@@ -120,6 +120,7 @@ export default function PhoneSimulator({
   const [regMbti, setRegMbti] = useState('INTJ - 战略策划家 (冷酷架构师)');
   const [regArchetype, setRegArchetype] = useState('非线性体验感官幽灵');
   const [regEmoji, setRegEmoji] = useState('🦊');
+  const [regAvatarImage, setRegAvatarImage] = useState('');
   const [regActiveColor, setRegActiveColor] = useState('bg-indigo-500');
   const [regSelectedDirections, setRegSelectedDirections] = useState<string[]>(['体验探究', '人机交互']);
   const [regSelectedInterests, setRegSelectedInterests] = useState<string[]>(['人工智能交互', '实体硬软件共生']);
@@ -162,7 +163,9 @@ export default function PhoneSimulator({
 
   useEffect(() => {
     try {
-      window.localStorage.setItem('welcomeMeProfile', JSON.stringify(myProfile));
+      if (isLoggedIn) {
+        window.localStorage.setItem('welcomeMeProfile', JSON.stringify(myProfile));
+      }
       window.localStorage.setItem('welcomeMeLoggedIn', isLoggedIn ? '1' : '0');
     } catch (error) {
       console.warn('写入本地档案失败', error);
@@ -172,6 +175,62 @@ export default function PhoneSimulator({
   const triggerToast = (msg: string) => {
     setShowNotification(msg);
     setTimeout(() => setShowNotification(null), 3500);
+  };
+
+  const handleSwitchAccount = () => {
+    setIsLoggedIn(false);
+    setAuthMode('login');
+    setActiveTab('home');
+    setSelectedProfileAttendee(null);
+    setActiveChatAttendee(null);
+    try {
+      window.localStorage.setItem('welcomeMeLoggedIn', '0');
+    } catch (error) {
+      console.warn('切换账号状态写入失败', error);
+    }
+    triggerToast('已返回登录页，可选择其他账号或重新注册');
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setAuthMode('login');
+    setActiveTab('home');
+    setSelectedProfileAttendee(null);
+    setActiveChatAttendee(null);
+    try {
+      window.localStorage.removeItem('welcomeMeProfile');
+      window.localStorage.setItem('welcomeMeLoggedIn', '0');
+    } catch (error) {
+      console.warn('退出登录清理失败', error);
+    }
+    triggerToast('已退出登录，当前设备不会继续自动进入账号');
+  };
+
+  const readImageAsDataUrl = (file: File, callback: (value: string) => void) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      callback(result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRegisterAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    readImageAsDataUrl(file, (result) => {
+      setRegAvatarImage(result);
+      triggerToast('头像已上传，可继续注册');
+    });
+  };
+
+  const handleProfileAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    readImageAsDataUrl(file, (result) => {
+      setMyProfile({ ...myProfile, avatarImage: result });
+      triggerToast('头像已更新并保存在本机');
+    });
   };
 
   const handleWorkImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -994,17 +1053,25 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     
                     {/* Character Card Live Preview */}
                     <div className="flex items-center space-x-3 bg-slate-55/70 dark:bg-slate-950/40 p-2.5 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                      <div className={`w-11 h-11 rounded-full ${regActiveColor} text-white flex items-center justify-center text-2.5xl shadow-md transition-all select-none`}>
-                        {regEmoji}
+                      <div className={`w-13 h-13 rounded-2xl ${regActiveColor} text-white flex items-center justify-center text-2.5xl shadow-md transition-all select-none overflow-hidden shrink-0`}>
+                        {regAvatarImage ? (
+                          <img src={regAvatarImage} alt="头像预览" className="w-full h-full object-cover" />
+                        ) : (
+                          regEmoji
+                        )}
                       </div>
                       <div className="flex-1 text-left min-w-0">
                         <div className="text-[10px] font-black text-slate-900 dark:text-white flex items-center space-x-1">
-                          <span>{ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象'}</span>
+                          <span>{regAvatarImage ? '已上传头像' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象')}</span>
                           <span className="text-[8px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-1.5 py-0.2 rounded font-normal font-mono select-none">PREVIEW</span>
                         </div>
                         <div className="text-[9px] text-slate-450 truncate mt-0.5">
-                          {ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态'}
+                          {regAvatarImage ? '也可以继续选择系统形象覆盖展示风格' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态')}
                         </div>
+                        <label className="mt-2 inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[9px] font-black text-indigo-600 dark:text-indigo-300 cursor-pointer active:scale-95 transition">
+                          上传头像
+                          <input type="file" accept="image/*" onChange={handleRegisterAvatarUpload} hidden />
+                        </label>
                       </div>
                     </div>
 
@@ -1014,7 +1081,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         <button
                           key={item.emoji}
                           type="button"
-                          onClick={() => setRegEmoji(item.emoji)}
+                          onClick={() => { setRegEmoji(item.emoji); setRegAvatarImage(''); }}
                           title={`${item.label}: ${item.desc}`}
                           className={`w-7.5 h-7.5 flex items-center justify-center text-sm rounded-lg transition-all ${
                             regEmoji === item.emoji 
@@ -1177,6 +1244,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       nickName: finalNick,
                       avatarColor: regActiveColor,
                       avatarEmoji: regEmoji,
+                      avatarImage: regAvatarImage || undefined,
                       organization: finalOrg,
                       title: finalTitle,
                       industry: '智能出行与人性体验',
@@ -1426,8 +1494,12 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               <div className="absolute top-1/2 left-3/4 w-8 h-8 rounded-full bg-purple-400/10 blur-sm animate-pulse" style={{ animationDelay: '0.6s' }}></div>
 
               <div className="relative z-10">
-                <div className={`w-16 h-16 ${myProfile.avatarColor} text-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl border-4 border-white dark:border-slate-900 transform group-hover:rotate-12 group-hover:scale-110 active:scale-95 transition-all duration-500 ease-out select-none`}>
-                  {myProfile.avatarEmoji}
+                <div className={`w-16 h-16 ${myProfile.avatarColor} text-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl border-4 border-white dark:border-slate-900 transform group-hover:rotate-6 group-hover:scale-105 active:scale-95 transition-all duration-500 ease-out select-none overflow-hidden`}>
+                  {myProfile.avatarImage ? (
+                    <img src={myProfile.avatarImage} alt={myProfile.nickName} className="w-full h-full object-cover" />
+                  ) : (
+                    myProfile.avatarEmoji
+                  )}
                 </div>
                 
                 <h3 className="text-sm font-black mt-3 text-slate-850 dark:text-white tracking-tight flex items-center justify-center space-x-1">
@@ -1435,6 +1507,27 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   <span className="w-2 h-2 rounded-full bg-emerald-450 animate-ping"></span>
                 </h3>
                 <p className="text-[10px] text-slate-500 mt-0.5 font-medium">{myProfile.organization || '组织/工作室'} • {myProfile.title || '设计学者'}</p>
+
+                <div className="mt-3 flex items-center justify-center gap-2">
+                  <label className="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 text-[9px] font-black text-indigo-600 dark:text-indigo-300 cursor-pointer active:scale-95 transition shadow-sm">
+                    更换头像
+                    <input type="file" accept="image/*" onChange={handleProfileAvatarUpload} hidden />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleSwitchAccount}
+                    className="px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 text-[9px] font-black text-slate-700 dark:text-slate-200 active:scale-95 transition shadow-sm"
+                  >
+                    切换账号
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="px-3 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 text-[9px] font-black text-rose-600 dark:text-rose-300 active:scale-95 transition shadow-sm"
+                  >
+                    退出
+                  </button>
+                </div>
                 
                 {/* Whimsical properties visualizers */}
                 <div className="mt-3.5 text-center space-y-2">
@@ -1732,8 +1825,12 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     <div className="absolute -bottom-10 -left-8 w-32 h-32 rounded-full bg-teal-400/20 blur-2xl"></div>
                     <div className="relative flex items-start justify-between gap-4">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className={`w-15 h-15 ${myProfile.avatarColor} rounded-[22px] flex items-center justify-center text-3xl shadow-xl shrink-0 border border-white/15`}>
-                          {myProfile.avatarEmoji}
+                        <div className={`w-15 h-15 ${myProfile.avatarColor} rounded-[22px] flex items-center justify-center text-3xl shadow-xl shrink-0 border border-white/15 overflow-hidden`}>
+                          {myProfile.avatarImage ? (
+                            <img src={myProfile.avatarImage} alt={myProfile.nickName} className="w-full h-full object-cover" />
+                          ) : (
+                            myProfile.avatarEmoji
+                          )}
                         </div>
                         <div className="min-w-0">
                           <p className="text-[10px] uppercase tracking-[0.24em] text-white/65 font-black">个人报告</p>
