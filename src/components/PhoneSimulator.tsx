@@ -335,13 +335,13 @@ export default function PhoneSimulator({
   const countApprovedQuestions = questions.filter(q => q.sessionId === activeSessionId && q.status === 'approved').length;
 
   return (
-    <div className="phone-frame relative mx-auto p-[3px] bg-gradient-to-tr from-pink-400 via-teal-300 via-purple-400 to-pink-500 rounded-[32px] sm:rounded-[58px] shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 sm:hover:scale-[1.01] sm:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)] w-full max-w-[420px] sm:max-w-[360px] h-[calc(100dvh-7.5rem)] min-h-[620px] max-h-[820px] sm:h-[760px] shrink-0">
+    <div className="phone-frame relative mx-auto p-0 sm:p-[3px] bg-gradient-to-tr from-pink-400 via-teal-300 via-purple-400 to-pink-500 rounded-none sm:rounded-[58px] shadow-none sm:shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-none sm:dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 sm:hover:scale-[1.01] sm:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)] w-full max-w-none sm:max-w-[360px] h-[100dvh] sm:h-[760px] min-h-0 sm:min-h-[620px] max-h-none sm:max-h-[820px] shrink-0">
       
       {/* Animated Stream light overlay inside borders */}
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-teal-300/5 to-purple-500/10 animate-pulse rounded-[32px] sm:rounded-[58px] pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-teal-300/5 to-purple-500/10 animate-pulse rounded-none sm:rounded-[58px] pointer-events-none"></div>
 
       {/* Main Glass Simulator Body */}
-      <div className="relative w-full h-full rounded-[29px] sm:rounded-[55px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-2xl border border-white/40 dark:border-slate-800/40 flex flex-col overflow-hidden select-none font-sans transition-all duration-300">
+      <div className="relative w-full h-full rounded-none sm:rounded-[55px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-2xl border-0 sm:border border-white/40 dark:border-slate-800/40 flex flex-col overflow-hidden select-none font-sans transition-all duration-300">
       
       {/* Toast Notification with Macaron Pink glow */}
       {showNotification && (

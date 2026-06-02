@@ -75,11 +75,15 @@ body {
 }
 
 @media (max-width: 640px) {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   .phone-only-shell {
-    min-height: calc(100dvh - 65px);
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-bottom: 0.5rem;
+    min-height: 100dvh;
+    padding: 0;
   }
 
   .phone-frame {

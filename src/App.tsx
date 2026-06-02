@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Sun, Moon } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 
 import { Attendee, Question, Session, Poll, Exhibit, Connection, BulletMessage } from './types';
 import { 
@@ -131,7 +131,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       
       {/* Outer master Header bar */}
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+      <header className="hidden sm:flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 items-center justify-between sticky top-0 z-50">
         <div className="flex items-center space-x-2.5">
           <div className="h-9 w-9 bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-550 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-pink-500/15">
             ME
@@ -162,22 +162,7 @@ export default function App() {
       </header>
 
       {/* Master Content Area */}
-      <main className="phone-only-shell flex-1 w-full mx-auto px-3 sm:px-6 md:px-10 py-4 md:py-8 flex flex-col items-center justify-center">
-        
-        {/* Helper guide ribbon representing interactive traits */}
-        <div className="w-full max-w-3xl bg-gradient-to-r from-pink-500/10 via-teal-500/5 to-purple-500/10 p-3.5 rounded-2xl mb-5 border border-pink-205/30 text-xs text-slate-700 dark:text-slate-300 flex flex-col md:flex-row md:items-center md:justify-between gap-3 shadow-sm animate-fadeIn select-none">
-          <div className="flex items-center space-x-2">
-            <Sparkles className="h-4.5 w-4.5 text-pink-500 shrink-0 animate-pulse" />
-            <p className="leading-relaxed font-medium">
-              <strong>💡 使用说明：</strong>
-              这里现在只保留「小程序端 Phone」体验。你可以直接在手机仿真界面里完成签到、编辑个人资料、浏览议程、互动提问、展品探索和同频社交等功能。
-            </p>
-          </div>
-          <span className="text-[10px] bg-white dark:bg-slate-800 text-pink-600 font-bold px-3 py-1 rounded-full font-mono shrink-0 text-center border border-pink-100 dark:border-pink-950/20">
-            Phone Only Mode
-          </span>
-        </div>
-
+      <main className="phone-only-shell flex-1 w-full mx-auto px-0 sm:px-6 md:px-10 py-0 sm:py-8 flex flex-col items-center justify-center">
         <div className="w-full flex justify-center items-center">
           <PhoneSimulator
             myProfile={myProfile}
@@ -206,7 +191,7 @@ export default function App() {
       </main>
 
       {/* Footer copyright */}
-      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-3 text-center text-[10px] text-slate-400 font-mono select-none">
+      <footer className="hidden sm:block bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-3 text-center text-[10px] text-slate-400 font-mono select-none">
         <p>© 2026 欢迎ME (WelcomeME) SaaS & 小程序生态体系 • 版权所有</p>
       </footer>
 
