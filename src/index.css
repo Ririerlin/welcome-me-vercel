@@ -102,3 +102,133 @@ body {
     padding: 0;
   }
 }
+/* ===== Mature Mini App UI Polish ===== */
+
+:root {
+  --me-bg: #f6f7fb;
+  --me-card: rgba(255, 255, 255, 0.96);
+  --me-text: #1f2333;
+  --me-muted: #73788a;
+  --me-primary: #5b4bff;
+  --me-primary-dark: #4436d9;
+  --me-soft: #f2f0ff;
+  --me-border: rgba(60, 65, 95, 0.1);
+  --me-shadow: 0 12px 32px rgba(35, 38, 70, 0.08);
+}
+
+/* 整体更像真实小程序 */
+body {
+  background: var(--me-bg);
+  color: var(--me-text);
+}
+
+/* 手机端铺满屏幕 */
+@media (max-width: 767px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100dvh;
+    margin: 0;
+    background: var(--me-bg);
+  }
+}
+
+/* 卡片更轻，不要 Demo 感强边框 */
+.card,
+.panel,
+.section,
+.module,
+.login-card,
+.profile-card,
+.teacher-card,
+.vip-card,
+.phone-content > div {
+  border-radius: 24px !important;
+  border: 1px solid var(--me-border) !important;
+  background: var(--me-card) !important;
+  box-shadow: var(--me-shadow) !important;
+}
+
+/* 增加模块之间的呼吸感 */
+.phone-content {
+  gap: 18px !important;
+  padding: 20px !important;
+}
+
+/* 手机端别太挤 */
+@media (max-width: 767px) {
+  .phone-content {
+    padding: 18px 16px 28px !important;
+    gap: 18px !important;
+  }
+}
+
+/* 标题更成熟 */
+h1,
+h2,
+h3 {
+  color: var(--me-text);
+  letter-spacing: -0.02em;
+}
+
+/* 说明文字变轻 */
+p,
+small,
+.subtitle,
+.description,
+.caption {
+  color: var(--me-muted) !important;
+}
+
+/* 弱化粉色高亮，改成成熟紫色高亮 */
+.selected,
+.active,
+.is-active {
+  background: var(--me-soft) !important;
+  border-color: rgba(91, 75, 255, 0.28) !important;
+  box-shadow: 0 10px 26px rgba(91, 75, 255, 0.12) !important;
+}
+
+/* 按钮更像正式小程序 */
+button {
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+}
+
+/* 主按钮更明确 */
+button.primary,
+.primary-button,
+.main-button,
+.cta-button {
+  background: linear-gradient(135deg, var(--me-primary), var(--me-primary-dark)) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 14px 30px rgba(91, 75, 255, 0.26) !important;
+}
+
+/* 输入框更轻 */
+input {
+  min-height: 46px;
+  border-radius: 18px !important;
+  border: 1px solid var(--me-border) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* 老师/嘉宾列表不要太挤 */
+.teacher-card,
+.vip-card {
+  padding: 16px !important;
+  margin-bottom: 12px !important;
+}
+
+/* 手机端主按钮更舒服 */
+@media (max-width: 767px) {
+  button {
+    min-height: 48px;
+  }
+
+  input {
+    min-height: 46px;
+  }
+}
