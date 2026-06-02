@@ -1,0 +1,8 @@
+{
+  "name": "Remix: 欢迎ME 轻量化 SaaS 小程序",
+  "description": "面向设计会议、展会、论坛、工作坊的「从 ME 到 WE」关系生成与现场互动 SaaS 数据沉淀平台",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
