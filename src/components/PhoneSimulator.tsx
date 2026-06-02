@@ -123,6 +123,11 @@ export default function PhoneSimulator({
   const [regActiveColor, setRegActiveColor] = useState('bg-indigo-500');
   const [regSelectedDirections, setRegSelectedDirections] = useState<string[]>(['体验探究', '人机交互']);
   const [regSelectedInterests, setRegSelectedInterests] = useState<string[]>(['人工智能交互', '实体硬软件共生']);
+  const [regWorkTitle, setRegWorkTitle] = useState('');
+  const [regWorkDesc, setRegWorkDesc] = useState('');
+  const [regWorkImage, setRegWorkImage] = useState('');
+  const [regEventName, setRegEventName] = useState('');
+  const [regEventRole, setRegEventRole] = useState('');
 
   // States
   const [nfcTapping, setNfcTapping] = useState<boolean>(false);
@@ -169,9 +174,22 @@ export default function PhoneSimulator({
     setTimeout(() => setShowNotification(null), 3500);
   };
 
+  const handleWorkImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      setRegWorkImage(result);
+      triggerToast('作品图片已添加，可继续完善或直接跳过');
+    };
+    reader.readAsDataURL(file);
+  };
+
   // Social community, chat and meetup states
   const [weSubTab, setWeSubTab] = useState<'radar' | 'community'>('radar');
   const [activeChatAttendee, setActiveChatAttendee] = useState<Attendee | null>(null);
+  const [selectedProfileAttendee, setSelectedProfileAttendee] = useState<Attendee | null>(null);
   
   // Seed initial values for private chats with User 2 (Mia)
   const [chatLogs, setChatLogs] = useState<Record<string, {
@@ -278,7 +296,7 @@ export default function PhoneSimulator({
     setTimeout(() => {
       let replyContent = '';
       if (isMeetupInvite) {
-        replyContent = `【学者电磁波呼应】太棒了！我也很期待和你面对面碰头。那我定个闹钟，咱们在 「${meetupTimeSelection.split(' ')[0]}」去一楼中庭茶歇咖啡台共享手冲咖啡，顺便拿着实体NFC会标再贴贴校对，深入脑风脑暴：「${meetupAgendaSelection}」！🤝`;
+        replyContent = `太棒了！我也很期待和你面对面碰头。那我定个闹钟，咱们在 「${meetupTimeSelection.split(' ')[0]}」去一楼中庭茶歇咖啡台共享手冲咖啡，顺便拿着深入聊聊：「${meetupAgendaSelection}」！🤝`;
       } else {
         replyContent = `【学者心灵共振】收到！你说的非常到点。我完全赞同咱们在设计思辨上进行非正统耦合。等会儿在茶歇咱们碰杯详谈！☕`;
       }
@@ -372,17 +390,17 @@ export default function PhoneSimulator({
 
   const reportMetrics = [
     {
-      label: '大会参与能量',
+      label: '参会完成度',
       value: Math.min(98, myProfile.personaCompletion + 12),
       accent: 'from-pink-500 to-purple-500'
     },
     {
-      label: '跨界连接指数',
+      label: '同行连接度',
       value: Math.min(95, 52 + activeConnections * 12),
       accent: 'from-teal-400 to-cyan-500'
     },
     {
-      label: '内容共创热度',
+      label: '互动活跃度',
       value: Math.min(96, 46 + myBulletCount * 10 + myFavoritedExhibits * 6),
       accent: 'from-amber-400 to-orange-500'
     }
@@ -465,7 +483,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 <body>
 <div class="wrap">
   <section class="hero">
-    <div class="badge">欢迎ME · AI增强个人报告</div><div class="badge">生成时间 ${timeLabel}</div>
+    <div class="badge">欢迎ME · 个人报告</div><div class="badge">生成时间 ${timeLabel}</div>
     <div style="display:flex;align-items:center;gap:16px;margin-top:16px">
       <div style="width:86px;height:86px;border-radius:28px;background:linear-gradient(135deg,#ec4899,#8b5cf6,#14b8a6);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 12px 30px rgba(0,0,0,.2)">${myProfile.avatarEmoji}</div>
       <div>
@@ -495,7 +513,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
       <div style="display:grid;gap:12px">
         <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">当前连接线索</div><div style="font-size:28px;font-weight:900;color:#0f172a">${activeConnections}<span style="font-size:16px;color:#64748b"> 位</span></div></div>
         <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">内容互动记录</div><div style="font-size:28px;font-weight:900;color:#0f172a">${myBulletCount}<span style="font-size:16px;color:#64748b"> 条</span></div></div>
-        <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">系统推荐合作对象</div><div style="font-size:18px;font-weight:900;color:#0f172a">${attendees[1]?.nickName || '米亚 Mia'}</div><div class="small">推荐原因：${(myProfile.interests || []).slice(0,2).join(' / ')}</div></div>
+        <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">推荐认识的人</div><div style="font-size:18px;font-weight:900;color:#0f172a">${attendees[1]?.nickName || '米亚 Mia'}</div><div class="small">共同关注：${(myProfile.interests || []).slice(0,2).join(' / ')}</div></div>
       </div>
     </div>
   </section>
@@ -521,7 +539,209 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   const generateVisualReport = () => {
     const now = new Date().toLocaleString('zh-CN', { hour12: false });
     setReportGeneratedAt(now);
-    triggerToast('✨ 个人报告已生成：已根据你的行为数据刷新图文内容');
+    triggerToast('✨ 个人报告已更新');
+  };
+
+  const getDesignWorks = (person: Attendee) => {
+    if (person.designWorks?.length) return person.designWorks;
+    return [
+      {
+        id: `${person.id}-work-1`,
+        title: person.id === 'me' ? '感官通行证体验系统' : `${person.nickName} 的代表项目`,
+        description: person.id === 'me'
+          ? '围绕参会者入场、互动、连接与会后回顾构建的体验原型。'
+          : `与「${person.designDirections[0] || '体验设计'}」相关的阶段性作品。`,
+        year: '2026',
+        role: person.title || '项目参与者'
+      },
+      {
+        id: `${person.id}-work-2`,
+        title: `${person.interests[0] || '跨界设计'} 研究草图`,
+        description: '基于现场观察与用户行为整理出的设计研究片段。',
+        year: '2025',
+        role: '研究与概念设计'
+      }
+    ];
+  };
+
+  const getDesignEvents = (person: Attendee) => {
+    if (person.designEvents?.length) return person.designEvents;
+    return [
+      {
+        id: `${person.id}-event-1`,
+        name: '跨界设计与人性体验峰会',
+        role: person.group === 'Guest' ? '特邀分享嘉宾' : '参会学者',
+        year: '2026',
+        location: '上海'
+      },
+      {
+        id: `${person.id}-event-2`,
+        name: `${person.designDirections[0] || '体验设计'} 主题工作坊`,
+        role: '项目共创者',
+        year: '2025',
+        location: '线上 / 线下'
+      }
+    ];
+  };
+
+  const downloadPersonalReportPng = () => {
+    const canvas = document.createElement('canvas');
+    const width = 1080;
+    const height = 1920;
+    const scale = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.scale(scale, scale);
+
+    const roundedRect = (x: number, y: number, w: number, h: number, r: number) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    };
+    const fillRound = (x: number, y: number, w: number, h: number, r: number, fill: string | CanvasGradient) => {
+      roundedRect(x, y, w, h, r);
+      ctx.fillStyle = fill;
+      ctx.fill();
+    };
+    const drawText = (text: string, x: number, y: number, maxWidth: number, lineHeight: number, font: string, color: string, maxLines = 2) => {
+      ctx.font = font;
+      ctx.fillStyle = color;
+      const words = String(text).split('');
+      let line = '';
+      let lines = 0;
+      for (let i = 0; i < words.length; i += 1) {
+        const test = line + words[i];
+        if (ctx.measureText(test).width > maxWidth && i > 0) {
+          ctx.fillText(line, x, y + lines * lineHeight);
+          line = words[i];
+          lines += 1;
+          if (lines >= maxLines - 1) break;
+        } else {
+          line = test;
+        }
+      }
+      if (line && lines < maxLines) ctx.fillText(line, x, y + lines * lineHeight);
+    };
+
+    const bg = ctx.createLinearGradient(0, 0, 0, height);
+    bg.addColorStop(0, '#eef2ff');
+    bg.addColorStop(0.45, '#fdf2f8');
+    bg.addColorStop(1, '#ecfeff');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, width, height);
+
+    const hero = ctx.createLinearGradient(70, 70, 1010, 390);
+    hero.addColorStop(0, '#0f172a');
+    hero.addColorStop(0.55, '#312e81');
+    hero.addColorStop(1, '#be185d');
+    fillRound(70, 70, 940, 360, 54, hero);
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath();
+    ctx.arc(890, 90, 160, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(170, 410, 180, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.16)';
+    fillRound(110, 110, 210, 44, 22, 'rgba(255,255,255,0.16)');
+    ctx.fillStyle = '#e0f2fe';
+    ctx.font = '700 22px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText('欢迎ME · 个人报告', 135, 140);
+
+    fillRound(110, 190, 140, 140, 36, 'rgba(255,255,255,0.14)');
+    ctx.font = '72px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText(myProfile.avatarEmoji || '👤', 142, 284);
+    ctx.font = '900 54px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`${myProfile.nickName || '参会者'} 的大会报告`, 290, 230);
+    ctx.font = '500 27px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#cbd5e1';
+    drawText(`${myProfile.organization || '欢迎ME'} · ${myProfile.title || '参会者'}`, 292, 280, 610, 34, '500 27px -apple-system, BlinkMacSystemFont, sans-serif', '#cbd5e1', 2);
+    ctx.font = '600 22px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#fbcfe8';
+    ctx.fillText(`生成时间 ${reportGeneratedAt || new Date().toLocaleString('zh-CN', { hour12: false })}`, 292, 345);
+
+    let y = 480;
+    const cardW = 292;
+    reportMetrics.forEach((item, index) => {
+      const x = 70 + index * (cardW + 32);
+      fillRound(x, y, cardW, 190, 36, 'rgba(255,255,255,0.92)');
+      ctx.fillStyle = '#64748b';
+      ctx.font = '700 24px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(item.label, x + 28, y + 46);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 56px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(`${item.value}%`, x + 28, y + 108);
+      fillRound(x + 28, y + 135, cardW - 56, 18, 9, '#e2e8f0');
+      const bar = ctx.createLinearGradient(x + 28, 0, x + cardW - 28, 0);
+      bar.addColorStop(0, '#ec4899');
+      bar.addColorStop(0.55, '#8b5cf6');
+      bar.addColorStop(1, '#14b8a6');
+      fillRound(x + 28, y + 135, (cardW - 56) * item.value / 100, 18, 9, bar);
+    });
+
+    y = 735;
+    fillRound(70, y, 940, 350, 42, 'rgba(255,255,255,0.92)');
+    ctx.font = '900 32px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#111827';
+    ctx.fillText('关注主题图谱', 110, y + 58);
+    focusDirectionValues.forEach((item, idx) => {
+      const rowY = y + 105 + idx * 58;
+      ctx.font = '700 24px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = '#334155';
+      ctx.fillText(item.label, 110, rowY);
+      ctx.fillStyle = '#7c3aed';
+      ctx.font = '800 22px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(`${item.value}%`, 900, rowY);
+      fillRound(110, rowY + 18, 820, 18, 9, '#e2e8f0');
+      const bar = ctx.createLinearGradient(110, 0, 930, 0);
+      bar.addColorStop(0, '#ec4899');
+      bar.addColorStop(0.6, '#8b5cf6');
+      bar.addColorStop(1, '#14b8a6');
+      fillRound(110, rowY + 18, 820 * item.value / 100, 18, 9, bar);
+    });
+
+    y = 1140;
+    fillRound(70, y, 940, 470, 42, 'rgba(255,255,255,0.92)');
+    ctx.font = '900 32px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillStyle = '#111827';
+    ctx.fillText('大会足迹', 110, y + 58);
+    reportTimeline.forEach((item, idx) => {
+      const rowY = y + 105 + idx * 82;
+      ctx.fillStyle = '#8b5cf6';
+      ctx.font = '900 24px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(item.time, 110, rowY);
+      ctx.fillStyle = '#111827';
+      ctx.font = '800 25px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(item.title, 235, rowY);
+      drawText(item.detail, 235, rowY + 34, 680, 28, '500 21px -apple-system, BlinkMacSystemFont, sans-serif', '#64748b', 2);
+    });
+
+    y = 1660;
+    fillRound(70, y, 940, 180, 42, '#0f172a');
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = '900 30px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText('推荐下一步', 110, y + 55);
+    ctx.fillStyle = '#cbd5e1';
+    drawText(`优先关注「${myProfile.designDirections[0] || '体验设计'}」相关议程，并与 ${attendees[1]?.nickName || '同频嘉宾'} 建立会后交流。`, 110, y + 100, 830, 34, '600 25px -apple-system, BlinkMacSystemFont, sans-serif', '#cbd5e1', 2);
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `welcome-me-report-${myProfile.nickName || 'guest'}.png`;
+      link.click();
+      URL.revokeObjectURL(url);
+      triggerToast('已导出 PNG 长图报告');
+    }, 'image/png');
   };
 
   return (
@@ -566,10 +786,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             </span>
           ) : (
             <>
-              {activeTab === 'home' && '🎪 会场大堂 & 通行证'}
-              {activeTab === 'me' && '🧁 ME 本色个人信息卡'}
-              {activeTab === 'co' && '💬 现场共创互动中心'}
-              {activeTab === 'we' && '🪐 同频智友 & 智能成果'}
+              {activeTab === 'home' && '会场首页'}
+              {activeTab === 'me' && '我的'}
+              {activeTab === 'co' && '互动'}
+              {activeTab === 'we' && '同频同行'}
             </>
           )}
         </div>
@@ -714,7 +934,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
                   <Zap className="h-4.5 w-4.5 text-amber-300 animate-pulse shrink-0" />
-                  <span>学者一键验证安全登入</span>
+                  <span>一键登录</span>
                 </button>
               </div>
             ) : (
@@ -888,6 +1108,59 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     </div>
                   </div>
 
+                  {/* Optional portfolio step */}
+                  <div className="rounded-[24px] bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800 p-3.5 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <label className="text-[9px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest block">设计作品与经历（可跳过）</label>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-300 mt-1">完善后，他人点开你的主页会看到更多作品与活动经历。</p>
+                      </div>
+                      <span className="shrink-0 text-[8px] px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 font-black">可选</span>
+                    </div>
+
+                    <label className="block rounded-2xl border border-dashed border-indigo-300/70 dark:border-indigo-700 bg-indigo-50/60 dark:bg-indigo-950/20 p-3 text-center cursor-pointer active:scale-[0.98] transition">
+                      {regWorkImage ? (
+                        <img src={regWorkImage} alt="作品预览" className="w-full h-28 object-cover rounded-xl mb-2" />
+                      ) : (
+                        <div className="h-24 rounded-xl bg-white/80 dark:bg-slate-900 flex flex-col items-center justify-center text-slate-500 dark:text-slate-300">
+                          <FileText className="h-5 w-5 mb-1" />
+                          <span className="text-[10px] font-bold">上传一张作品图</span>
+                        </div>
+                      )}
+                      <input type="file" accept="image/*" onChange={handleWorkImageUpload} hidden />
+                    </label>
+
+                    <input
+                      type="text"
+                      value={regWorkTitle}
+                      onChange={(e) => setRegWorkTitle(e.target.value)}
+                      placeholder="作品标题，例如：城市微气候交互装置"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2.5 text-[11px] focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                    />
+                    <textarea
+                      value={regWorkDesc}
+                      onChange={(e) => setRegWorkDesc(e.target.value)}
+                      placeholder="一句话介绍作品。也可以不填，直接跳过。"
+                      className="w-full min-h-[72px] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2.5 text-[11px] focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100 resize-none"
+                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        value={regEventName}
+                        onChange={(e) => setRegEventName(e.target.value)}
+                        placeholder="参加过的活动"
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2.5 text-[11px] focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                      />
+                      <input
+                        type="text"
+                        value={regEventRole}
+                        onChange={(e) => setRegEventRole(e.target.value)}
+                        placeholder="角色/奖项"
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2.5 text-[11px] focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                      />
+                    </div>
+                  </div>
+
                 </div>
 
                 <button
@@ -911,6 +1184,25 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       designDirections: regSelectedDirections,
                       interests: regSelectedInterests,
                       goals: ['寻找项目技术合伙人', '发现前沿艺术灵感'],
+                      designWorks: regWorkTitle.trim() || regWorkDesc.trim() || regWorkImage ? [
+                        {
+                          id: `work_${Date.now()}`,
+                          title: regWorkTitle.trim() || '我的设计作品',
+                          description: regWorkDesc.trim() || '这个用户还没有填写作品说明。',
+                          imageUrl: regWorkImage || undefined,
+                          year: '2026',
+                          role: '创作者'
+                        }
+                      ] : [],
+                      designEvents: regEventName.trim() || regEventRole.trim() ? [
+                        {
+                          id: `event_${Date.now()}`,
+                          name: regEventName.trim() || '设计相关活动',
+                          role: regEventRole.trim() || '参与者',
+                          year: '2026',
+                          location: '未填写'
+                        }
+                      ] : [],
                       privacyScope: 'public',
                       personaCompletion: 80,
                       checkedIn: false,
@@ -930,13 +1222,13 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
                   <Sparkles className="h-4.5 w-4.5 text-pink-300 animate-spin shrink-0" style={{ animationDuration: '3s' }} />
-                  <span>学者一键验证安全投射</span>
+                  <span>完成注册并进入会场</span>
                 </button>
               </div>
             )}
             
             <div className="text-center text-[8px] text-slate-450 dark:text-slate-500 font-mono tracking-wide py-2 select-none">
-              🔒 智电卡安全封签加密验证 | 跨界设计峰会 2026
+              🔒 信息仅用于本次活动体验
             </div>
           </div>
         ) : (
@@ -1110,7 +1402,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 </div>
                 <div>
                   <h5 className="text-[11px] font-extrabold text-slate-850 dark:text-slate-200">A馆现场微气候传感器</h5>
-                  <p className="text-[9px] text-slate-400 font-medium">会场恒温湿、全区已布满电磁共鸣节点</p>
+                  <p className="text-[9px] text-slate-400 font-medium">今日天气舒适，适合逛展与交流</p>
                 </div>
               </div>
               <div className="text-right font-mono shrink-0 select-none">
@@ -1410,6 +1702,178 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               </div>
             )}
 
+            {/* AI Personal Report Generator */}
+            <div className="bg-gradient-to-br from-white via-pink-50/45 to-teal-50/45 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-[32px] p-4.5 space-y-3.5 border border-white/70 dark:border-slate-800/80 shadow-[0_18px_45px_rgba(15,23,42,0.06)] text-slate-800 dark:text-slate-100">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center space-x-2 select-none">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-pink-500/15">
+                    <BarChart3 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-[11px] uppercase tracking-wider text-slate-900 dark:text-white leading-none">我的大会报告</h4>
+                    <span className="text-[9px] text-slate-500 dark:text-slate-300">根据你的签到、收藏、互动和连接生成。</span>
+                  </div>
+                </div>
+                {reportGeneratedAt && (
+                  <span className="shrink-0 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 text-[9px] font-black">
+                    已生成
+                  </span>
+                )}
+              </div>
+
+              {!myProfile.checkedIn ? (
+                <p className="text-[10px] text-slate-500 dark:text-slate-300 italic bg-white/75 dark:bg-slate-900/70 p-3 rounded-2xl leading-normal select-none border border-slate-200/80 dark:border-slate-800">
+                  完成签到后即可生成你的大会报告。
+                </p>
+              ) : (
+                <div className="space-y-3.5">
+                  <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4.5">
+                    <div className="absolute -top-10 -right-8 w-32 h-32 rounded-full bg-pink-500/20 blur-2xl"></div>
+                    <div className="absolute -bottom-10 -left-8 w-32 h-32 rounded-full bg-teal-400/20 blur-2xl"></div>
+                    <div className="relative flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-15 h-15 ${myProfile.avatarColor} rounded-[22px] flex items-center justify-center text-3xl shadow-xl shrink-0 border border-white/15`}>
+                          {myProfile.avatarEmoji}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[10px] uppercase tracking-[0.24em] text-white/65 font-black">个人报告</p>
+                          <h5 className="text-lg font-black tracking-tight truncate">{myProfile.nickName} 的大会个人报告</h5>
+                          <p className="text-[10px] text-white/75 mt-1 leading-relaxed">{myProfile.organization} · {myProfile.title}</p>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            <span className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{myProfile.mbti || 'AI 体验创作者'}</span>
+                            <span className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{myProfile.designArchetype || '具身智能观察者'}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="hidden sm:flex flex-col items-end text-right shrink-0">
+                        <span className="text-[9px] text-white/60">生成时间</span>
+                        <span className="text-[10px] font-bold text-white/90">{reportGeneratedAt || '点击下方按钮生成'}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 mt-4">
+                      {reportMetrics.map((item) => (
+                        <div key={item.label} className="rounded-2xl bg-white/7 border border-white/10 p-3 backdrop-blur-sm">
+                          <span className="block text-[9px] text-white/65 font-bold">{item.label}</span>
+                          <span className="text-xl font-black tracking-tight">{item.value}<span className="text-[11px] font-bold ml-0.5">%</span></span>
+                          <div className="h-1.5 rounded-full bg-white/10 mt-2 overflow-hidden">
+                            <div className={`h-full rounded-full bg-gradient-to-r ${item.accent}`} style={{ width: `${item.value}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {reportHighlights.map((item) => (
+                      <div key={item.title} className="rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 p-3.5 shadow-sm">
+                        <span className={`inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black ${item.color}`}>{item.title}</span>
+                        <div className="mt-2 text-[12px] font-black text-slate-900 dark:text-white leading-snug">{item.value}</div>
+                        <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.note}</div>
+                      </div>
+                    ))}
+                    <div className="rounded-3xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-teal-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 border border-pink-200/70 dark:border-slate-800 p-3.5 shadow-sm">
+                      <span className="inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-100">图像快照</span>
+                      <div className="grid grid-cols-3 gap-2 mt-3">
+                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
+                          <div className="text-lg">🎤</div>
+                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">主旨现场</div>
+                        </div>
+                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
+                          <div className="text-lg">🖼️</div>
+                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">展品灵感</div>
+                        </div>
+                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
+                          <div className="text-lg">🤝</div>
+                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">连接瞬间</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="text-[11px] font-black uppercase tracking-wider text-slate-900 dark:text-white">关注主题图表</h5>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-300">根据你的兴趣自动整理</span>
+                      </div>
+                      <div className="space-y-3">
+                        {focusDirectionValues.map((item) => (
+                          <div key={item.label}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] font-bold text-slate-700 dark:text-slate-100">{item.label}</span>
+                              <span className="text-[10px] font-black text-purple-600 dark:text-purple-300">{item.value}%</span>
+                            </div>
+                            <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                              <div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400" style={{ width: `${item.value}%` }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="text-[11px] font-black uppercase tracking-wider text-slate-900 dark:text-white">大会足迹时间线</h5>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-300">你的参会记录</span>
+                      </div>
+                      <div className="space-y-3">
+                        {reportTimeline.map((item) => (
+                          <div key={`${item.time}-${item.title}`} className="flex items-start gap-3 rounded-2xl bg-slate-50/85 dark:bg-slate-950/80 p-3 border border-slate-200/70 dark:border-slate-800">
+                            <div className="w-15 shrink-0 text-[10px] font-black text-purple-600 dark:text-purple-300">{item.time}</div>
+                            <div className="min-w-0">
+                              <div className="text-[11px] font-black text-slate-900 dark:text-white">{item.title}</div>
+                              <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.detail}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">已收藏议程</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{mySessionBookmarks}</div>
+                    </div>
+                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">展品共鸣</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{myFavoritedExhibits}</div>
+                    </div>
+                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">同频连接</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{activeConnections}</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2.5">
+                    <button 
+                      onClick={generateVisualReport}
+                      className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-pink-500/15 cursor-pointer"
+                    >
+                      生成我的报告
+                    </button>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <button 
+                        onClick={downloadPersonalReportPng}
+                        className="w-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <Download className="h-4 w-4" />
+                        导出 PNG 长图
+                      </button>
+                      <button 
+                        onClick={downloadPersonalReport}
+                        className="w-full bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 hover:bg-slate-200 hover:dark:bg-slate-700 font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <Download className="h-4 w-4" />
+                        下载 HTML
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Custom Interactive Holographic NFC Device Binding - Border-free token card with pulsing indicator */}
             <div className={`p-5 rounded-[32px] transition-all duration-500 relative overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.012)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.035)] ${myProfile.nfcBound ? 'bg-gradient-to-tr from-teal-500/10 via-purple-500/5 to-teal-500/5 dark:from-slate-900/90 dark:via-teal-950/20' : 'bg-white/95 dark:bg-slate-900/95'}`}>
               
@@ -1473,7 +1937,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   }`}
                 >
                   <Zap className="h-3.5 w-3.5 animate-bounce" />
-                  <span>{!myProfile.checkedIn ? '请先在「会场大厅」扫码核销卡' : '极速贴电磁会卡：感应配对 NFC 挂饰'}</span>
+                  <span>{!myProfile.checkedIn ? '请先完成签到' : '绑定你的现场通行卡'}</span>
                 </button>
               )}
             </div>
@@ -1981,7 +2445,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     <div className="absolute w-44 h-12 border border-purple-400/30 rounded-full animate-ping opacity-25" style={{ animationDuration: '2.5s' }}></div>
                   </div>
                   <span className="text-[10px] uppercase tracking-widest text-indigo-600 dark:text-indigo-400 font-extrabold animate-pulse">
-                    ⚡ 镜像对称磁通量对齐中，正在投射心智双生子...
+                    正在为你查找可能聊得来的参会者...
                   </span>
                 </div>
               ) : (
@@ -1989,11 +2453,11 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   <div className="flex items-center justify-center space-x-1.5 bg-indigo-100/80 dark:bg-purple-950/40 px-3.5 py-1.5 rounded-2xl border border-indigo-200/50 dark:border-indigo-900/50 w-fit mx-auto shadow-xs">
                     <Sparkles className="h-3.5 w-3.5 text-pink-550 animate-bounce" />
                     <span className="text-[10px] font-black text-indigo-700 dark:text-indigo-400 uppercase tracking-widest">
-                      AI 镜像智能同步：发现 {attendees.length} 组心智镜友
+                      已找到 {attendees.length} 位可能同频的人
                     </span>
                   </div>
                   <p className="text-[9.5px] text-slate-500 dark:text-slate-400 leading-relaxed font-semibold px-2">
-                    系统为您实时对敲 NFC 气味标签，如同看入镜中的自己 —— 模拟贴合物理挂物，心智镜像与对边学者相遇，即可瞬间交换数字学者名片！
+                    根据你的关注主题、兴趣标签和参会目标，优先推荐可能适合交流的人。
                   </p>
                 </div>
               )}
@@ -2022,7 +2486,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     {/* Visual Symmetrical Mirror percentage badge */}
                     <div className="absolute top-0 right-0 bg-gradient-to-bl from-pink-500 via-purple-600 to-indigo-600 border-l border-b border-pink-400/20 dark:border-purple-400/30 text-white text-[9px] px-3.5 py-1.5 rounded-bl-2xl font-black font-mono flex items-center space-x-1 shadow-xs">
                       <ArrowLeftRight className="h-2.5 w-2.5 text-pink-200 mr-0.5" />
-                      <span>镜像度: {matchVal}%</span>
+                      <span>匹配度: {matchVal}%</span>
                     </div>
 
                     <div className="flex items-start space-x-3 pr-20 select-none">
@@ -2072,22 +2536,30 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       
                       <span className="text-[9.5px] font-black text-indigo-700 dark:text-indigo-400 uppercase tracking-widest block mb-1.5 flex items-center select-none font-sans">
                         <Sparkles className="h-3.5 w-3.5 mr-1 text-pink-550 animate-pulse" />
-                        AI 心智镜像指引 • Mirror Catalyst
+                        智能推荐理由
                       </span>
                       <p className="font-semibold text-slate-650 dark:text-slate-300">
-                        “在跨界设计的极客镜像中，你与「{other.nickName}」的灵魂坐标在「{other.designDirections[0] || '人机本性'}」实现了完美对称。近场贴合物理会标，即可将这股共鸣对称锁进你的电子名片夹。”
+                        你和「{other.nickName}」都关注「{other.designDirections[0] || '体验设计'}」。可以先查看对方主页，再决定是否发起交流。
                       </p>
                     </div>
 
                     {/* Shared overlap tags */}
                     <div className="space-y-1.5 select-none">
-                      <span className="text-[9px] text-slate-505 dark:text-slate-400 font-extrabold block">双生镜面的交汇气味 / Refracted Overlap:</span>
+                      <span className="text-[9px] text-slate-505 dark:text-slate-400 font-extrabold block">共同兴趣</span>
                       <div className="flex flex-wrap gap-1">
                         {commonTags.slice(0, 3).map(t => (
                           <span key={t} className="text-[8px] bg-purple-55 dark:bg-purple-950/40 text-purple-650 dark:text-purple-400 border border-purple-100 dark:border-purple-800/45 px-2.5 py-0.5 rounded-full font-black shadow-xs">{t}</span>
                         ))}
                       </div>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedProfileAttendee(other)}
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 font-black py-2.5 rounded-2xl text-[10px] active:scale-95 transition cursor-pointer"
+                    >
+                      查看主页、作品和经历
+                    </button>
 
                     {/* Action Button Segment with Clear Border & Visible High Contrast */}
                     <div className="pt-2 text-[11px]">
@@ -2097,7 +2569,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             <div className="w-full flex items-center justify-between bg-teal-50 dark:bg-teal-950/30 p-2.5 rounded-2xl border-2 border-teal-500/60 dark:border-teal-700 shadow-sm">
                               <span className="text-teal-850 dark:text-teal-400 font-extrabold flex items-center select-none text-[10.5px]">
                                 <Check className="h-4.5 w-4.5 mr-1 bg-teal-100 dark:bg-teal-900 border border-teal-400 dark:border-teal-700 rounded-full text-teal-600 dark:text-teal-400 p-0.5" />
-                                镜像互换成功
+                                已交换联系方式
                               </span>
                               <span className="bg-white dark:bg-slate-950 border border-teal-300 dark:border-slate-850 px-2.5 py-0.8 rounded-xl font-mono text-[10px] font-black text-slate-900 dark:text-teal-350 select-all shadow-xs">
                                 📞 {other.phone}
@@ -2111,14 +2583,14 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[10px] py-2.5 rounded-xl cursor-pointer transition-all duration-300 flex items-center justify-center space-x-1 shadow-md shadow-indigo-650/15 active:scale-[0.98]"
                             >
                               <MessageSquare className="h-3.5 w-3.5 shrink-0" />
-                              <span>与 {other.nickName} 开启私聊 & 约茶叙</span>
+                              <span>与 {other.nickName} 私聊</span>
                             </button>
                           </div>
                         ) : (
                           <div className="w-full flex items-center justify-between bg-slate-50 dark:bg-slate-955 p-2.5 rounded-2xl border-2 border-purple-300 dark:border-purple-800 shadow-sm">
                             <span className="text-purple-700 dark:text-purple-400 font-black animate-pulse text-[10px] select-none pl-1 flex items-center">
                               <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-1.5 animate-pulse"></span>
-                              镜面折射极速校验中...
+                              等待对方确认...
                             </span>
                             <button 
                               onClick={() => {
@@ -2127,11 +2599,11 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                                   return c;
                                 });
                                 setConnections(updated);
-                                triggerToast(`🎉 镜像呼应成功！恭喜您与 【${other.nickName}】 互换学术电磁名片！`);
+                                triggerToast(`🎉 已与【${other.nickName}】交换联系方式`);
                               }}
                               className="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[9.5px] px-3.5 py-1.8 rounded-xl active:scale-95 transition-all shadow-md shadow-indigo-600/10 border border-indigo-500 cursor-pointer"
                             >
-                              【模拟】近场贴贴
+                              确认连接
                             </button>
                           </div>
                         )
@@ -2148,7 +2620,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                               createdAt: '11:59'
                             };
                             setConnections([...connections, newC]);
-                            triggerToast(`⚡ 镜像调频信号已打出！两人贴近双边芯片或在线确认时即可瞬间解锁！`);
+                            triggerToast(`已发送联系请求，等待对方确认。`);
                           }}
                           className={`w-full font-black py-3 rounded-xl text-center text-[10.5px] transition-all duration-300 active:scale-95 cursor-pointer border-2 ${
                             !myProfile.checkedIn
@@ -2156,7 +2628,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                               : 'bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-750 hover:to-pink-750 text-white shadow-md shadow-pink-500/15 border-pink-500/40 hover:border-pink-600'
                           }`}
                         >
-                          {!myProfile.checkedIn ? '🔓 签到激活 NFC 会学镜友雷达' : '🔗 发射镜像对称电磁波 (极速对称握手)'}
+                          {!myProfile.checkedIn ? '签到后可发起联系' : '请求交换联系方式'}
                         </button>
                       )}
                     </div>
@@ -2166,167 +2638,24 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               })}
             </div>
 
-            {/* AI Personal Report Generator */}
-            <div className="bg-gradient-to-br from-white via-pink-50/45 to-teal-50/45 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-[32px] p-4.5 space-y-3.5 border border-white/70 dark:border-slate-800/80 shadow-[0_18px_45px_rgba(15,23,42,0.06)] text-slate-800 dark:text-slate-100">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center space-x-2 select-none">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-pink-500/15">
-                    <BarChart3 className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-extrabold text-[11px] uppercase tracking-wider text-slate-900 dark:text-white leading-none">欢迎ME · AI个人报告中心</h4>
-                    <span className="text-[9px] text-slate-500 dark:text-slate-300">真正根据你的资料、互动与会场行为生成图文报告</span>
-                  </div>
+            {/* Report moved to My tab */}
+            <div className="bg-white/90 dark:bg-slate-900/85 rounded-[28px] p-4 border border-slate-200/80 dark:border-slate-800 shadow-sm text-left space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-pink-500/15">
+                  <BarChart3 className="h-5 w-5" />
                 </div>
-                {reportGeneratedAt && (
-                  <span className="shrink-0 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 text-[9px] font-black">
-                    已生成
-                  </span>
-                )}
+                <div className="min-w-0">
+                  <h4 className="text-[12px] font-black text-slate-900 dark:text-white">我的大会报告已移到「我的」</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed">这里专注展示同行推荐。你的报告、收藏和个人数据都在底部「我的」里查看。</p>
+                </div>
               </div>
-
-              {!myProfile.checkedIn ? (
-                <p className="text-[10px] text-slate-500 dark:text-slate-300 italic bg-white/75 dark:bg-slate-900/70 p-3 rounded-2xl leading-normal select-none border border-slate-200/80 dark:border-slate-800">
-                  ⚠️ 完成「签到」后即可解锁个性化报告。系统会根据你的身份信息、关注主题、互动行为与连接记录，生成可下载的图文版个人报告。
-                </p>
-              ) : (
-                <div className="space-y-3.5">
-                  <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4.5">
-                    <div className="absolute -top-10 -right-8 w-32 h-32 rounded-full bg-pink-500/20 blur-2xl"></div>
-                    <div className="absolute -bottom-10 -left-8 w-32 h-32 rounded-full bg-teal-400/20 blur-2xl"></div>
-                    <div className="relative flex items-start justify-between gap-4">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className={`w-15 h-15 ${myProfile.avatarColor} rounded-[22px] flex items-center justify-center text-3xl shadow-xl shrink-0 border border-white/15`}>
-                          {myProfile.avatarEmoji}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-[10px] uppercase tracking-[0.24em] text-white/65 font-black">Personal Visual Report</p>
-                          <h5 className="text-lg font-black tracking-tight truncate">{myProfile.nickName} 的大会个人报告</h5>
-                          <p className="text-[10px] text-white/75 mt-1 leading-relaxed">{myProfile.organization} · {myProfile.title}</p>
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            <span className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{myProfile.mbti || 'AI 体验创作者'}</span>
-                            <span className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{myProfile.designArchetype || '具身智能观察者'}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="hidden sm:flex flex-col items-end text-right shrink-0">
-                        <span className="text-[9px] text-white/60">生成时间</span>
-                        <span className="text-[10px] font-bold text-white/90">{reportGeneratedAt || '点击下方按钮生成'}</span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 mt-4">
-                      {reportMetrics.map((item) => (
-                        <div key={item.label} className="rounded-2xl bg-white/7 border border-white/10 p-3 backdrop-blur-sm">
-                          <span className="block text-[9px] text-white/65 font-bold">{item.label}</span>
-                          <span className="text-xl font-black tracking-tight">{item.value}<span className="text-[11px] font-bold ml-0.5">%</span></span>
-                          <div className="h-1.5 rounded-full bg-white/10 mt-2 overflow-hidden">
-                            <div className={`h-full rounded-full bg-gradient-to-r ${item.accent}`} style={{ width: `${item.value}%` }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2.5">
-                    {reportHighlights.map((item) => (
-                      <div key={item.title} className="rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 p-3.5 shadow-sm">
-                        <span className={`inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black ${item.color}`}>{item.title}</span>
-                        <div className="mt-2 text-[12px] font-black text-slate-900 dark:text-white leading-snug">{item.value}</div>
-                        <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.note}</div>
-                      </div>
-                    ))}
-                    <div className="rounded-3xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-teal-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 border border-pink-200/70 dark:border-slate-800 p-3.5 shadow-sm">
-                      <span className="inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-100">图像快照</span>
-                      <div className="grid grid-cols-3 gap-2 mt-3">
-                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
-                          <div className="text-lg">🎤</div>
-                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">主旨现场</div>
-                        </div>
-                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
-                          <div className="text-lg">🖼️</div>
-                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">展品灵感</div>
-                        </div>
-                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
-                          <div className="text-lg">🤝</div>
-                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">连接瞬间</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-3">
-                        <h5 className="text-[11px] font-black uppercase tracking-wider text-slate-900 dark:text-white">关注主题图表</h5>
-                        <span className="text-[9px] text-slate-500 dark:text-slate-300">基于注册标签自动计算</span>
-                      </div>
-                      <div className="space-y-3">
-                        {focusDirectionValues.map((item) => (
-                          <div key={item.label}>
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-[10px] font-bold text-slate-700 dark:text-slate-100">{item.label}</span>
-                              <span className="text-[10px] font-black text-purple-600 dark:text-purple-300">{item.value}%</span>
-                            </div>
-                            <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                              <div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400" style={{ width: `${item.value}%` }} />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm">
-                      <div className="flex items-center justify-between mb-3">
-                        <h5 className="text-[11px] font-black uppercase tracking-wider text-slate-900 dark:text-white">大会足迹时间线</h5>
-                        <span className="text-[9px] text-slate-500 dark:text-slate-300">会中行为摘要</span>
-                      </div>
-                      <div className="space-y-3">
-                        {reportTimeline.map((item) => (
-                          <div key={`${item.time}-${item.title}`} className="flex items-start gap-3 rounded-2xl bg-slate-50/85 dark:bg-slate-950/80 p-3 border border-slate-200/70 dark:border-slate-800">
-                            <div className="w-15 shrink-0 text-[10px] font-black text-purple-600 dark:text-purple-300">{item.time}</div>
-                            <div className="min-w-0">
-                              <div className="text-[11px] font-black text-slate-900 dark:text-white">{item.title}</div>
-                              <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.detail}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
-                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">已收藏议程</div>
-                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{mySessionBookmarks}</div>
-                    </div>
-                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
-                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">展品共鸣</div>
-                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{myFavoritedExhibits}</div>
-                    </div>
-                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
-                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">同频连接</div>
-                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{activeConnections}</div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2.5">
-                    <button 
-                      onClick={generateVisualReport}
-                      className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-pink-500/15 cursor-pointer"
-                    >
-                      生成/刷新我的报告
-                    </button>
-                    <button 
-                      onClick={downloadPersonalReport}
-                      className="w-full bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 hover:bg-slate-200 hover:dark:bg-slate-700 font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
-                    >
-                      <Download className="h-4 w-4" />
-                      下载图文报告
-                    </button>
-                  </div>
-                </div>
-              )}
+              <button
+                type="button"
+                onClick={() => setActiveTab('me')}
+                className="w-full rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 py-3 text-[11px] font-black active:scale-95 transition"
+              >
+                去看我的个人报告
+              </button>
             </div>
 
             </>
@@ -2335,11 +2664,11 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 {/* Community Header Banner */}
                 <div className="bg-gradient-to-tr from-purple-500/10 via-indigo-500/10 to-teal-500/5 p-4 rounded-[24px] border border-indigo-200/40 dark:border-indigo-900/45 text-slate-800 dark:text-slate-100 select-none space-y-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]">
                   <h4 className="text-xs font-black text-slate-900 dark:text-white flex items-center space-x-1.5 select-none">
-                    <span>🪐 跨界同频智能衍生元社区</span>
-                    <span className="text-[7.5px] bg-rose-500 text-white font-black px-1.5 py-0.2 rounded-full scale-90 uppercase animate-pulse shrink-0">封闭招募</span>
+                    <span>会后兴趣小组</span>
+                    <span className="text-[7.5px] bg-rose-500 text-white font-black px-1.5 py-0.2 rounded-full scale-90 uppercase animate-pulse shrink-0">推荐</span>
                   </h4>
                   <p className="text-[10px] text-slate-505 dark:text-slate-400 leading-relaxed font-semibold pr-1 text-left">
-                    为了让本次学术与人性体验大展的余温持续裂变，组委会特此公布四大元学术智库社群。寻找脑频共鸣的参会盟友自发聚集，共同孵化项目立项资金、申领双年展联署参展名额等衍生合作！
+                    根据你的兴趣标签推荐会后小组。加入后可以继续交流、查看资源和发起合作。
                   </p>
                 </div>
 
@@ -2354,7 +2683,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       borderColor: 'border-emerald-300 dark:border-emerald-800/40',
                       badgeColor: 'bg-emerald-505/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
                       sparkleText: '🌱 专注于生命计算、土壤微生物能源转化与有机气候共创。',
-                      mbti: 'INFJ / INFP 极客频段',
+                      mbti: 'INFJ / INFP 推荐人群',
                       agenda: '$25,000 元余系列基金共创立项',
                       members: ['陈青川 Panda 🐼', '季雨桐 Fox 🦊'],
                       desc: '回归土地与生机逻辑。本组会后立项书获得清华创意实验室学术联署，目前正在招募空气介质物理反馈件与微电极传感器拼装师。',
@@ -2367,8 +2696,8 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       borderColor: 'border-indigo-300 dark:border-indigo-800/40',
                       badgeColor: 'bg-indigo-505/10 text-indigo-650 dark:text-indigo-400 border border-indigo-500/20',
                       sparkleText: '🔮 探索气味、温湿度调节与迷宫具身交互。',
-                      mbti: 'ENFP / ISFP / INFP 极客频段',
-                      agenda: '下届双年展「自适应镜像感官迷宫」承展',
+                      mbti: 'ENFP / ISFP / INFP 推荐人群',
+                      agenda: '会后联合项目与作品展示机会',
                       members: ['苏格 Dr.Su 🦉', '陈青川 Panda 🐼'],
                       desc: '致力于数字技术在物理感官上的非线性溢出。组委会将在静安艺术中心媒体室免费提供4周的联合学者驻留工位。',
                     },
@@ -2380,7 +2709,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       borderColor: 'border-pink-300 dark:border-pink-800/40',
                       badgeColor: 'bg-pink-505/10 text-pink-650 dark:text-pink-400 border border-pink-500/20',
                       sparkleText: '🧠 具身感知、情感反馈硬件与 XR 穿戴设备研发。',
-                      mbti: 'ENTP / INTJ 极客频段',
+                      mbti: 'ENTP / INTJ 推荐人群',
                       agenda: 'AI Studio 长期高能 GPU 限免接口与设备赞助',
                       members: ['米亚 Mia 🤖', '张赫轩 Mark 🐯'],
                       desc: '让交互硬件充溢情感。由 Google AI Studio 生态及上海微校集成电路提供赞助支持，已预配置十组智能物联网调试套件。',
@@ -2393,7 +2722,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       borderColor: 'border-slate-350 dark:border-slate-800',
                       badgeColor: 'bg-slate-205 text-slate-705 dark:bg-slate-900 dark:text-slate-400 border border-slate-300 dark:border-slate-800',
                       sparkleText: '⚖️ 探讨算法社会考古学、系统霸权批判、人类非核心设计。',
-                      mbti: 'INTJ / INTP 极客频段',
+                      mbti: 'INTJ / INTP 推荐人群',
                       agenda: '联刊出版《设计批判之刃》白皮书',
                       members: ['苏格 Dr.Su 🦉', '米亚 Mia 🤖'],
                       desc: '用冰寒的底层逻辑拆穿一切伪善的同构神话。对接各大高校与期刊提供后峰会学术发表席位与论文共创支持。',
@@ -2412,7 +2741,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         <div className="flex justify-between items-start select-none relative z-10">
                           <div>
                             <span className={`text-[7px] font-black uppercase tracking-wider px-1.8 py-0.5 rounded-md ${comm.badgeColor}`}>
-                              🧬 {comm.mbti}
+                              {comm.mbti}
                             </span>
                             <h5 className="font-extrabold text-[11.5px] text-slate-900 dark:text-white mt-1 leading-none">{comm.name}</h5>
                             <p className="text-[7.5px] font-mono font-bold text-slate-400 leading-none mt-0.5">{comm.engName}</p>
@@ -2420,7 +2749,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                           
                           {isJoined ? (
                             <span className="bg-teal-500 text-white font-black text-[8px] px-2 py-0.8 rounded-xl border border-teal-400 shadow-xs uppercase select-none flex items-center animate-bounce shrink-0">
-                              ✓ 已入阵
+                              已加入
                             </span>
                           ) : (
                             <button
@@ -2431,7 +2760,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                               }}
                               className="px-3 py-1.2 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-black text-[8.5px] rounded-xl active:scale-95 transition cursor-pointer select-none shrink-0 shadow-sm"
                             >
-                              一键解封本盟约
+                              加入小组
                             </button>
                           )}
                         </div>
@@ -2708,7 +3037,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center bg-amber-500/10 text-amber-650 dark:bg-amber-950/30 dark:text-amber-400 px-2 py-0.5 rounded-lg text-[8px] font-black border border-amber-500/20 animate-pulse">
-                                  ⌛ 空中电磁波呼唤中...
+                                  等待对方回复...
                                 </span>
                               )}
                             </div>
@@ -2781,6 +3110,121 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
       </div>
 
+      {/* -------------------- ATTENDEE PROFILE DETAIL -------------------- */}
+      {selectedProfileAttendee && (
+        <div className="absolute inset-0 z-50 bg-slate-950/55 backdrop-blur-sm flex items-end animate-fadeIn">
+          <div className="w-full max-h-[88%] overflow-y-auto bg-white dark:bg-slate-950 rounded-t-[34px] border-t border-white/50 dark:border-slate-800 shadow-[0_-20px_60px_rgba(15,23,42,0.28)] p-4.5 space-y-4 animate-slideUp">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-widest">个人主页</span>
+              <button
+                type="button"
+                onClick={() => setSelectedProfileAttendee(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-300 flex items-center justify-center active:scale-95 transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4.5">
+              <div className="absolute -top-12 -right-10 w-36 h-36 rounded-full bg-pink-500/20 blur-2xl"></div>
+              <div className="absolute -bottom-12 -left-10 w-36 h-36 rounded-full bg-teal-400/20 blur-2xl"></div>
+              <div className="relative flex items-start gap-3">
+                <div className={`w-16 h-16 ${selectedProfileAttendee.avatarColor} rounded-[24px] overflow-hidden flex items-center justify-center text-3xl shadow-xl shrink-0 border border-white/15`}>
+                  {selectedProfileAttendee.avatarImage ? (
+                    <img src={selectedProfileAttendee.avatarImage} alt={selectedProfileAttendee.nickName} className="w-full h-full object-cover" />
+                  ) : (
+                    selectedProfileAttendee.avatarEmoji
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-lg font-black tracking-tight truncate">{selectedProfileAttendee.nickName}</h3>
+                  <p className="text-[10px] text-white/75 leading-relaxed mt-1">{selectedProfileAttendee.organization} · {selectedProfileAttendee.title}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {selectedProfileAttendee.designDirections.slice(0, 3).map(tag => (
+                      <span key={tag} className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="rounded-3xl bg-slate-50 dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-800">
+                <div className="text-lg font-black text-slate-900 dark:text-white">{calculateMatchScore(selectedProfileAttendee)}%</div>
+                <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">匹配度</div>
+              </div>
+              <div className="rounded-3xl bg-slate-50 dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-800">
+                <div className="text-lg font-black text-slate-900 dark:text-white">{getDesignWorks(selectedProfileAttendee).length}</div>
+                <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">作品</div>
+              </div>
+              <div className="rounded-3xl bg-slate-50 dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-800">
+                <div className="text-lg font-black text-slate-900 dark:text-white">{getDesignEvents(selectedProfileAttendee).length}</div>
+                <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">经历</div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">设计作品</h4>
+              {getDesignWorks(selectedProfileAttendee).map((work, index) => (
+                <div key={work.id} className="rounded-[26px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+                  {work.imageUrl ? (
+                    <img src={work.imageUrl} alt={work.title} className="w-full h-32 object-cover" />
+                  ) : (
+                    <div className={`h-32 bg-gradient-to-br ${index % 2 === 0 ? 'from-pink-100 via-purple-100 to-teal-100 dark:from-pink-950/30 dark:via-purple-950/30 dark:to-teal-950/30' : 'from-indigo-100 via-sky-100 to-emerald-100 dark:from-indigo-950/30 dark:via-sky-950/30 dark:to-emerald-950/30'} flex items-center justify-center`}>
+                      <span className="text-3xl">{index % 2 === 0 ? '🖼️' : '✨'}</span>
+                    </div>
+                  )}
+                  <div className="p-3.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <h5 className="text-[12px] font-black text-slate-900 dark:text-white leading-snug">{work.title}</h5>
+                      <span className="shrink-0 text-[9px] px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 font-bold">{work.year || '2026'}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-2">{work.description}</p>
+                    {work.role && <p className="text-[9px] text-purple-600 dark:text-purple-300 font-bold mt-2">角色：{work.role}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">设计活动经历</h4>
+              {getDesignEvents(selectedProfileAttendee).map(event => (
+                <div key={event.id} className="flex items-start gap-3 rounded-[22px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5">
+                  <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-950 flex items-center justify-center text-lg border border-slate-200 dark:border-slate-800 shrink-0">🎟️</div>
+                  <div className="min-w-0">
+                    <h5 className="text-[11px] font-black text-slate-900 dark:text-white">{event.name}</h5>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-300 mt-1">{event.role} · {event.year || '2026'}{event.location ? ` · ${event.location}` : ''}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5 pb-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedProfileAttendee(null);
+                  setActiveChatAttendee(selectedProfileAttendee);
+                }}
+                className="rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 py-3 text-[11px] font-black active:scale-95 transition"
+              >
+                私聊交流
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedProfileAttendee(null);
+                  triggerToast('已保存到你的关注列表');
+                }}
+                className="rounded-2xl bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-3 text-[11px] font-black active:scale-95 transition border border-slate-200 dark:border-slate-800"
+              >
+                先收藏
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* -------------------- PHONE NAVIGATION TABS (OPTIMIZED TO 4 TABS) -------------------- */}
       {isLoggedIn ? (
         <div className="bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900 px-3 pt-2.5 pb-5.5 flex items-center justify-around shrink-0 relative z-30 select-none shadow-[0_-8px_24px_rgba(0,0,0,0.012)] animate-slideUp">
@@ -2793,7 +3237,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             }`}
           >
             <Home className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">会场入口</span>
+            <span className="text-[9px] font-bold tracking-tight scale-90">首页</span>
           </button>
 
           {/* Tab 2: Concordant network & living report */}
@@ -2804,7 +3248,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             }`}
           >
             <Users className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">同频圈层</span>
+            <span className="text-[9px] font-bold tracking-tight scale-90">同行</span>
           </button>
 
           {/* Tab 3: Sandbox Interaction */}
@@ -2815,7 +3259,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             }`}
           >
             <MessageCircle className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">现场互动</span>
+            <span className="text-[9px] font-bold tracking-tight scale-90">互动</span>
           </button>
 
           {/* Tab 4: ME Image Card */}
@@ -2826,14 +3270,14 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             }`}
           >
             <IdCard className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">ME信息卡</span>
+            <span className="text-[9px] font-bold tracking-tight scale-90">我的</span>
           </button>
         </div>
       ) : (
         <div className="bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900 px-4 pt-4 pb-5.5 flex items-center justify-center shrink-0 relative z-30 select-none">
           <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono tracking-wider flex items-center space-x-1.5 font-bold animate-pulse">
             <Lock className="h-3 w-3 text-indigo-400" />
-            <span>物理智电会卡配对后启用底座导航</span>
+            <span>完成登录后启用底部导航</span>
           </span>
         </div>
       )}

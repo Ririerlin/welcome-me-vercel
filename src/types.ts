@@ -9,6 +9,21 @@ export interface Attendee {
   avatarColor: string; // Tailwind bg color class
   avatarEmoji: string;
   avatarImage?: string; // uploaded avatar preview URL
+  designWorks?: {
+    id: string;
+    title: string;
+    imageUrl?: string;
+    description: string;
+    year?: string;
+    role?: string;
+  }[];
+  designEvents?: {
+    id: string;
+    name: string;
+    role: string;
+    year?: string;
+    location?: string;
+  }[];
   organization: string;
   title: string;
   industry: string;
@@ -98,7 +113,6 @@ export interface Exhibit {
     id: string;
     userNick: string;
     avatarEmoji: string;
-  avatarImage?: string; // uploaded avatar preview URL
     avatarColor: string;
     text: string;
     createdAt: string;
