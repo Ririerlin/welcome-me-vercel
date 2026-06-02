@@ -120,6 +120,7 @@ export default function PhoneSimulator({
   const [regMbti, setRegMbti] = useState('INTJ - 战略策划家 (冷酷架构师)');
   const [regArchetype, setRegArchetype] = useState('非线性体验感官幽灵');
   const [regEmoji, setRegEmoji] = useState('🦊');
+  const [regAvatarImage, setRegAvatarImage] = useState<string | null>(null);
   const [regActiveColor, setRegActiveColor] = useState('bg-indigo-500');
   const [regSelectedDirections, setRegSelectedDirections] = useState<string[]>(['体验探究', '人机交互']);
   const [regSelectedInterests, setRegSelectedInterests] = useState<string[]>(['人工智能交互', '实体硬软件共生']);
@@ -142,6 +143,15 @@ export default function PhoneSimulator({
   const triggerToast = (msg: string) => {
     setShowNotification(msg);
     setTimeout(() => setShowNotification(null), 3500);
+  };
+
+  const handleRegAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setRegAvatarImage(previewUrl);
+    triggerToast('头像已更新，可以继续完善名片');
   };
 
   // Social community, chat and meetup states
@@ -392,40 +402,35 @@ export default function PhoneSimulator({
       </div>
 
       {/* Main Column Client Container */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-8 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 scrollbar-none">
+      <div className="phone-content mini-app-screen flex-1 overflow-y-auto overflow-x-hidden p-4 pb-8 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 scrollbar-none">
         
         {!isLoggedIn ? (
           <div className="space-y-4 animate-fadeIn py-1">
-            {/* Immersive Welcome Glass card */}
-            <div className="p-5 rounded-[28px] bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-teal-500/5 border border-indigo-200/80 dark:border-indigo-900/50 text-center select-none space-y-3 relative overflow-hidden">
-              <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 via-transparent to-transparent opacity-60 pointer-events-none"></div>
-              
-              <div className="relative mx-auto w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-500 via-pink-500 to-teal-500 flex items-center justify-center text-2xl shadow-lg ring-4 ring-white/50 dark:ring-slate-900/50 animate-pulse">
-                {authMode === 'login' ? '🔮' : regEmoji}
+            {/* Clean visual hero and mode switch */}
+            <div className="auth-hero-card">
+              <img src="/welcome-hero.svg" alt="跨界设计峰会视觉头图" className="auth-hero-image" />
+              <div className="auth-hero-overlay">
+                <span className="auth-hero-kicker">WelcomeME · 2026</span>
+                <h2>智能学者会卡</h2>
+                <p>快速注册、身份验证与会场入场。先完成名片，再进入同频网络。</p>
               </div>
-              
-              <div>
-                <h3 className="text-[15px] font-black tracking-tight text-slate-900 dark:text-white">ME • 智能学者会卡</h3>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">跨界设计与人性体验峰会 2026</p>
-              </div>
+            </div>
 
-              {/* Segmented Control */}
-              <div className="flex p-0.5 bg-slate-100/90 dark:bg-slate-905 border border-slate-200 dark:border-slate-800 rounded-2xl">
-                <button
-                  type="button"
-                  onClick={() => setAuthMode('login')}
-                  className={`flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all ${authMode === 'login' ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/60 dark:border-slate-700/60' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
-                >
-                  学者便捷登入
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAuthMode('register')}
-                  className={`flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all ${authMode === 'register' ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/60 dark:border-slate-700/60' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
-                >
-                  注册新学者名片
-                </button>
-              </div>
+            <div className="auth-mode-switch" aria-label="选择进入方式">
+              <button
+                type="button"
+                onClick={() => setAuthMode('login')}
+                className={authMode === 'login' ? 'active' : ''}
+              >
+                便捷登入
+              </button>
+              <button
+                type="button"
+                onClick={() => setAuthMode('register')}
+                className={authMode === 'register' ? 'active' : ''}
+              >
+                新学者注册
+              </button>
             </div>
 
             {/* Login Flow */}
@@ -433,7 +438,7 @@ export default function PhoneSimulator({
               <div className="space-y-4 animate-fadeIn text-[11px]">
                 <div className="bg-white dark:bg-slate-900/90 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
                   <div className="space-y-2">
-                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block font-bold">VIP 随会学者即席验证入会 (点击选择身份)</label>
+                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block font-bold">推荐引导人</label>
                     <div className="grid grid-cols-1 gap-2">
                       <button
                         type="button"
@@ -492,7 +497,7 @@ export default function PhoneSimulator({
                   </div>
 
                   <div className="space-y-1.5 pt-1">
-                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 block uppercase font-bold">验证学者手机号码 (自动关联名片)</label>
+                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 block uppercase font-bold">手机号确认</label>
                     <input
                       type="text"
                       value={loginPhone}
@@ -524,143 +529,154 @@ export default function PhoneSimulator({
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
                   <Zap className="h-4.5 w-4.5 text-amber-300 animate-pulse shrink-0" />
-                  <span>学者一键验证安全登入</span>
+                  <span>一键验证并进入会场</span>
                 </button>
               </div>
             ) : (
               /* Register Flow */
-              <div className="space-y-3.5 animate-fadeIn pb-4 text-[11px]">
-                <div className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-4 rounded-3xl border border-white/60 dark:border-white/10 space-y-3">
-                  
-                  {/* Name field */}
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-black text-slate-400 block uppercase">学者姓名 / Nickname *</label>
+              <div className="register-flow animate-fadeIn pb-4 text-[12px]">
+                <section className="section-card visual-card avatar-section-v2">
+                  <div className="section-title-row">
+                    <span className="step-badge">01</span>
+                    <div>
+                      <h3>选择头像</h3>
+                      <p>上传真实头像，或选择一个拟人化形象。</p>
+                    </div>
+                  </div>
+
+                  <div className="avatar-upload-card">
+                    <label htmlFor="reg-avatar-upload" className="avatar-upload-preview" title="点击上传头像">
+                      {regAvatarImage ? (
+                        <img src={regAvatarImage} alt="上传头像预览" />
+                      ) : (
+                        <span className={`avatar-emoji-preview ${regActiveColor}`}>{regEmoji}</span>
+                      )}
+                      <input
+                        id="reg-avatar-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleRegAvatarUpload}
+                        className="sr-only"
+                      />
+                    </label>
+                    <div className="avatar-upload-copy">
+                      <strong>{regAvatarImage ? '已使用上传头像' : ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象'}</strong>
+                      <span>{regAvatarImage ? '也可以继续切换系统形象' : '推荐上传头像，页面会更像真实小程序'}</span>
+                      <label htmlFor="reg-avatar-upload" className="upload-link">上传头像</label>
+                    </div>
+                  </div>
+
+                  <div className="avatar-choice-grid" aria-label="系统头像选择">
+                    {ANTHROPOMORPHIC_AVATARS.slice(0, 8).map(item => (
+                      <button
+                        key={item.emoji}
+                        type="button"
+                        onClick={() => {
+                          setRegEmoji(item.emoji);
+                          setRegAvatarImage(null);
+                        }}
+                        title={`${item.label}: ${item.desc}`}
+                        className={regEmoji === item.emoji && !regAvatarImage ? 'active' : ''}
+                      >
+                        <span>{item.emoji}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="color-dot-row">
+                    <span>名片主色</span>
+                    <div>
+                      {[
+                        { name: 'bg-pink-500', color: '#f43f5e' },
+                        { name: 'bg-teal-500', color: '#14b8a6' },
+                        { name: 'bg-indigo-500', color: '#6366f1' },
+                        { name: 'bg-purple-500', color: '#a855f7' }
+                      ].map(col => (
+                        <button
+                          key={col.name}
+                          type="button"
+                          onClick={() => setRegActiveColor(col.name)}
+                          className={regActiveColor === col.name ? 'active' : ''}
+                          style={{ backgroundColor: col.color }}
+                          aria-label={`选择 ${col.name}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                <section className="section-card visual-card form-section-v2">
+                  <div className="section-title-row">
+                    <span className="step-badge">02</span>
+                    <div>
+                      <h3>基本信息</h3>
+                      <p>只保留注册必要信息，输入框更适合手机操作。</p>
+                    </div>
+                  </div>
+
+                  <div className="form-field-v2">
+                    <label>姓名 / 昵称</label>
                     <input
                       type="text"
                       value={regNick}
                       onChange={(e) => setRegNick(e.target.value)}
-                      placeholder="例：苏子昂"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-850 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                      placeholder="例如：苏子昂"
                     />
                   </div>
 
-                  {/* Organization field */}
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-black text-slate-400 block uppercase">研究组织 / Studio *</label>
-                    <input
-                      type="text"
-                      value={regOrg}
-                      onChange={(e) => setRegOrg(e.target.value)}
-                      placeholder="例：林泉多模态媒体室"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
-                    />
-                  </div>
-
-                  {/* Title field */}
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-black text-slate-400 block uppercase">学者领域职称 / Title *</label>
-                    <input
-                      type="text"
-                      value={regTitle}
-                      onChange={(e) => setRegTitle(e.target.value)}
-                      placeholder="例：数智交互体验探索家"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
-                    />
-                  </div>
-
-                  {/* Phone field */}
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-black text-slate-400 block uppercase">学者手机 / Phone</label>
+                  <div className="form-field-v2">
+                    <label>手机号</label>
                     <input
                       type="text"
                       value={regPhone}
                       onChange={(e) => setRegPhone(e.target.value)}
-                      placeholder="例：138-0000-0000"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 font-mono text-slate-800 dark:text-slate-100"
+                      placeholder="例如：138-0000-0000"
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 block uppercase font-bold text-left w-full">拟人化形象精选 (Click to swap)</label>
-                    
-                    {/* Character Card Live Preview */}
-                    <div className="flex items-center space-x-3 bg-slate-55/70 dark:bg-slate-950/40 p-2.5 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                      <div className={`w-11 h-11 rounded-full ${regActiveColor} text-white flex items-center justify-center text-2.5xl shadow-md transition-all select-none`}>
-                        {regEmoji}
-                      </div>
-                      <div className="flex-1 text-left min-w-0">
-                        <div className="text-[10px] font-black text-slate-900 dark:text-white flex items-center space-x-1">
-                          <span>{ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象'}</span>
-                          <span className="text-[8px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-1.5 py-0.2 rounded font-normal font-mono select-none">PREVIEW</span>
-                        </div>
-                        <div className="text-[9px] text-slate-450 truncate mt-0.5">
-                          {ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态'}
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Emoji Select Grid */}
-                    <div className="grid grid-cols-6 gap-1 bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-855">
-                      {ANTHROPOMORPHIC_AVATARS.map(item => (
-                        <button
-                          key={item.emoji}
-                          type="button"
-                          onClick={() => setRegEmoji(item.emoji)}
-                          title={`${item.label}: ${item.desc}`}
-                          className={`w-7.5 h-7.5 flex items-center justify-center text-sm rounded-lg transition-all ${
-                            regEmoji === item.emoji 
-                              ? 'bg-white dark:bg-slate-800 scale-110 shadow-sm border border-slate-200 dark:border-slate-705 z-10' 
-                              : 'opacity-55 hover:opacity-100 hover:scale-105'
-                          }`}
-                        >
-                          {item.emoji}
-                        </button>
-                      ))}
-                    </div>
+                  <div className="form-field-v2">
+                    <label>组织 / 工作室</label>
+                    <input
+                      type="text"
+                      value={regOrg}
+                      onChange={(e) => setRegOrg(e.target.value)}
+                      placeholder="例如：林泉多模态媒体室"
+                    />
+                  </div>
 
-                    {/* Theme color row */}
-                    <div className="flex justify-between items-center bg-slate-50/55 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-855">
-                      <span className="text-[9px] text-slate-455 font-bold ml-1 select-none">专属磁极色底纹：</span>
-                      <div className="flex space-x-1.5 mr-1">
-                        {[
-                          { name: 'bg-pink-500', color: '#f43f5e' },
-                          { name: 'bg-teal-500', color: '#14b8a6' },
-                          { name: 'bg-indigo-500', color: '#6366f1' },
-                          { name: 'bg-purple-500', color: '#a855f7' }
-                        ].map(col => (
-                          <button
-                            key={col.name}
-                            type="button"
-                            onClick={() => setRegActiveColor(col.name)}
-                            className={`w-3.5 h-3.5 rounded-full border transition-all ${regActiveColor === col.name ? 'border-indigo-400 dark:border-white scale-120' : 'border-transparent opacity-60'}`}
-                            style={{ backgroundColor: col.color }}
-                          />
-                        ))}
-                      </div>
+                  <div className="form-field-v2">
+                    <label>身份 / 职位</label>
+                    <input
+                      type="text"
+                      value={regTitle}
+                      onChange={(e) => setRegTitle(e.target.value)}
+                      placeholder="例如：数智交互体验探索家"
+                    />
+                  </div>
+                </section>
+
+                <section className="section-card visual-card form-section-v2">
+                  <div className="section-title-row">
+                    <span className="step-badge">03</span>
+                    <div>
+                      <h3>兴趣画像</h3>
+                      <p>用于推荐会场内容和同频学者。</p>
                     </div>
                   </div>
 
-                  {/* Character MBTI Archetype selector */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 block uppercase font-bold text-left">MBTI 认知特性</label>
-                      <select
-                        value={regMbti}
-                        onChange={(e) => setRegMbti(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-205"
-                      >
+                  <div className="select-stack-v2">
+                    <div className="form-field-v2">
+                      <label>认知类型</label>
+                      <select value={regMbti} onChange={(e) => setRegMbti(e.target.value)}>
                         {MBTI_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                       </select>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-[9px] font-black text-slate-400 block uppercase font-bold text-left">学者设计原质</label>
-                      <select
-                        value={regArchetype}
-                        onChange={(e) => setRegArchetype(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-205"
-                      >
+                    <div className="form-field-v2">
+                      <label>设计原质</label>
+                      <select value={regArchetype} onChange={(e) => setRegArchetype(e.target.value)}>
                         {ARCHETYPE_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
@@ -668,13 +684,10 @@ export default function PhoneSimulator({
                     </div>
                   </div>
 
-                  {/* Tag customization directions */}
-                  <div className="space-y-1">
-                    <label className="text-[9px] font-black text-slate-400 block uppercase leading-none">
-                      选择研究方向 (极速限选2个)
-                    </label>
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {tagCategories.designDirections.slice(0, 5).map(dir => {
+                  <div className="tag-picker-v2">
+                    <label>研究方向 · 最多选 2 个</label>
+                    <div>
+                      {tagCategories.designDirections.slice(0, 6).map(dir => {
                         const isSel = regSelectedDirections.includes(dir);
                         return (
                           <button
@@ -686,10 +699,10 @@ export default function PhoneSimulator({
                               } else if (regSelectedDirections.length < 2) {
                                 setRegSelectedDirections([...regSelectedDirections, dir]);
                               } else {
-                                triggerToast('🔒 对齐设计方向数量限 2 个');
+                                triggerToast('最多选择 2 个研究方向');
                               }
                             }}
-                            className={`p-1 px-1.8 text-[8.5px] font-bold rounded-lg border transition-all ${isSel ? 'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-955/20 dark:text-indigo-400' : 'bg-slate-50 dark:bg-slate-950 border-slate-150 dark:border-slate-855 text-slate-500'}`}
+                            className={isSel ? 'active' : ''}
                           >
                             {dir}
                           </button>
@@ -697,8 +710,7 @@ export default function PhoneSimulator({
                       })}
                     </div>
                   </div>
-
-                </div>
+                </section>
 
                 <button
                   type="button"
@@ -714,6 +726,7 @@ export default function PhoneSimulator({
                       nickName: finalNick,
                       avatarColor: regActiveColor,
                       avatarEmoji: regEmoji,
+                      avatarImage: regAvatarImage || undefined,
                       organization: finalOrg,
                       title: finalTitle,
                       industry: '智能出行与人性体验',
@@ -735,12 +748,12 @@ export default function PhoneSimulator({
                     setAttendees([...attendees, newAttendee]);
                     setMyProfile(newAttendee);
                     setIsLoggedIn(true);
-                    triggerToast(`🎨 专属学者名片已成功铸造！欢迎您入场：${finalNick}`);
+                    triggerToast(`欢迎入场：${finalNick}`);
                   }}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
+                  className="primary-cta-button"
                 >
-                  <Sparkles className="h-4.5 w-4.5 text-pink-300 animate-spin shrink-0" style={{ animationDuration: '3s' }} />
-                  <span>学者一键验证安全投射</span>
+                  <Sparkles className="h-4.5 w-4.5 shrink-0" />
+                  <span>完成注册并进入会场</span>
                 </button>
               </div>
             )}
@@ -944,8 +957,12 @@ export default function PhoneSimulator({
               <div className="absolute top-1/2 left-3/4 w-8 h-8 rounded-full bg-purple-400/10 blur-sm animate-pulse" style={{ animationDelay: '0.6s' }}></div>
 
               <div className="relative z-10">
-                <div className={`w-16 h-16 ${myProfile.avatarColor} text-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl border-4 border-white dark:border-slate-900 transform group-hover:rotate-12 group-hover:scale-110 active:scale-95 transition-all duration-500 ease-out select-none`}>
-                  {myProfile.avatarEmoji}
+                <div className={`w-16 h-16 ${myProfile.avatarColor} text-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl border-4 border-white dark:border-slate-900 transform group-hover:rotate-12 group-hover:scale-110 active:scale-95 transition-all duration-500 ease-out select-none overflow-hidden`}>
+                  {myProfile.avatarImage ? (
+                    <img src={myProfile.avatarImage} alt={myProfile.nickName} className="w-full h-full object-cover" />
+                  ) : (
+                    myProfile.avatarEmoji
+                  )}
                 </div>
                 
                 <h3 className="text-sm font-black mt-3 text-slate-850 dark:text-white tracking-tight flex items-center justify-center space-x-1">
@@ -1047,7 +1064,7 @@ export default function PhoneSimulator({
                           key={item.emoji}
                           type="button"
                           onClick={() => {
-                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji });
+                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji, avatarImage: undefined });
                             triggerToast(`已瞬变学者灵魂印记：${item.label}`);
                           }}
                           title={`${item.label}: ${item.desc}`}

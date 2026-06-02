@@ -8,6 +8,7 @@ export interface Attendee {
   nickName: string;
   avatarColor: string; // Tailwind bg color class
   avatarEmoji: string;
+  avatarImage?: string; // uploaded avatar preview URL
   organization: string;
   title: string;
   industry: string;
@@ -97,6 +98,7 @@ export interface Exhibit {
     id: string;
     userNick: string;
     avatarEmoji: string;
+  avatarImage?: string; // uploaded avatar preview URL
     avatarColor: string;
     text: string;
     createdAt: string;
