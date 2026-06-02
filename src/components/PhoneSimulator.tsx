@@ -150,8 +150,12 @@ export default function PhoneSimulator({
     try {
       const savedProfile = window.localStorage.getItem('welcomeMeProfile');
       const savedLoggedIn = window.localStorage.getItem('welcomeMeLoggedIn');
+      const savedConnections = window.localStorage.getItem('welcomeMeConnections');
       if (savedProfile) {
         setMyProfile(JSON.parse(savedProfile));
+      }
+      if (savedConnections) {
+        setConnections(JSON.parse(savedConnections));
       }
       if (savedLoggedIn === '1') {
         setIsLoggedIn(true);
@@ -159,7 +163,7 @@ export default function PhoneSimulator({
     } catch (error) {
       console.warn('读取本地档案失败', error);
     }
-  }, [setMyProfile]);
+  }, [setMyProfile, setConnections]);
 
   useEffect(() => {
     try {
@@ -171,6 +175,14 @@ export default function PhoneSimulator({
       console.warn('写入本地档案失败', error);
     }
   }, [myProfile, isLoggedIn]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('welcomeMeConnections', JSON.stringify(connections));
+    } catch (error) {
+      console.warn('写入通讯录失败', error);
+    }
+  }, [connections]);
 
   const triggerToast = (msg: string) => {
     setShowNotification(msg);
@@ -246,7 +258,7 @@ export default function PhoneSimulator({
   };
 
   // Social community, chat and meetup states
-  const [weSubTab, setWeSubTab] = useState<'radar' | 'community'>('radar');
+  const [weSubTab, setWeSubTab] = useState<'radar' | 'contacts' | 'community'>('radar');
   const [activeChatAttendee, setActiveChatAttendee] = useState<Attendee | null>(null);
   const [selectedProfileAttendee, setSelectedProfileAttendee] = useState<Attendee | null>(null);
   
@@ -440,6 +452,16 @@ export default function PhoneSimulator({
   const myFavoritedExhibits = exhibits.filter((e) => e.isLikedByUser || e.isFavoritedByUser).length;
   const confirmedConnections = connections.filter((c) => c.status === 'confirmed').length;
   const activeConnections = connections.filter((c) => c.fromUserId === 'me' || c.toUserId === 'me').length;
+  const myContactCards = connections
+    .filter((conn) => conn.fromUserId === 'me' || conn.toUserId === 'me')
+    .map((conn) => {
+      const otherId = conn.fromUserId === 'me' ? conn.toUserId : conn.fromUserId;
+      const attendee = attendees.find((item) => item.id === otherId);
+      return attendee ? { connection: conn, attendee } : null;
+    })
+    .filter((item): item is { connection: Connection; attendee: Attendee } => Boolean(item));
+  const confirmedContactCards = myContactCards.filter((item) => item.connection.status === 'confirmed');
+  const pendingContactCards = myContactCards.filter((item) => item.connection.status === 'pending');
   const mySessionBookmarks = sessions.filter((s) => s.isSubscribed).length;
 
   const focusDirectionValues = myProfile.designDirections.slice(0, 4).map((item, index) => ({
@@ -2479,32 +2501,44 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {activeTab === 'we' && (
           <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
             {/* Top Sub Tabs for "Mirror Twins" vs "Alumni Communities" */}
-            <div className="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl border dark:border-slate-800 shadow-inner select-none shrink-0">
+            <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl border dark:border-slate-800 shadow-inner select-none shrink-0">
               <button
                 type="button"
                 onClick={() => setWeSubTab('radar')}
-                className={`flex-1 py-1.8 text-center text-[10.5px] font-black rounded-xl transition cursor-pointer ${
+                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer ${
                   weSubTab === 'radar' 
                     ? 'bg-white dark:bg-slate-800 text-indigo-755 dark:text-indigo-400 shadow-sm font-black' 
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
-                🔮 心智双生镜友
+                发现同行
+              </button>
+              <button
+                type="button"
+                onClick={() => setWeSubTab('contacts')}
+                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer relative ${
+                  weSubTab === 'contacts' 
+                    ? 'bg-white dark:bg-slate-800 text-indigo-755 dark:text-indigo-400 shadow-sm font-black' 
+                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
+                }`}
+              >
+                通讯录
+                {myContactCards.length > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-pink-500 text-white text-[8px] flex items-center justify-center font-black">
+                    {myContactCards.length}
+                  </span>
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => setWeSubTab('community')}
-                className={`flex-1 py-1.8 text-center text-[10.5px] font-black rounded-xl transition cursor-pointer relative ${
+                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer relative ${
                   weSubTab === 'community' 
                     ? 'bg-white dark:bg-slate-800 text-indigo-755 dark:text-indigo-400 shadow-sm font-black' 
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
-                🪐 会后同频社群
-                <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-550"></span>
-                </span>
+                兴趣小组
               </button>
             </div>
 
@@ -2717,7 +2751,8 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                               createdAt: '11:59'
                             };
                             setConnections([...connections, newC]);
-                            triggerToast(`已发送联系请求，等待对方确认。`);
+                            setWeSubTab('contacts');
+                            triggerToast(`已发送联系请求，已加入「我的通讯录」待确认列表。`);
                           }}
                           className={`w-full font-black py-3 rounded-xl text-center text-[10.5px] transition-all duration-300 active:scale-95 cursor-pointer border-2 ${
                             !myProfile.checkedIn
@@ -2756,6 +2791,127 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             </div>
 
             </>
+            ) : weSubTab === 'contacts' ? (
+              <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
+                <div className="rounded-[28px] p-4 bg-gradient-to-br from-white via-indigo-50/45 to-teal-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white tracking-tight">我的通讯录</h4>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">
+                        已请求或已交换联系方式的同行都会保存在这里，方便之后查看主页、作品和继续聊天。
+                      </p>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <div className="text-lg font-black text-indigo-600 dark:text-indigo-300 leading-none">{myContactCards.length}</div>
+                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-bold mt-1">联系人</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="rounded-2xl bg-white/80 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800 p-2.5">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">已连接</div>
+                      <div className="text-base font-black text-teal-600 dark:text-teal-300">{confirmedContactCards.length}</div>
+                    </div>
+                    <div className="rounded-2xl bg-white/80 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800 p-2.5">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">待确认</div>
+                      <div className="text-base font-black text-purple-600 dark:text-purple-300">{pendingContactCards.length}</div>
+                    </div>
+                    <div className="rounded-2xl bg-white/80 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800 p-2.5">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">推荐</div>
+                      <div className="text-base font-black text-pink-600 dark:text-pink-300">{Math.max(0, attendees.length - myContactCards.length)}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {myContactCards.length === 0 ? (
+                  <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/90 border border-dashed border-slate-300 dark:border-slate-700 p-6 text-center space-y-3">
+                    <div className="w-14 h-14 mx-auto rounded-3xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 flex items-center justify-center">
+                      <Users className="h-7 w-7" />
+                    </div>
+                    <div>
+                      <h5 className="text-sm font-black text-slate-900 dark:text-white">还没有联系人</h5>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">去「发现同行」里请求交换联系方式，之后就能在这里统一查看。</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setWeSubTab('radar')}
+                      className="w-full rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 py-3 text-[11px] font-black active:scale-95 transition"
+                    >
+                      去发现同行
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {myContactCards.map(({ connection, attendee }) => {
+                      const commonTags = connection.matchedTags.length > 0 ? connection.matchedTags : myProfile.interests.filter((tag) => attendee.interests.includes(tag));
+                      const isConfirmed = connection.status === 'confirmed';
+                      return (
+                        <div key={connection.id} className="rounded-[28px] bg-white/95 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm space-y-3">
+                          <div className="flex items-start gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedProfileAttendee(attendee)}
+                              className={`h-13 w-13 ${attendee.avatarColor} text-white rounded-2xl overflow-hidden flex items-center justify-center text-2xl shadow-inner shrink-0 border border-white/20 active:scale-95 transition`}
+                            >
+                              {attendee.avatarImage ? <img src={attendee.avatarImage} alt={attendee.nickName} className="w-full h-full object-cover" /> : attendee.avatarEmoji}
+                            </button>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <h5 className="text-[12px] font-black text-slate-900 dark:text-white truncate max-w-28">{attendee.nickName}</h5>
+                                <span className={`px-2 py-0.5 rounded-full text-[8px] font-black ${isConfirmed ? 'bg-teal-500/10 text-teal-600 dark:text-teal-300' : 'bg-purple-500/10 text-purple-600 dark:text-purple-300'}`}>
+                                  {isConfirmed ? '已连接' : '待确认'}
+                                </span>
+                              </div>
+                              <p className="text-[9px] text-slate-500 dark:text-slate-300 leading-relaxed mt-0.5 truncate">{attendee.organization} · {attendee.title}</p>
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {commonTags.slice(0, 3).map((tag) => (
+                                  <span key={tag} className="text-[8px] rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 px-2 py-0.5 font-bold">{tag}</span>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="shrink-0 text-right">
+                              <div className="text-[9px] text-slate-400 dark:text-slate-500 font-bold">匹配度</div>
+                              <div className="text-sm font-black text-pink-600 dark:text-pink-300">{calculateMatchScore(attendee)}%</div>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedProfileAttendee(attendee)}
+                              className="rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 py-2.5 text-[9.5px] font-black active:scale-95 transition"
+                            >
+                              看主页
+                            </button>
+                            <button
+                              type="button"
+                              disabled={!isConfirmed}
+                              onClick={() => {
+                                setActiveChatAttendee(attendee);
+                                triggerToast(`正在打开与 ${attendee.nickName} 的聊天`);
+                              }}
+                              className={`rounded-2xl py-2.5 text-[9.5px] font-black active:scale-95 transition ${isConfirmed ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed'}`}
+                            >
+                              发消息
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = connections.map((item) => item.id === connection.id ? { ...item, status: 'confirmed' as const } : item);
+                                setConnections(updated);
+                                triggerToast(`已与 ${attendee.nickName} 交换联系方式`);
+                              }}
+                              className="rounded-2xl bg-teal-500/10 text-teal-700 dark:text-teal-300 py-2.5 text-[9.5px] font-black active:scale-95 transition"
+                            >
+                              {isConfirmed ? '已保存' : '确认'}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
                 {/* Community Header Banner */}
