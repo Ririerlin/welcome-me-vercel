@@ -63,3 +63,26 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(244, 114, 182, 0.4);
 }
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .phone-only-shell {
+    min-height: calc(100dvh - 65px);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .phone-frame {
+    max-width: 100%;
+  }
+}
