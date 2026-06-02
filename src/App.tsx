@@ -19,6 +19,7 @@ import {
 } from './data';
 
 import PhoneSimulator from './components/PhoneSimulator';
+import AdminDashboard from './components/AdminDashboard';
 
 export default function App() {
   // App state
@@ -37,6 +38,7 @@ export default function App() {
   // Outer Shell settings
   const [showSplash, setShowSplash] = useState<boolean>(true);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const isAdminRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
 
   // Synced states or hooks can be here if needed to react to shifts
   useEffect(() => {
@@ -48,6 +50,30 @@ export default function App() {
       root.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  if (isAdminRoute) {
+    return (
+      <AdminDashboard
+        myProfile={myProfile}
+        setMyProfile={setMyProfile}
+        attendees={attendees}
+        setAttendees={setAttendees}
+        sessions={sessions}
+        setSessions={setSessions}
+        questions={questions}
+        setQuestions={setQuestions}
+        polls={polls}
+        exhibits={exhibits}
+        setExhibits={setExhibits}
+        connections={connections}
+        setConnections={setConnections}
+        bulletMessages={bulletMessages}
+        setBulletMessages={setBulletMessages}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
+      />
+    );
+  }
 
   if (showSplash) {
     return (
