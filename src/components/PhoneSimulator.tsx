@@ -9,7 +9,7 @@ import {
   Settings, Home, Compass, Tag, Plus, Search, Share2, Map, 
   Cpu, Zap, Sparkles, Check, ExternalLink, X, Lock, Send, 
   MessageCircle, FileText, Heart, Bookmark, ChevronRight, RefreshCw, AlertCircle, Activity,
-  ArrowLeftRight, Coffee, Calendar, Briefcase
+  ArrowLeftRight, Coffee, Calendar, Briefcase, BarChart3, Download
 } from 'lucide-react';
 import { Attendee, Ticket, Session, Question, Poll, Exhibit, Connection, BulletMessage } from '../types';
 
@@ -120,7 +120,6 @@ export default function PhoneSimulator({
   const [regMbti, setRegMbti] = useState('INTJ - 战略策划家 (冷酷架构师)');
   const [regArchetype, setRegArchetype] = useState('非线性体验感官幽灵');
   const [regEmoji, setRegEmoji] = useState('🦊');
-  const [regAvatarImage, setRegAvatarImage] = useState<string | null>(null);
   const [regActiveColor, setRegActiveColor] = useState('bg-indigo-500');
   const [regSelectedDirections, setRegSelectedDirections] = useState<string[]>(['体验探究', '人机交互']);
   const [regSelectedInterests, setRegSelectedInterests] = useState<string[]>(['人工智能交互', '实体硬软件共生']);
@@ -139,19 +138,35 @@ export default function PhoneSimulator({
   
   const [surveyStep, setSurveyStep] = useState<number>(0);
   const [showNotification, setShowNotification] = useState<string | null>(null);
+  const [reportGeneratedAt, setReportGeneratedAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedProfile = window.localStorage.getItem('welcomeMeProfile');
+      const savedLoggedIn = window.localStorage.getItem('welcomeMeLoggedIn');
+      if (savedProfile) {
+        setMyProfile(JSON.parse(savedProfile));
+      }
+      if (savedLoggedIn === '1') {
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.warn('读取本地档案失败', error);
+    }
+  }, [setMyProfile]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('welcomeMeProfile', JSON.stringify(myProfile));
+      window.localStorage.setItem('welcomeMeLoggedIn', isLoggedIn ? '1' : '0');
+    } catch (error) {
+      console.warn('写入本地档案失败', error);
+    }
+  }, [myProfile, isLoggedIn]);
 
   const triggerToast = (msg: string) => {
     setShowNotification(msg);
     setTimeout(() => setShowNotification(null), 3500);
-  };
-
-  const handleRegAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const previewUrl = URL.createObjectURL(file);
-    setRegAvatarImage(previewUrl);
-    triggerToast('头像已更新，可以继续完善名片');
   };
 
   // Social community, chat and meetup states
@@ -344,6 +359,171 @@ export default function PhoneSimulator({
   const currentSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
   const countApprovedQuestions = questions.filter(q => q.sessionId === activeSessionId && q.status === 'approved').length;
 
+  const myBulletCount = bulletMessages.filter((b) => b.userNick === myProfile.nickName).length;
+  const myFavoritedExhibits = exhibits.filter((e) => e.isLikedByUser || e.isFavoritedByUser).length;
+  const confirmedConnections = connections.filter((c) => c.status === 'confirmed').length;
+  const activeConnections = connections.filter((c) => c.fromUserId === 'me' || c.toUserId === 'me').length;
+  const mySessionBookmarks = sessions.filter((s) => s.isSubscribed).length;
+
+  const focusDirectionValues = myProfile.designDirections.slice(0, 4).map((item, index) => ({
+    label: item,
+    value: Math.max(58, Math.min(96, myProfile.personaCompletion - 4 + index * 8))
+  }));
+
+  const reportMetrics = [
+    {
+      label: '大会参与能量',
+      value: Math.min(98, myProfile.personaCompletion + 12),
+      accent: 'from-pink-500 to-purple-500'
+    },
+    {
+      label: '跨界连接指数',
+      value: Math.min(95, 52 + activeConnections * 12),
+      accent: 'from-teal-400 to-cyan-500'
+    },
+    {
+      label: '内容共创热度',
+      value: Math.min(96, 46 + myBulletCount * 10 + myFavoritedExhibits * 6),
+      accent: 'from-amber-400 to-orange-500'
+    }
+  ];
+
+  const reportTimeline = [
+    { time: myProfile.checkedInAt || '09:12', title: '完成现场签到', detail: '通行证与身份卡完成核销，同步激活个人行为记录。' },
+    { time: '10:20', title: '进入主旨会场', detail: `已关注 ${sessions[0]?.title || '主旨议程'}，系统记录你的高兴趣主题。` },
+    { time: '11:05', title: '互动参与', detail: `已产生 ${myBulletCount} 条互动记录，并关注 ${myFavoritedExhibits} 个展品灵感。` },
+    { time: '14:30', title: '建立同频连接', detail: `当前已建立 ${activeConnections} 个连接线索，正在生成会后合作建议。` }
+  ];
+
+  const reportHighlights = [
+    {
+      title: '人物画像',
+      value: myProfile.mbti || '跨界体验策展人',
+      note: myProfile.designArchetype || '具身智能观察者',
+      color: 'bg-pink-500/10 text-pink-600 dark:bg-pink-500/15 dark:text-pink-300'
+    },
+    {
+      title: '现场角色',
+      value: myProfile.title || '参会学者',
+      note: myProfile.organization || '欢迎ME 大会',
+      color: 'bg-teal-500/10 text-teal-600 dark:bg-teal-500/15 dark:text-teal-300'
+    },
+    {
+      title: '合作倾向',
+      value: myProfile.goals?.[0] || '寻找合作伙伴',
+      note: `推荐优先对接 ${attendees[1]?.nickName || '同频嘉宾'}` ,
+      color: 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/15 dark:text-purple-300'
+    }
+  ];
+
+  const downloadPersonalReport = () => {
+    const timeLabel = reportGeneratedAt || new Date().toLocaleString('zh-CN', { hour12: false });
+    const chartRows = focusDirectionValues.map(item => `
+      <div style="margin:12px 0">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#42526b;margin-bottom:6px"><span>${item.label}</span><span>${item.value}%</span></div>
+        <div style="height:10px;border-radius:999px;background:#e8ecf5;overflow:hidden">
+          <div style="width:${item.value}%;height:100%;border-radius:999px;background:linear-gradient(90deg,#f43f5e,#8b5cf6,#14b8a6)"></div>
+        </div>
+      </div>`).join('');
+
+    const timelineRows = reportTimeline.map(item => `
+      <div style="display:flex;gap:14px;margin:14px 0;padding:14px;border-radius:18px;background:#fff;border:1px solid #e9edf6">
+        <div style="min-width:64px;font-weight:800;color:#8b5cf6">${item.time}</div>
+        <div><div style="font-weight:800;color:#1f2937;margin-bottom:4px">${item.title}</div><div style="font-size:13px;color:#667085;line-height:1.6">${item.detail}</div></div>
+      </div>`).join('');
+
+    const statCards = reportMetrics.map(item => `
+      <div style="flex:1;min-width:150px;padding:18px;border-radius:22px;background:#fff;border:1px solid #e9edf6">
+        <div style="font-size:12px;color:#667085;margin-bottom:10px">${item.label}</div>
+        <div style="font-size:30px;font-weight:900;color:#111827;margin-bottom:10px">${item.value}<span style="font-size:16px">%</span></div>
+        <div style="height:10px;border-radius:999px;background:#edf1f7;overflow:hidden"><div style="width:${item.value}%;height:100%;background:linear-gradient(90deg,#f43f5e,#8b5cf6,#14b8a6)"></div></div>
+      </div>`).join('');
+
+    const html = `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${myProfile.nickName}-欢迎ME大会个人报告</title>
+<style>
+body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(180deg,#f4f6fb,#eef4ff);color:#111827;}
+.wrap{max-width:880px;margin:0 auto;padding:28px;}
+.hero{background:linear-gradient(135deg,#0f172a,#1e1b4b 55%,#312e81);color:#fff;border-radius:32px;padding:28px;overflow:hidden;position:relative;box-shadow:0 20px 60px rgba(15,23,42,.18);}
+.hero:before{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:999px;background:radial-gradient(circle,rgba(236,72,153,.35),transparent 68%);}
+.hero:after{content:'';position:absolute;left:-50px;bottom:-70px;width:220px;height:220px;border-radius:999px;background:radial-gradient(circle,rgba(45,212,191,.26),transparent 66%);}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.1);font-size:12px;font-weight:700;margin-right:8px;}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:18px;}
+.card{background:rgba(255,255,255,.92);border:1px solid #e9edf6;border-radius:28px;padding:22px;box-shadow:0 16px 40px rgba(15,23,42,.06);}
+.photo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.shot{padding:18px;border-radius:22px;background:linear-gradient(135deg,#faf5ff,#eff6ff);min-height:110px;border:1px solid #e8ecf5;}
+.small{font-size:12px;color:#667085;}
+.h1{font-size:34px;font-weight:900;line-height:1.15;margin:10px 0 6px;}
+.h2{font-size:18px;font-weight:900;margin:0 0 12px;}
+@media (max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:16px}.h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="badge">欢迎ME · AI增强个人报告</div><div class="badge">生成时间 ${timeLabel}</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:16px">
+      <div style="width:86px;height:86px;border-radius:28px;background:linear-gradient(135deg,#ec4899,#8b5cf6,#14b8a6);display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 12px 30px rgba(0,0,0,.2)">${myProfile.avatarEmoji}</div>
+      <div>
+        <div class="small" style="color:#cbd5e1">${myProfile.organization}</div>
+        <div class="h1">${myProfile.nickName} 的大会个人报告</div>
+        <div class="small" style="color:#e2e8f0">${myProfile.title} · ${myProfile.designArchetype || ''}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="h2">核心指标总览</div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">${statCards}</div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="h2">关注主题图谱</div>
+      ${chartRows}
+      <div class="photo">
+        <div class="shot"><div style="font-size:26px">🎤</div><div style="font-weight:800;margin-top:8px">主旨议程关注</div><div class="small">已收藏 ${mySessionBookmarks} 场议程，偏好主题为 ${myProfile.designDirections.slice(0,2).join(' / ')}</div></div>
+        <div class="shot"><div style="font-size:26px">🖼️</div><div style="font-weight:800;margin-top:8px">展品灵感记录</div><div class="small">已记录 ${myFavoritedExhibits} 个展品灵感，用于会后灵感板回顾</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="h2">关系与行为摘要</div>
+      <div style="display:grid;gap:12px">
+        <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">当前连接线索</div><div style="font-size:28px;font-weight:900;color:#0f172a">${activeConnections}<span style="font-size:16px;color:#64748b"> 位</span></div></div>
+        <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">内容互动记录</div><div style="font-size:28px;font-weight:900;color:#0f172a">${myBulletCount}<span style="font-size:16px;color:#64748b"> 条</span></div></div>
+        <div style="padding:16px;border-radius:20px;background:#f8fafc"><div class="small">系统推荐合作对象</div><div style="font-size:18px;font-weight:900;color:#0f172a">${attendees[1]?.nickName || '米亚 Mia'}</div><div class="small">推荐原因：${(myProfile.interests || []).slice(0,2).join(' / ')}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <div class="h2">大会足迹时间线</div>
+    ${timelineRows}
+  </section>
+</div>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `welcome-me-report-${myProfile.nickName || 'guest'}.html`;
+    link.click();
+    URL.revokeObjectURL(url);
+    triggerToast('📄 已生成可下载的图文个人报告 HTML 文件');
+  };
+
+  const generateVisualReport = () => {
+    const now = new Date().toLocaleString('zh-CN', { hour12: false });
+    setReportGeneratedAt(now);
+    triggerToast('✨ 个人报告已生成：已根据你的行为数据刷新图文内容');
+  };
+
   return (
     <div className="phone-frame relative mx-auto w-screen md:w-full max-w-none md:max-w-[360px] min-h-[100dvh] md:min-h-[620px] h-[100dvh] md:h-[760px] max-h-none md:max-h-[820px] shrink-0 p-0 md:p-[3px] bg-transparent md:bg-gradient-to-tr md:from-pink-400 md:via-teal-300 md:via-purple-400 md:to-pink-500 rounded-none md:rounded-[58px] shadow-none md:shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-none md:dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 md:hover:scale-[1.01] md:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)]">
       
@@ -402,35 +582,40 @@ export default function PhoneSimulator({
       </div>
 
       {/* Main Column Client Container */}
-      <div className="phone-content mini-app-screen flex-1 overflow-y-auto overflow-x-hidden p-4 pb-8 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 scrollbar-none">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-8 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 scrollbar-none">
         
         {!isLoggedIn ? (
           <div className="space-y-4 animate-fadeIn py-1">
-            {/* Clean visual hero and mode switch */}
-            <div className="auth-hero-card">
-              <img src="/welcome-hero.svg" alt="跨界设计峰会视觉头图" className="auth-hero-image" />
-              <div className="auth-hero-overlay">
-                <span className="auth-hero-kicker">WelcomeME · 2026</span>
-                <h2>智能学者会卡</h2>
-                <p>快速注册、身份验证与会场入场。先完成名片，再进入同频网络。</p>
+            {/* Immersive Welcome Glass card */}
+            <div className="p-5 rounded-[28px] bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-teal-500/5 border border-indigo-200/80 dark:border-indigo-900/50 text-center select-none space-y-3 relative overflow-hidden">
+              <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+              
+              <div className="relative mx-auto w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-500 via-pink-500 to-teal-500 flex items-center justify-center text-2xl shadow-lg ring-4 ring-white/50 dark:ring-slate-900/50 animate-pulse">
+                {authMode === 'login' ? '🔮' : regEmoji}
               </div>
-            </div>
+              
+              <div>
+                <h3 className="text-[15px] font-black tracking-tight text-slate-900 dark:text-white">ME • 智能学者会卡</h3>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-0.5">跨界设计与人性体验峰会 2026</p>
+              </div>
 
-            <div className="auth-mode-switch" aria-label="选择进入方式">
-              <button
-                type="button"
-                onClick={() => setAuthMode('login')}
-                className={authMode === 'login' ? 'active' : ''}
-              >
-                便捷登入
-              </button>
-              <button
-                type="button"
-                onClick={() => setAuthMode('register')}
-                className={authMode === 'register' ? 'active' : ''}
-              >
-                新学者注册
-              </button>
+              {/* Segmented Control */}
+              <div className="flex p-0.5 bg-slate-100/90 dark:bg-slate-905 border border-slate-200 dark:border-slate-800 rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setAuthMode('login')}
+                  className={`flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all ${authMode === 'login' ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/60 dark:border-slate-700/60' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
+                >
+                  学者便捷登入
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode('register')}
+                  className={`flex-1 py-1.5 text-[10px] font-black rounded-xl transition-all ${authMode === 'register' ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/60 dark:border-slate-700/60' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
+                >
+                  注册新学者名片
+                </button>
+              </div>
             </div>
 
             {/* Login Flow */}
@@ -438,7 +623,7 @@ export default function PhoneSimulator({
               <div className="space-y-4 animate-fadeIn text-[11px]">
                 <div className="bg-white dark:bg-slate-900/90 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
                   <div className="space-y-2">
-                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block font-bold">推荐引导人</label>
+                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest block font-bold">VIP 随会学者即席验证入会 (点击选择身份)</label>
                     <div className="grid grid-cols-1 gap-2">
                       <button
                         type="button"
@@ -497,7 +682,7 @@ export default function PhoneSimulator({
                   </div>
 
                   <div className="space-y-1.5 pt-1">
-                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 block uppercase font-bold">手机号确认</label>
+                    <label className="text-[9px] font-black text-slate-500 dark:text-slate-400 block uppercase font-bold">验证学者手机号码 (自动关联名片)</label>
                     <input
                       type="text"
                       value={loginPhone}
@@ -529,154 +714,143 @@ export default function PhoneSimulator({
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
                   <Zap className="h-4.5 w-4.5 text-amber-300 animate-pulse shrink-0" />
-                  <span>一键验证并进入会场</span>
+                  <span>学者一键验证安全登入</span>
                 </button>
               </div>
             ) : (
               /* Register Flow */
-              <div className="register-flow animate-fadeIn pb-4 text-[12px]">
-                <section className="section-card visual-card avatar-section-v2">
-                  <div className="section-title-row">
-                    <span className="step-badge">01</span>
-                    <div>
-                      <h3>选择头像</h3>
-                      <p>上传真实头像，或选择一个拟人化形象。</p>
-                    </div>
-                  </div>
-
-                  <div className="avatar-upload-card">
-                    <label htmlFor="reg-avatar-upload" className="avatar-upload-preview" title="点击上传头像">
-                      {regAvatarImage ? (
-                        <img src={regAvatarImage} alt="上传头像预览" />
-                      ) : (
-                        <span className={`avatar-emoji-preview ${regActiveColor}`}>{regEmoji}</span>
-                      )}
-                      <input
-                        id="reg-avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleRegAvatarUpload}
-                        className="sr-only"
-                      />
-                    </label>
-                    <div className="avatar-upload-copy">
-                      <strong>{regAvatarImage ? '已使用上传头像' : ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象'}</strong>
-                      <span>{regAvatarImage ? '也可以继续切换系统形象' : '推荐上传头像，页面会更像真实小程序'}</span>
-                      <label htmlFor="reg-avatar-upload" className="upload-link">上传头像</label>
-                    </div>
-                  </div>
-
-                  <div className="avatar-choice-grid" aria-label="系统头像选择">
-                    {ANTHROPOMORPHIC_AVATARS.slice(0, 8).map(item => (
-                      <button
-                        key={item.emoji}
-                        type="button"
-                        onClick={() => {
-                          setRegEmoji(item.emoji);
-                          setRegAvatarImage(null);
-                        }}
-                        title={`${item.label}: ${item.desc}`}
-                        className={regEmoji === item.emoji && !regAvatarImage ? 'active' : ''}
-                      >
-                        <span>{item.emoji}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="color-dot-row">
-                    <span>名片主色</span>
-                    <div>
-                      {[
-                        { name: 'bg-pink-500', color: '#f43f5e' },
-                        { name: 'bg-teal-500', color: '#14b8a6' },
-                        { name: 'bg-indigo-500', color: '#6366f1' },
-                        { name: 'bg-purple-500', color: '#a855f7' }
-                      ].map(col => (
-                        <button
-                          key={col.name}
-                          type="button"
-                          onClick={() => setRegActiveColor(col.name)}
-                          className={regActiveColor === col.name ? 'active' : ''}
-                          style={{ backgroundColor: col.color }}
-                          aria-label={`选择 ${col.name}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </section>
-
-                <section className="section-card visual-card form-section-v2">
-                  <div className="section-title-row">
-                    <span className="step-badge">02</span>
-                    <div>
-                      <h3>基本信息</h3>
-                      <p>只保留注册必要信息，输入框更适合手机操作。</p>
-                    </div>
-                  </div>
-
-                  <div className="form-field-v2">
-                    <label>姓名 / 昵称</label>
+              <div className="space-y-3.5 animate-fadeIn pb-4 text-[11px]">
+                <div className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-4 rounded-3xl border border-white/60 dark:border-white/10 space-y-3">
+                  
+                  {/* Name field */}
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-400 block uppercase">学者姓名 / Nickname *</label>
                     <input
                       type="text"
                       value={regNick}
                       onChange={(e) => setRegNick(e.target.value)}
-                      placeholder="例如：苏子昂"
+                      placeholder="例：苏子昂"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-850 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
-                  <div className="form-field-v2">
-                    <label>手机号</label>
-                    <input
-                      type="text"
-                      value={regPhone}
-                      onChange={(e) => setRegPhone(e.target.value)}
-                      placeholder="例如：138-0000-0000"
-                    />
-                  </div>
-
-                  <div className="form-field-v2">
-                    <label>组织 / 工作室</label>
+                  {/* Organization field */}
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-400 block uppercase">研究组织 / Studio *</label>
                     <input
                       type="text"
                       value={regOrg}
                       onChange={(e) => setRegOrg(e.target.value)}
-                      placeholder="例如：林泉多模态媒体室"
+                      placeholder="例：林泉多模态媒体室"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
-                  <div className="form-field-v2">
-                    <label>身份 / 职位</label>
+                  {/* Title field */}
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-400 block uppercase">学者领域职称 / Title *</label>
                     <input
                       type="text"
                       value={regTitle}
                       onChange={(e) => setRegTitle(e.target.value)}
-                      placeholder="例如：数智交互体验探索家"
+                      placeholder="例：数智交互体验探索家"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
                     />
                   </div>
-                </section>
 
-                <section className="section-card visual-card form-section-v2">
-                  <div className="section-title-row">
-                    <span className="step-badge">03</span>
-                    <div>
-                      <h3>兴趣画像</h3>
-                      <p>用于推荐会场内容和同频学者。</p>
+                  {/* Phone field */}
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-400 block uppercase">学者手机 / Phone</label>
+                    <input
+                      type="text"
+                      value={regPhone}
+                      onChange={(e) => setRegPhone(e.target.value)}
+                      placeholder="例：138-0000-0000"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 font-mono text-slate-800 dark:text-slate-100"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 block uppercase font-bold text-left w-full">拟人化形象精选 (Click to swap)</label>
+                    
+                    {/* Character Card Live Preview */}
+                    <div className="flex items-center space-x-3 bg-slate-55/70 dark:bg-slate-950/40 p-2.5 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                      <div className={`w-11 h-11 rounded-full ${regActiveColor} text-white flex items-center justify-center text-2.5xl shadow-md transition-all select-none`}>
+                        {regEmoji}
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <div className="text-[10px] font-black text-slate-900 dark:text-white flex items-center space-x-1">
+                          <span>{ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象'}</span>
+                          <span className="text-[8px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-1.5 py-0.2 rounded font-normal font-mono select-none">PREVIEW</span>
+                        </div>
+                        <div className="text-[9px] text-slate-450 truncate mt-0.5">
+                          {ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Emoji Select Grid */}
+                    <div className="grid grid-cols-6 gap-1 bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-855">
+                      {ANTHROPOMORPHIC_AVATARS.map(item => (
+                        <button
+                          key={item.emoji}
+                          type="button"
+                          onClick={() => setRegEmoji(item.emoji)}
+                          title={`${item.label}: ${item.desc}`}
+                          className={`w-7.5 h-7.5 flex items-center justify-center text-sm rounded-lg transition-all ${
+                            regEmoji === item.emoji 
+                              ? 'bg-white dark:bg-slate-800 scale-110 shadow-sm border border-slate-200 dark:border-slate-705 z-10' 
+                              : 'opacity-55 hover:opacity-100 hover:scale-105'
+                          }`}
+                        >
+                          {item.emoji}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Theme color row */}
+                    <div className="flex justify-between items-center bg-slate-50/55 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-855">
+                      <span className="text-[9px] text-slate-455 font-bold ml-1 select-none">专属磁极色底纹：</span>
+                      <div className="flex space-x-1.5 mr-1">
+                        {[
+                          { name: 'bg-pink-500', color: '#f43f5e' },
+                          { name: 'bg-teal-500', color: '#14b8a6' },
+                          { name: 'bg-indigo-500', color: '#6366f1' },
+                          { name: 'bg-purple-500', color: '#a855f7' }
+                        ].map(col => (
+                          <button
+                            key={col.name}
+                            type="button"
+                            onClick={() => setRegActiveColor(col.name)}
+                            className={`w-3.5 h-3.5 rounded-full border transition-all ${regActiveColor === col.name ? 'border-indigo-400 dark:border-white scale-120' : 'border-transparent opacity-60'}`}
+                            style={{ backgroundColor: col.color }}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="select-stack-v2">
-                    <div className="form-field-v2">
-                      <label>认知类型</label>
-                      <select value={regMbti} onChange={(e) => setRegMbti(e.target.value)}>
+                  {/* Character MBTI Archetype selector */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-slate-400 block uppercase font-bold text-left">MBTI 认知特性</label>
+                      <select
+                        value={regMbti}
+                        onChange={(e) => setRegMbti(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-205"
+                      >
                         {MBTI_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
                       </select>
                     </div>
 
-                    <div className="form-field-v2">
-                      <label>设计原质</label>
-                      <select value={regArchetype} onChange={(e) => setRegArchetype(e.target.value)}>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-slate-400 block uppercase font-bold text-left">学者设计原质</label>
+                      <select
+                        value={regArchetype}
+                        onChange={(e) => setRegArchetype(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-205"
+                      >
                         {ARCHETYPE_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
@@ -684,10 +858,13 @@ export default function PhoneSimulator({
                     </div>
                   </div>
 
-                  <div className="tag-picker-v2">
-                    <label>研究方向 · 最多选 2 个</label>
-                    <div>
-                      {tagCategories.designDirections.slice(0, 6).map(dir => {
+                  {/* Tag customization directions */}
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-400 block uppercase leading-none">
+                      选择研究方向 (极速限选2个)
+                    </label>
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {tagCategories.designDirections.slice(0, 5).map(dir => {
                         const isSel = regSelectedDirections.includes(dir);
                         return (
                           <button
@@ -699,10 +876,10 @@ export default function PhoneSimulator({
                               } else if (regSelectedDirections.length < 2) {
                                 setRegSelectedDirections([...regSelectedDirections, dir]);
                               } else {
-                                triggerToast('最多选择 2 个研究方向');
+                                triggerToast('🔒 对齐设计方向数量限 2 个');
                               }
                             }}
-                            className={isSel ? 'active' : ''}
+                            className={`p-1 px-1.8 text-[8.5px] font-bold rounded-lg border transition-all ${isSel ? 'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-955/20 dark:text-indigo-400' : 'bg-slate-50 dark:bg-slate-950 border-slate-150 dark:border-slate-855 text-slate-500'}`}
                           >
                             {dir}
                           </button>
@@ -710,7 +887,8 @@ export default function PhoneSimulator({
                       })}
                     </div>
                   </div>
-                </section>
+
+                </div>
 
                 <button
                   type="button"
@@ -726,7 +904,6 @@ export default function PhoneSimulator({
                       nickName: finalNick,
                       avatarColor: regActiveColor,
                       avatarEmoji: regEmoji,
-                      avatarImage: regAvatarImage || undefined,
                       organization: finalOrg,
                       title: finalTitle,
                       industry: '智能出行与人性体验',
@@ -748,12 +925,12 @@ export default function PhoneSimulator({
                     setAttendees([...attendees, newAttendee]);
                     setMyProfile(newAttendee);
                     setIsLoggedIn(true);
-                    triggerToast(`欢迎入场：${finalNick}`);
+                    triggerToast(`🎨 专属学者名片已成功铸造！欢迎您入场：${finalNick}`);
                   }}
-                  className="primary-cta-button"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
-                  <Sparkles className="h-4.5 w-4.5 shrink-0" />
-                  <span>完成注册并进入会场</span>
+                  <Sparkles className="h-4.5 w-4.5 text-pink-300 animate-spin shrink-0" style={{ animationDuration: '3s' }} />
+                  <span>学者一键验证安全投射</span>
                 </button>
               </div>
             )}
@@ -957,12 +1134,8 @@ export default function PhoneSimulator({
               <div className="absolute top-1/2 left-3/4 w-8 h-8 rounded-full bg-purple-400/10 blur-sm animate-pulse" style={{ animationDelay: '0.6s' }}></div>
 
               <div className="relative z-10">
-                <div className={`w-16 h-16 ${myProfile.avatarColor} text-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl border-4 border-white dark:border-slate-900 transform group-hover:rotate-12 group-hover:scale-110 active:scale-95 transition-all duration-500 ease-out select-none overflow-hidden`}>
-                  {myProfile.avatarImage ? (
-                    <img src={myProfile.avatarImage} alt={myProfile.nickName} className="w-full h-full object-cover" />
-                  ) : (
-                    myProfile.avatarEmoji
-                  )}
+                <div className={`w-16 h-16 ${myProfile.avatarColor} text-white rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl border-4 border-white dark:border-slate-900 transform group-hover:rotate-12 group-hover:scale-110 active:scale-95 transition-all duration-500 ease-out select-none`}>
+                  {myProfile.avatarEmoji}
                 </div>
                 
                 <h3 className="text-sm font-black mt-3 text-slate-850 dark:text-white tracking-tight flex items-center justify-center space-x-1">
@@ -1064,7 +1237,7 @@ export default function PhoneSimulator({
                           key={item.emoji}
                           type="button"
                           onClick={() => {
-                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji, avatarImage: undefined });
+                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji });
                             triggerToast(`已瞬变学者灵魂印记：${item.label}`);
                           }}
                           title={`${item.label}: ${item.desc}`}
@@ -1993,53 +2166,165 @@ export default function PhoneSimulator({
               })}
             </div>
 
-            {/* Simulated Printed Live Summit Report Block */}
-            <div className="bg-gradient-to-tr from-pink-50/70 via-teal-50/40 to-purple-50/60 dark:from-slate-950 dark:via-purple-950/20 dark:to-slate-950 rounded-[32px] p-5.5 space-y-3.5 shadow-inner text-slate-800 dark:text-slate-100 text-xs">
-              <div className="flex items-center space-x-2 select-none">
-                <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-md">📊</div>
-                <div>
-                  <h4 className="font-extrabold text-[11px] uppercase tracking-wider text-pink-650 leading-none">欢迎ME • 我的大会足迹长图报告</h4>
-                  <span className="text-[9px] text-slate-400">会中海量动作实时统计封存</span>
+            {/* AI Personal Report Generator */}
+            <div className="bg-gradient-to-br from-white via-pink-50/45 to-teal-50/45 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-[32px] p-4.5 space-y-3.5 border border-white/70 dark:border-slate-800/80 shadow-[0_18px_45px_rgba(15,23,42,0.06)] text-slate-800 dark:text-slate-100">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center space-x-2 select-none">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-pink-500/15">
+                    <BarChart3 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-[11px] uppercase tracking-wider text-slate-900 dark:text-white leading-none">欢迎ME · AI个人报告中心</h4>
+                    <span className="text-[9px] text-slate-500 dark:text-slate-300">真正根据你的资料、互动与会场行为生成图文报告</span>
+                  </div>
                 </div>
+                {reportGeneratedAt && (
+                  <span className="shrink-0 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 text-[9px] font-black">
+                    已生成
+                  </span>
+                )}
               </div>
 
               {!myProfile.checkedIn ? (
-                <p className="text-[10px] text-slate-400 italic bg-white/70 dark:bg-slate-900/60 p-3 rounded-2xl leading-normal select-none">
-                  ⚠️ 您的个人报告将在完成「签到」后开始统计。签到后解锁：学者排名、交互热度、灵感地图等一站式 CSV + 长图导出！
+                <p className="text-[10px] text-slate-500 dark:text-slate-300 italic bg-white/75 dark:bg-slate-900/70 p-3 rounded-2xl leading-normal select-none border border-slate-200/80 dark:border-slate-800">
+                  ⚠️ 完成「签到」后即可解锁个性化报告。系统会根据你的身份信息、关注主题、互动行为与连接记录，生成可下载的图文版个人报告。
                 </p>
               ) : (
-                <div className="space-y-3 text-left">
-                  <div className="grid grid-cols-2 gap-2 text-center select-none">
-                    <div className="bg-white/80 dark:bg-slate-900/40 p-2.5 rounded-2xl shadow-xs">
-                      <span className="block text-[8px] text-slate-455 uppercase font-black">解锁智友关系</span>
-                      <span className="font-mono text-xs font-black text-pink-500">
-                        {connections.filter(c => c.status === 'confirmed').length} 名业内智友
-                      </span>
+                <div className="space-y-3.5">
+                  <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4.5">
+                    <div className="absolute -top-10 -right-8 w-32 h-32 rounded-full bg-pink-500/20 blur-2xl"></div>
+                    <div className="absolute -bottom-10 -left-8 w-32 h-32 rounded-full bg-teal-400/20 blur-2xl"></div>
+                    <div className="relative flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-15 h-15 ${myProfile.avatarColor} rounded-[22px] flex items-center justify-center text-3xl shadow-xl shrink-0 border border-white/15`}>
+                          {myProfile.avatarEmoji}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[10px] uppercase tracking-[0.24em] text-white/65 font-black">Personal Visual Report</p>
+                          <h5 className="text-lg font-black tracking-tight truncate">{myProfile.nickName} 的大会个人报告</h5>
+                          <p className="text-[10px] text-white/75 mt-1 leading-relaxed">{myProfile.organization} · {myProfile.title}</p>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            <span className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{myProfile.mbti || 'AI 体验创作者'}</span>
+                            <span className="px-2 py-1 rounded-full bg-white/10 text-[9px] font-bold">{myProfile.designArchetype || '具身智能观察者'}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="hidden sm:flex flex-col items-end text-right shrink-0">
+                        <span className="text-[9px] text-white/60">生成时间</span>
+                        <span className="text-[10px] font-bold text-white/90">{reportGeneratedAt || '点击下方按钮生成'}</span>
+                      </div>
                     </div>
-                    <div className="bg-white/80 dark:bg-slate-900/40 p-2.5 rounded-2xl shadow-xs">
-                      <span className="block text-[8px] text-slate-455 uppercase font-black">收藏展品灵感徽章</span>
-                      <span className="font-mono text-xs font-black text-purple-500">
-                        {exhibits.filter(e => e.isLikedByUser || e.isFavoritedByUser).length} 件藏品共鸣
-                      </span>
+
+                    <div className="grid grid-cols-3 gap-2 mt-4">
+                      {reportMetrics.map((item) => (
+                        <div key={item.label} className="rounded-2xl bg-white/7 border border-white/10 p-3 backdrop-blur-sm">
+                          <span className="block text-[9px] text-white/65 font-bold">{item.label}</span>
+                          <span className="text-xl font-black tracking-tight">{item.value}<span className="text-[11px] font-bold ml-0.5">%</span></span>
+                          <div className="h-1.5 rounded-full bg-white/10 mt-2 overflow-hidden">
+                            <div className={`h-full rounded-full bg-gradient-to-r ${item.accent}`} style={{ width: `${item.value}%` }} />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="bg-white/80 dark:bg-slate-900/40 p-3 rounded-2xl text-[9px] space-y-1.5 leading-relaxed text-slate-505 select-none font-medium">
-                    <div className="font-bold text-teal-600 block flex items-center">
-                      <Activity className="h-3 w-3 mr-1 animate-pulse" />
-                      <span>我的跨界行为特征：</span>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {reportHighlights.map((item) => (
+                      <div key={item.title} className="rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 p-3.5 shadow-sm">
+                        <span className={`inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black ${item.color}`}>{item.title}</span>
+                        <div className="mt-2 text-[12px] font-black text-slate-900 dark:text-white leading-snug">{item.value}</div>
+                        <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.note}</div>
+                      </div>
+                    ))}
+                    <div className="rounded-3xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-teal-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 border border-pink-200/70 dark:border-slate-800 p-3.5 shadow-sm">
+                      <span className="inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-100">图像快照</span>
+                      <div className="grid grid-cols-3 gap-2 mt-3">
+                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
+                          <div className="text-lg">🎤</div>
+                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">主旨现场</div>
+                        </div>
+                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
+                          <div className="text-lg">🖼️</div>
+                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">展品灵感</div>
+                        </div>
+                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
+                          <div className="text-lg">🤝</div>
+                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">连接瞬间</div>
+                        </div>
+                      </div>
                     </div>
-                    <p>• 1. <strong className="text-slate-705 dark:text-slate-300">9:12 点位打卡:</strong> UID虚拟芯片智能对准，投射大合唱看板。</p>
-                    <p>• 2. <strong className="text-slate-705 dark:text-slate-300">感应兴趣标签:</strong> “{myProfile.designDirections.join('、')}”，具备顶级艺术触觉。</p>
-                    <p>• 3. <strong className="text-slate-705 dark:text-slate-300">极客对谈:</strong> 累计发射了 {bulletMessages.filter(b=>b.userNick === myProfile.nickName).length} 条弹幕，互动十分活跃。</p>
                   </div>
 
-                  <button 
-                    onClick={() => triggerToast('💾 报告单生成成功！已生成极速 PNG 专属学者特征分析报告至您手机相册！')}
-                    className="w-full bg-slate-105 text-slate-800 dark:bg-slate-800 dark:text-slate-105 hover:bg-slate-200 hover:dark:bg-slate-700 font-black text-xs py-2 px-3 rounded-xl text-center active:scale-95 transition-all shadow-xs cursor-pointer"
-                  >
-                    保存我的专属长图分析报告
-                  </button>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="text-[11px] font-black uppercase tracking-wider text-slate-900 dark:text-white">关注主题图表</h5>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-300">基于注册标签自动计算</span>
+                      </div>
+                      <div className="space-y-3">
+                        {focusDirectionValues.map((item) => (
+                          <div key={item.label}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] font-bold text-slate-700 dark:text-slate-100">{item.label}</span>
+                              <span className="text-[10px] font-black text-purple-600 dark:text-purple-300">{item.value}%</span>
+                            </div>
+                            <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                              <div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400" style={{ width: `${item.value}%` }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-[28px] bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800 p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
+                        <h5 className="text-[11px] font-black uppercase tracking-wider text-slate-900 dark:text-white">大会足迹时间线</h5>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-300">会中行为摘要</span>
+                      </div>
+                      <div className="space-y-3">
+                        {reportTimeline.map((item) => (
+                          <div key={`${item.time}-${item.title}`} className="flex items-start gap-3 rounded-2xl bg-slate-50/85 dark:bg-slate-950/80 p-3 border border-slate-200/70 dark:border-slate-800">
+                            <div className="w-15 shrink-0 text-[10px] font-black text-purple-600 dark:text-purple-300">{item.time}</div>
+                            <div className="min-w-0">
+                              <div className="text-[11px] font-black text-slate-900 dark:text-white">{item.title}</div>
+                              <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.detail}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">已收藏议程</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{mySessionBookmarks}</div>
+                    </div>
+                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">展品共鸣</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{myFavoritedExhibits}</div>
+                    </div>
+                    <div className="rounded-3xl bg-white/90 dark:bg-slate-900/85 p-3 border border-slate-200/80 dark:border-slate-800 text-center shadow-sm">
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">同频连接</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white mt-1">{activeConnections}</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <button 
+                      onClick={generateVisualReport}
+                      className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-pink-500/15 cursor-pointer"
+                    >
+                      生成/刷新我的报告
+                    </button>
+                    <button 
+                      onClick={downloadPersonalReport}
+                      className="w-full bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 hover:bg-slate-200 hover:dark:bg-slate-700 font-black text-[11px] py-3 px-3 rounded-2xl text-center active:scale-95 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Download className="h-4 w-4" />
+                      下载图文报告
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
