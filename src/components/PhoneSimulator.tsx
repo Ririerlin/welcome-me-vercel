@@ -335,13 +335,13 @@ export default function PhoneSimulator({
   const countApprovedQuestions = questions.filter(q => q.sessionId === activeSessionId && q.status === 'approved').length;
 
   return (
-    <div className="phone-frame relative mx-auto p-0 sm:p-[3px] bg-gradient-to-tr from-pink-400 via-teal-300 via-purple-400 to-pink-500 rounded-none sm:rounded-[58px] shadow-none sm:shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-none sm:dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 sm:hover:scale-[1.01] sm:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)] w-full max-w-none sm:max-w-[360px] h-[100dvh] sm:h-[760px] min-h-0 sm:min-h-[620px] max-h-none sm:max-h-[820px] shrink-0">
+    <div className="phone-frame relative mx-auto w-screen md:w-full max-w-none md:max-w-[360px] min-h-[100dvh] md:min-h-[620px] h-[100dvh] md:h-[760px] max-h-none md:max-h-[820px] shrink-0 p-0 md:p-[3px] bg-transparent md:bg-gradient-to-tr md:from-pink-400 md:via-teal-300 md:via-purple-400 md:to-pink-500 rounded-none md:rounded-[58px] shadow-none md:shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-none md:dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 md:hover:scale-[1.01] md:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)]">
       
       {/* Animated Stream light overlay inside borders */}
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-teal-300/5 to-purple-500/10 animate-pulse rounded-none sm:rounded-[58px] pointer-events-none"></div>
+      <div className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-r from-pink-500/10 via-teal-300/5 to-purple-500/10 animate-pulse rounded-[58px]"></div>
 
       {/* Main Glass Simulator Body */}
-      <div className="relative w-full h-full rounded-none sm:rounded-[55px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-2xl border-0 sm:border border-white/40 dark:border-slate-800/40 flex flex-col overflow-hidden select-none font-sans transition-all duration-300">
+      <div className="relative w-full h-full rounded-none md:rounded-[55px] bg-white dark:bg-slate-950 md:bg-white/80 md:dark:bg-slate-950/80 md:backdrop-blur-2xl border-0 md:border border-white/40 dark:border-slate-800/40 flex flex-col overflow-hidden select-none font-sans transition-all duration-300">
       
       {/* Toast Notification with Macaron Pink glow */}
       {showNotification && (
@@ -352,13 +352,13 @@ export default function PhoneSimulator({
       )}
 
       {/* Camera Hole */}
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-slate-950 rounded-b-2xl z-50 flex items-center justify-center">
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-slate-950 rounded-b-2xl z-50 hidden md:flex items-center justify-center">
         <div className="w-14 h-1 bg-slate-800 rounded-full mb-1"></div>
         <div className="w-2.5 h-2.5 bg-slate-850 border-2 border-slate-950 rounded-full ml-3 mb-1"></div>
       </div>
 
       {/* Top Banner Bar */}
-      <div className="pt-8 pb-3 px-5 bg-gradient-to-r from-pink-50 via-teal-50 to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
+      <div className="hidden md:flex pt-8 pb-3 px-5 bg-gradient-to-r from-pink-50 via-teal-50 to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border-b border-slate-100 dark:border-slate-800 items-center justify-between shrink-0">
         <div className="flex items-center space-x-1">
           <span className="text-xs text-slate-500 font-mono font-bold">09:41</span>
           {!isLoggedIn ? (

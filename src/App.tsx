@@ -131,7 +131,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       
       {/* Outer master Header bar */}
-      <header className="hidden sm:flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 items-center justify-between sticky top-0 z-50">
+      <header className="hidden md:flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 items-center justify-between sticky top-0 z-50">
         <div className="flex items-center space-x-2.5">
           <div className="h-9 w-9 bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-550 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-pink-500/15">
             ME
@@ -162,7 +162,7 @@ export default function App() {
       </header>
 
       {/* Master Content Area */}
-      <main className="phone-only-shell flex-1 w-full mx-auto px-0 sm:px-6 md:px-10 py-0 sm:py-8 flex flex-col items-center justify-center">
+      <main className="phone-only-shell flex-1 w-full mx-auto px-0 md:px-10 py-0 md:py-8 flex flex-col items-center justify-center">
         <div className="w-full flex justify-center items-center">
           <PhoneSimulator
             myProfile={myProfile}
@@ -191,7 +191,7 @@ export default function App() {
       </main>
 
       {/* Footer copyright */}
-      <footer className="hidden sm:block bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-3 text-center text-[10px] text-slate-400 font-mono select-none">
+      <footer className="hidden md:block bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-3 text-center text-[10px] text-slate-400 font-mono select-none">
         <p>© 2026 欢迎ME (WelcomeME) SaaS & 小程序生态体系 • 版权所有</p>
       </footer>
 
