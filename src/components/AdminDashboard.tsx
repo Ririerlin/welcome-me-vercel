@@ -1274,27 +1274,230 @@ export default function AdminDashboard({
             )}
 
             {activeTab === 'settings' && (
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <SectionCard title="品牌与视觉" subtitle="后台与小程序共享一套粉紫青品牌系统。" action={<Sparkles className="w-5 h-5 text-pink-500" />}>
-                  <div className="space-y-3">
-                    <div className="rounded-[22px] bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 p-4">主色：粉紫青渐变，用于按钮、图表与重点模块。</div>
-                    <div className="rounded-[22px] bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 p-4">卡片：大圆角 + 柔和阴影，保持更成熟的 SaaS 风格。</div>
-                    <div className="rounded-[22px] bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 p-4">图像：优先展示用户作品、活动封面、展品图片。</div>
+              <div className="space-y-6">
+                <div className="rounded-[34px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                  <div className="p-6 md:p-7 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 text-white relative overflow-hidden">
+                    <div className="absolute -top-16 right-8 w-56 h-56 rounded-full bg-pink-500/20 blur-3xl" />
+                    <div className="absolute -bottom-20 left-10 w-64 h-64 rounded-full bg-teal-400/15 blur-3xl" />
+                    <div className="relative flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
+                      <div>
+                        <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/10 text-[11px] font-black tracking-[0.18em] uppercase text-white/80">
+                          <Settings className="w-3.5 h-3.5" /> Admin Settings
+                        </div>
+                        <h3 className="mt-4 text-3xl md:text-4xl font-black tracking-tight text-white">系统设置</h3>
+                        <p className="mt-3 max-w-2xl text-sm md:text-base leading-7 text-white/82">像真实 SaaS 后台一样管理活动基础信息、品牌视觉、报名规则、权限角色、数据集成、报告导出与安全配置。</p>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 min-w-full xl:min-w-[560px]">
+                        {[
+                          ['运行状态', 'Online'],
+                          ['后台路径', '/admin'],
+                          ['数据模式', 'Demo'],
+                          ['部署环境', 'Vercel']
+                        ].map(([label, value]) => (
+                          <div key={label} className="rounded-2xl bg-white/10 border border-white/10 p-3">
+                            <div className="text-[11px] font-bold text-white/60">{label}</div>
+                            <div className="mt-1 text-lg font-black text-white truncate">{value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </SectionCard>
-                <SectionCard title="后台说明" subtitle="当前版本适合路演、答辩与产品演示。" action={<ShieldCheck className="w-5 h-5 text-teal-500" />}>
-                  <div className="space-y-3 text-sm text-slate-600 dark:text-slate-300 leading-7">
-                    <p>访问路径：<span className="font-black text-slate-950 dark:text-white">/admin</span></p>
-                    <p>当前是前端模拟版，适合展示信息架构与交互流程。</p>
-                    <p>后续若接 Supabase / Firebase，即可变成真实可用后台。</p>
-                  </div>
-                </SectionCard>
-                <SectionCard title="后续升级建议" subtitle="如果还要继续精修，可以往这里迭代。" action={<Zap className="w-5 h-5 text-violet-500" />}>
-                  <div className="space-y-3">
-                    {['接入真实数据库与图片存储', '增加管理员登录与权限层级', '个人报告一键导出 PNG / PDF', '增加实时签到数据与内容审核通知'].map((text) => (
-                      <div key={text} className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 flex items-start gap-3">
-                        <CheckCircle2 className="w-4.5 h-4.5 mt-0.5 text-emerald-500" />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">{text}</span>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-[1.05fr_0.95fr] gap-6">
+                  <SectionCard title="活动基础配置" subtitle="管理用户端展示的会议名称、地点、日期和入场状态。" action={<CalendarDays className="w-5 h-5 text-pink-500" />}>
+                    <div className="space-y-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label className="space-y-2">
+                          <span className="text-xs font-black text-slate-500 dark:text-slate-300">活动名称</span>
+                          <input readOnly value="2026 跨界设计与人性体验峰会" className="w-full px-4 py-2.5 text-sm" />
+                        </label>
+                        <label className="space-y-2">
+                          <span className="text-xs font-black text-slate-500 dark:text-slate-300">活动日期</span>
+                          <input readOnly value="2026-05-25" className="w-full px-4 py-2.5 text-sm" />
+                        </label>
+                        <label className="space-y-2">
+                          <span className="text-xs font-black text-slate-500 dark:text-slate-300">场馆</span>
+                          <input readOnly value="上海当代艺术创意园 · A1馆" className="w-full px-4 py-2.5 text-sm" />
+                        </label>
+                        <label className="space-y-2">
+                          <span className="text-xs font-black text-slate-500 dark:text-slate-300">用户端域名</span>
+                          <input readOnly value="welcome-me-vercel.vercel.app" className="w-full px-4 py-2.5 text-sm" />
+                        </label>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {[
+                          ['开放注册', '允许用户进入注册流程', true],
+                          ['现场签到', '开启二维码核销入口', true],
+                          ['报告生成', '允许用户导出个人报告', true]
+                        ].map(([title, desc, on]) => (
+                          <div key={String(title)} className="rounded-[24px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 flex items-start justify-between gap-3">
+                            <div>
+                              <div className="font-black text-slate-950 dark:text-white">{title}</div>
+                              <div className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-300">{desc}</div>
+                            </div>
+                            <div className={classNames('w-12 h-7 rounded-full p-1 shrink-0 transition', on ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700')}>
+                              <div className={classNames('w-5 h-5 rounded-full bg-white shadow-sm transition', on ? 'translate-x-5' : 'translate-x-0')} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="品牌与视觉系统" subtitle="像真实网站后台一样管理 Logo、主题色、图像素材和前台视觉规范。" action={<Sparkles className="w-5 h-5 text-violet-500" />}>
+                    <div className="space-y-5">
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-gradient-to-br from-pink-50 via-white to-teal-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-5">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-pink-500 via-purple-500 to-teal-400 flex items-center justify-center text-white text-2xl font-black shadow-lg">ME</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-black text-slate-950 dark:text-white">欢迎ME 品牌资产</div>
+                            <div className="mt-1 text-sm text-slate-500 dark:text-slate-300">用户端与后台共用同一套粉紫青品牌系统。</div>
+                          </div>
+                          <button className="px-4 py-2 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-black">更换</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-xs font-black text-slate-500 dark:text-slate-300 mb-3">主题色</div>
+                        <div className="grid grid-cols-5 gap-3">
+                          {['#ec4899', '#8b5cf6', '#14b8a6', '#0f172a', '#f8fafc'].map((color) => (
+                            <div key={color} className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-2">
+                              <div className="h-12 rounded-xl shadow-inner" style={{ backgroundColor: color }} />
+                              <div className="mt-2 text-[10px] font-bold text-center text-slate-500 dark:text-slate-300">{color}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {['活动封面图', '报告长图背景'].map((title) => (
+                          <div key={title} className="rounded-[24px] border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 p-5 text-center">
+                            <ImageIcon className="w-6 h-6 mx-auto text-pink-500" />
+                            <div className="mt-2 text-sm font-black text-slate-950 dark:text-white">{title}</div>
+                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-300">PNG / JPG，建议 1440×900</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </SectionCard>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                  <SectionCard title="报名与用户资料" subtitle="控制用户端注册流程、资料采集和可跳过项。" action={<Users className="w-5 h-5 text-teal-500" />}>
+                    <div className="space-y-3">
+                      {[
+                        ['头像上传', '允许用户上传个人头像', true],
+                        ['作品资料', '注册时可上传设计作品，可跳过', true],
+                        ['活动经历', '采集设计活动经历，可跳过', true],
+                        ['手机号验证', '当前演示版使用模拟验证', false]
+                      ].map(([title, desc, on]) => (
+                        <div key={String(title)} className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 flex items-center justify-between gap-3">
+                          <div>
+                            <div className="font-black text-slate-950 dark:text-white">{title}</div>
+                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-300">{desc}</div>
+                          </div>
+                          <span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black shrink-0', on ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300')}>{on ? '已开启' : '未开启'}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="权限与角色" subtitle="更接近真实后台的管理员权限结构。" action={<ShieldCheck className="w-5 h-5 text-emerald-500" />}>
+                    <div className="space-y-3">
+                      {[
+                        ['超级管理员', '全部权限', '1 人'],
+                        ['内容审核员', '提问、弹幕、作品审核', '3 人'],
+                        ['现场工作人员', '签到核销、用户查询', '6 人'],
+                        ['报告查看者', '只读查看报告中心', '2 人']
+                      ].map(([role, scope, count]) => (
+                        <div key={role} className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex items-center justify-between gap-3">
+                          <div>
+                            <div className="font-black text-slate-950 dark:text-white">{role}</div>
+                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-300">{scope}</div>
+                          </div>
+                          <span className="text-xs font-black text-slate-500 dark:text-slate-300">{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="通知与自动化" subtitle="配置关键运营事件的提醒方式。" action={<Bell className="w-5 h-5 text-amber-500" />}>
+                    <div className="space-y-3">
+                      {[
+                        ['新用户注册', '站内通知 + 邮件摘要'],
+                        ['待审核提问', '实时提醒内容审核员'],
+                        ['签到异常', '提醒现场工作人员'],
+                        ['报告生成完成', '通知用户与主办方']
+                      ].map(([title, desc]) => (
+                        <div key={title} className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 flex items-start gap-3">
+                          <CheckCircle2 className="w-4.5 h-4.5 mt-0.5 text-emerald-500 shrink-0" />
+                          <div>
+                            <div className="font-black text-slate-950 dark:text-white">{title}</div>
+                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-300">{desc}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-6">
+                  <SectionCard title="数据与第三方集成" subtitle="演示版先展示连接状态，后续可接入真实数据库、存储和 AI 服务。" action={<Zap className="w-5 h-5 text-violet-500" />}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        ['Supabase Database', '用户、报名、签到、关系数据', '待接入'],
+                        ['Supabase Storage', '头像、作品、报告图片存储', '待接入'],
+                        ['Gemini API', '报告摘要与内容生成', '已配置'],
+                        ['Vercel Hosting', '前台与后台网页部署', '运行中']
+                      ].map(([name, desc, status]) => (
+                        <div key={name} className="rounded-[24px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <div className="font-black text-slate-950 dark:text-white">{name}</div>
+                              <div className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-300">{desc}</div>
+                            </div>
+                            <span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black shrink-0', status === '运行中' || status === '已配置' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-amber-500/10 text-amber-600 dark:text-amber-300')}>{status}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="报告导出配置" subtitle="管理个人报告与会议总报告中包含的图表、词云、图片和导出格式。" action={<FileText className="w-5 h-5 text-pink-500" />}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        ['个人报告', ['头像与身份信息', '设计方向标签', '作品图像模块', '成长曲线图', 'PNG 导出']],
+                        ['会议总报告', ['签到率与活跃趋势', '会议关键词词云', '议程热度排行', '用户结构分布', '图片摘要模块']]
+                      ].map(([title, items]) => (
+                        <div key={String(title)} className="rounded-[26px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                          <div className="text-lg font-black text-slate-950 dark:text-white">{title}</div>
+                          <div className="mt-4 space-y-3">
+                            {(items as string[]).map((item) => (
+                              <div key={item} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-200">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                                {item}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+                </div>
+
+                <SectionCard title="高级设置与安全区" subtitle="真实网站后台通常会把危险操作单独收纳，避免误操作。" action={<Lock className="w-5 h-5 text-rose-500" />}>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {[
+                      ['导出运营快照', '下载当前前端模拟数据，便于备份和演示。', '导出 JSON'],
+                      ['重置演示数据', '清空本机浏览器缓存中的模拟注册与关系。', '重置数据'],
+                      ['管理员访问控制', '后续接入登录后，可限制 /admin 访问权限。', '配置权限']
+                    ].map(([title, desc, action]) => (
+                      <div key={title} className="rounded-[26px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+                        <div className="font-black text-slate-950 dark:text-white">{title}</div>
+                        <div className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-300">{desc}</div>
+                        <button className="mt-4 px-4 py-2 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-black">{action}</button>
                       </div>
                     ))}
                   </div>

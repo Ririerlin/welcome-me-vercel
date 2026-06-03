@@ -1,20 +1,17 @@
-欢迎ME 服务端卡片布局与夜间模式修复补丁
+欢迎ME 服务端系统设置真实网站化补丁
 
-修复内容：
-1. 给后台增加 admin-console 样式作用域，避免前台小程序全局 CSS 污染后台。
-2. 给用户端增加 mini-app-theme 标记，方便前后台样式隔离。
-3. 修复左侧菜单卡片结构：字号、图标、间距恢复到更标准的后台导航。
-4. 修复“参会用户资料”卡片：不再像大胶囊，标签与签到状态不再挤压。
-5. 修复搜索框交互格式。
-6. 增强后台夜间模式可读性，提亮灰字、修正深色卡片和输入框。
+本补丁基于上一版 admin-card-dark-fix 做增量优化：
+1. 将“系统设置”从简单说明卡片改成真实 SaaS 后台设置页
+2. 新增活动基础配置、品牌视觉系统、报名与用户资料、权限角色、通知自动化、数据集成、报告导出配置、高级设置与安全区
+3. 继续保留后台样式隔离与夜间模式可读性修复
+4. 保留 /admin 后台入口，不影响用户端小程序
 
 安装方式：
-unzip -o ~/Downloads/welcome-me-admin-card-dark-fix.zip
+unzip -o ~/Downloads/welcome-me-admin-real-settings-upgrade.zip
 npm run build
 git add .
-git commit -m "fix admin card layout and dark mode readability"
+git commit -m "upgrade admin settings page"
 git push
 
-如果想回滚：
-git revert HEAD --no-edit
-git push
+部署后打开：
+https://welcome-me-vercel.vercel.app/admin?v=27
