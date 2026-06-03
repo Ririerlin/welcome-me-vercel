@@ -66,7 +66,7 @@ const menuItems: { id: AdminTab; label: string; desc: string; icon: React.Elemen
   { id: 'portfolio', label: '作品资料', desc: '设计作品与图像墙', icon: ImageIcon },
   { id: 'content', label: '互动内容', desc: '提问、弹幕、审核', icon: MessageCircle },
   { id: 'schedule', label: '议程管理', desc: '议程排期与直播状态', icon: CalendarDays },
-  { id: 'reports', label: '报告中心', desc: '个人报告 + 会议报告', icon: FileText },
+  { id: 'reports', label: '报告中心', desc: '个人报告 · 会议总报告', icon: FileText },
   { id: 'settings', label: '系统设置', desc: '品牌与后台配置', icon: Settings }
 ];
 
@@ -241,6 +241,40 @@ function DonutChart({ value }: { value: number }) {
   );
 }
 
+function WordCloudPanel({ items }: { items: { label: string; value: number }[] }) {
+  const toneClasses = [
+    'bg-pink-500/12 text-pink-700 dark:text-pink-300 border-pink-500/15',
+    'bg-violet-500/12 text-violet-700 dark:text-violet-300 border-violet-500/15',
+    'bg-cyan-500/12 text-cyan-700 dark:text-cyan-300 border-cyan-500/15',
+    'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300 border-emerald-500/15',
+    'bg-amber-500/12 text-amber-700 dark:text-amber-300 border-amber-500/15'
+  ];
+
+  if (!items.length) {
+    return <div className="text-sm text-slate-500 dark:text-slate-400">暂无关键词数据。</div>;
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {items.map((item, index) => {
+        const fontSize = Math.min(28, 12 + item.value * 2.2);
+        const tone = toneClasses[index % toneClasses.length];
+        return (
+          <div
+            key={item.label}
+            className={`rounded-full border px-4 py-2 font-black shadow-sm ${tone}`}
+            style={{ fontSize: `${fontSize}px`, lineHeight: 1.1 }}
+            title={`${item.label}: ${item.value}`}
+          >
+            {item.label}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+
 export default function AdminDashboard({
   myProfile,
   setMyProfile,
@@ -316,6 +350,25 @@ export default function AdminDashboard({
     });
     return Array.from(map.entries()).map(([label, value]) => ({ label, value }));
   }, [allAttendees]);
+
+  const meetingWordCloud = useMemo(() => {
+    const words = [
+      ...allAttendees.flatMap((person) => person.designDirections || []),
+      ...allAttendees.flatMap((person) => person.interests || []),
+      ...allAttendees.flatMap((person) => person.goals || []),
+      ...sessions.flatMap((session) => session.tags || []),
+      ...exhibits.flatMap((exhibit) => exhibit.tags || []),
+      ...connections.flatMap((connection) => connection.matchedTags || [])
+    ];
+    const counter = new Map<string, number>();
+    words.filter(Boolean).forEach((word) => {
+      counter.set(word, (counter.get(word) || 0) + 1);
+    });
+    return Array.from(counter.entries())
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 22);
+  }, [allAttendees, sessions, exhibits, connections]);
 
   const phaseValues = [58, 72, 66, 82, 77, 91, 86];
   const recentQuestions = questions.slice(0, 3);
@@ -393,18 +446,18 @@ export default function AdminDashboard({
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={classNames(
-                    'w-full text-left rounded-[22px] border transition px-3 py-3 flex items-center gap-3',
+                    'w-full text-left rounded-[24px] border transition px-4 py-4 flex items-start gap-4',
                     active
                       ? 'border-pink-200 dark:border-pink-500/20 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-teal-500/10 shadow-sm'
                       : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-900'
                   )}
                 >
-                  <div className={classNames('w-10 h-10 rounded-2xl flex items-center justify-center shrink-0', active ? 'bg-white dark:bg-slate-900 text-pink-600 shadow-sm' : 'bg-slate-100 dark:bg-slate-900 text-slate-500')}>
+                  <div className={classNames('w-14 h-14 rounded-[20px] flex items-center justify-center shrink-0', active ? 'bg-white dark:bg-slate-900 text-pink-600 shadow-sm' : 'bg-slate-100 dark:bg-slate-900 text-slate-500')}>
                     <Icon className="w-4.5 h-4.5" />
                   </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-black text-slate-900 dark:text-white">{item.label}</div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{item.desc}</div>
+                  <div className="min-w-0 pt-0.5">
+                    <div className="text-[17px] leading-6 font-extrabold tracking-tight text-slate-900 dark:text-white">{item.label}</div>
+                    <div className="mt-1 text-[14px] leading-5 text-slate-500 dark:text-slate-400">{item.desc}</div>
                   </div>
                 </button>
               );
@@ -1075,6 +1128,19 @@ export default function AdminDashboard({
                             ))}
                           </div>
                         </div>
+                      </div>
+                    </div>
+
+                    <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <div className="text-lg font-black text-slate-950 dark:text-white">会议关键词词云</div>
+                          <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">从用户设计方向、兴趣标签、议程主题、作品标签和同频关系里提取会议热词。</div>
+                        </div>
+                        <Sparkles className="w-5 h-5 text-pink-500" />
+                      </div>
+                      <div className="mt-5 rounded-[24px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-5">
+                        <WordCloudPanel items={meetingWordCloud} />
                       </div>
                     </div>
 
