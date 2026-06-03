@@ -1,0 +1,21 @@
+欢迎ME 用户端真实 App 风格升级补丁
+
+本补丁根据你提供的参考图，将用户端首页视觉升级为更像真实 App 的风格：
+1. 顶部改成 App Header：Logo、欢迎ME、用户端说明、进行中状态
+2. 首页欢迎卡重做：更大字号、更清晰层级、75% 进度环
+3. 通行证 QR 卡重做：大圆角玻璃卡、柔和渐变背景、清晰 CTA
+4. 三个快捷入口重做：我的肖像 / 主场发言 / 实地展品
+5. 热门议程卡重做：更像真实小程序内容卡片
+6. 底部导航重做：更像真实 App 的 TabBar，激活态有柔和粉色底
+7. 背景、卡片、阴影、间距统一为高级柔和 App 风格
+
+覆盖文件：
+- src/components/PhoneSimulator.tsx
+- src/index.css
+
+安装方式：
+unzip -o ~/Downloads/welcome-me-real-app-style-upgrade.zip
+npm run build
+git add .
+git commit -m "upgrade client to real app visual style"
+git push

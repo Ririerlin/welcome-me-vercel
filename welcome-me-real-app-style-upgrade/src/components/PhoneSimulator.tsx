@@ -848,42 +848,23 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         <div className="w-2.5 h-2.5 bg-slate-850 border-2 border-slate-950 rounded-full ml-3 mb-1"></div>
       </div>
 
-      {/* Top Banner Bar */}
-      <div className="hidden md:flex pt-8 pb-3 px-5 bg-gradient-to-r from-pink-50 via-teal-50 to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border-b border-slate-100 dark:border-slate-800 items-center justify-between shrink-0">
-        <div className="flex items-center space-x-1">
-          <span className="text-xs text-slate-500 font-mono font-bold">09:41</span>
-          {!isLoggedIn ? (
-            <span className="text-[9px] bg-indigo-100 text-indigo-655 dark:bg-indigo-950/40 dark:text-indigo-405 border border-indigo-200 dark:border-indigo-850 font-bold px-1.5 py-0.2 rounded-full scale-90">UNLOCKED</span>
-          ) : (
-            <span className="text-[9px] bg-pink-100 text-pink-650 dark:bg-pink-950/40 dark:text-pink-450 border border-pink-200 dark:border-pink-850 font-bold px-1.5 py-0.2 rounded-full scale-90">欢迎ME</span>
-          )}
+      {/* App Header - real app style */}
+      <div className="app-top-header shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="app-logo-badge">ME</div>
+          <div className="min-w-0">
+            <div className="text-[20px] leading-6 font-black tracking-tight text-slate-950 dark:text-white">欢迎ME</div>
+            <div className="mt-1 text-[13px] leading-4 font-bold text-slate-500 dark:text-slate-300 truncate">跨界设计峰会用户端</div>
+          </div>
         </div>
-        
-        <div className="text-xs font-bold text-slate-850 dark:text-slate-100 truncate max-w-[185px] text-center flex items-center justify-center space-x-1">
-          {!isLoggedIn ? (
-            <span className="flex items-center space-x-1 text-indigo-600 dark:text-indigo-400">
-              <Lock className="h-3 w-3 animate-pulse shrink-0" />
-              <span>学者通行证注册</span>
-            </span>
-          ) : (
-            <>
-              {activeTab === 'home' && '会场首页'}
-              {activeTab === 'me' && '我的'}
-              {activeTab === 'co' && '互动'}
-              {activeTab === 'we' && '同频同行'}
-            </>
-          )}
-        </div>
-
-        <div className="flex items-center space-x-1 px-2 py-1 rounded-full bg-white/80 dark:bg-slate-900/60 shadow-xs border border-slate-200/40 dark:border-slate-800/40">
-          <div className="w-1.5 h-1.5 bg-rose-400 rounded-full animate-pulse"></div>
-          <div className="w-1.5 h-1.5 bg-teal-400 rounded-full"></div>
-          <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
+        <div className="app-status-pill">
+          <span className="w-2.5 h-2.5 rounded-full bg-teal-500 shadow-[0_0_0_5px_rgba(20,184,166,0.12)]"></span>
+          <span>{eventPhase === 'before' ? '预热中' : eventPhase === 'during' ? '进行中' : '已结束'}</span>
         </div>
       </div>
 
       {/* Main Column Client Container */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-8 space-y-4 bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 scrollbar-none">
+      <div className="app-content flex-1 overflow-y-auto overflow-x-hidden p-4 pb-8 space-y-4 text-slate-800 dark:text-slate-100 scrollbar-none">
         
         {!isLoggedIn ? (
           <div className="space-y-4 animate-fadeIn py-1">
@@ -1323,140 +1304,159 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           </div>
         ) : (
           <>
-            {/* Dynamic event phase block - highly visualized with bright Macaron accents - borderless */}
-            <div className={`bg-gradient-to-r from-pink-500/10 via-teal-500/10 to-purple-500/10 rounded-2xl p-3.5 items-center justify-between text-[11px] hover:shadow-[0_8px_20px_rgba(244,114,182,0.05)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ${activeTab === 'home' ? 'hidden' : 'flex'}`}>
-              <div className="flex items-center space-x-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-405 opacity-70"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                </span>
-                <span className="font-bold text-slate-600 dark:text-slate-400 tracking-wide">跨界体验峰会 2026</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <span className="text-[10px] font-bold bg-white dark:bg-slate-850 text-teal-600 dark:text-teal-400 px-2.5 py-1 rounded-full shadow-xs select-none">
-                  {eventPhase === 'before' ? '📅 预加热中' : eventPhase === 'during' ? '🎙️ 进行中' : '🏁 已闭幕'}
-                </span>
-              </div>
-            </div>
-
         {/* -------------------- TAB 1: HOME & PASSPORT -------------------- */}
         {activeTab === 'home' && (
-          <div className="real-app-home animate-fadeIn">
-            <div className="real-app-header">
-              <div className="real-app-logo">ME</div>
+          <div className="app-home space-y-4 animate-fadeIn">
+            {/* Welcome summary */}
+            <div className="app-glass-card app-welcome-card">
               <div className="min-w-0">
-                <div className="real-app-title">欢迎ME</div>
-                <div className="real-app-subtitle">跨界设计峰会用户端</div>
+                <p className="text-[13px] font-black tracking-[0.25em] text-pink-500 uppercase">WELCOME BACK</p>
+                <h2 className="mt-2 text-[34px] leading-[1.05] font-black tracking-tight text-slate-950 dark:text-white">
+                  你好，{myProfile.nickName || '参会者'}
+                </h2>
+                <p className="mt-3 text-[15px] leading-5 font-bold text-slate-500 dark:text-slate-300 truncate">
+                  {myProfile.organization || '欢迎ME'} · {myProfile.title || '参会者'}
+                </p>
               </div>
-              <div className="real-app-status">
-                <span className="real-app-status-dot" />
-                {eventPhase === 'during' ? '进行中' : eventPhase === 'before' ? '预热中' : '已结束'}
+              <div className="relative w-20 h-20 shrink-0 flex items-center justify-center select-none">
+                <svg className="w-20 h-20 -rotate-90">
+                  <circle cx="40" cy="40" r="31" stroke="rgba(226,232,240,0.9)" strokeWidth="8" fill="transparent" />
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="31"
+                    stroke="#14b8a6"
+                    strokeWidth="8"
+                    fill="transparent"
+                    strokeLinecap="round"
+                    strokeDasharray={`${2 * Math.PI * 31}`}
+                    strokeDashoffset={`${2 * Math.PI * 31 * (1 - myProfile.personaCompletion / 100)}`}
+                    className="transition-all duration-700"
+                  />
+                </svg>
+                <span className="absolute text-[19px] font-black text-teal-700 dark:text-teal-300">{myProfile.personaCompletion}%</span>
               </div>
             </div>
 
-            <div className="real-welcome-card">
-              <div className="min-w-0">
-                <div className="real-card-kicker">WELCOME BACK</div>
-                <div className="real-welcome-name">你好，{myProfile.nickName || '参会者'}</div>
-                <div className="real-welcome-meta">{myProfile.organization || '明眸设计工作室'} · {myProfile.title || '资深体验探路师'}</div>
-              </div>
-              <div className="real-progress-ring" style={{ ['--progress' as string]: myProfile.personaCompletion }}>
-                <span>{myProfile.personaCompletion}%</span>
-              </div>
-            </div>
-
-            <div className="real-pass-card">
-              <div className="real-pass-bg real-pass-bg-pink" />
-              <div className="real-pass-bg real-pass-bg-teal" />
-              <div className="real-pass-top">
-                <div className="min-w-0">
-                  <div className="real-pass-title">2026 跨界设计与人性体验峰会</div>
-                  <div className="real-pass-location">⌖ 上海当代艺术创意园 · A1馆</div>
+            {/* Main credential card */}
+            <div className="app-glass-card app-pass-card relative overflow-hidden">
+              <div className="absolute -left-12 -top-14 w-44 h-44 rounded-full bg-pink-300/25 blur-xl"></div>
+              <div className="absolute -right-14 bottom-5 w-48 h-48 rounded-full bg-teal-300/22 blur-xl"></div>
+              <div className="relative">
+                <div className="flex items-start justify-between gap-4 pb-4 border-b border-dashed border-slate-300/70 dark:border-slate-700">
+                  <div className="min-w-0">
+                    <h3 className="text-[21px] leading-7 font-black tracking-tight text-slate-950 dark:text-white">2026 跨界设计与人性体验峰会</h3>
+                    <p className="mt-2 text-[13px] font-bold text-slate-500 dark:text-slate-300 truncate">上海当代艺术创意园 · A1馆</p>
+                  </div>
+                  <div className="shrink-0 pt-1 text-[14px] font-black text-slate-500 dark:text-slate-300">2026-05-25</div>
                 </div>
-                <div className="real-pass-date">2026-05-25</div>
-              </div>
-              <div className="real-dashed-line" />
-              <div className="real-qr-wrap">
-                <div className="real-qr-box">
-                  <QrCode className={`real-qr-icon ${myProfile.checkedIn ? 'opacity-20' : 'opacity-100'}`} />
-                  {myProfile.checkedIn && (
-                    <div className="real-qr-passed">
-                      <Check className="h-6 w-6" />
-                      <span>已核销</span>
+
+                <div className="pt-6 flex flex-col items-center">
+                  <div className="relative p-4 bg-white dark:bg-slate-950 rounded-[28px] shadow-[0_14px_30px_rgba(15,23,42,0.10)] ring-1 ring-pink-300/40 dark:ring-slate-700">
+                    <QrCode className={`h-35 w-35 text-slate-950 dark:text-white transition-all ${myProfile.checkedIn ? 'opacity-20' : 'opacity-100'}`} />
+                    {myProfile.checkedIn && (
+                      <div className="absolute inset-3 bg-white/95 dark:bg-slate-950/95 rounded-[22px] flex flex-col items-center justify-center text-teal-600 dark:text-teal-300 font-black">
+                        <Check className="w-9 h-9 mb-2" />
+                        <span className="text-[13px]">已核销</span>
+                        <span className="mt-1 text-[10px] text-slate-400">{myProfile.checkedInAt || '09:12'}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4 px-4 py-2 rounded-full bg-white/86 dark:bg-slate-900/86 shadow-sm text-[13px] font-black text-slate-800 dark:text-slate-100">
+                    凭证ID&nbsp;&nbsp; ME-2026-VIP-8891
+                  </div>
+
+                  {!myProfile.checkedIn ? (
+                    <button
+                      onClick={() => {
+                        const now = new Date();
+                        const formattedTime = now.toTimeString().split(' ')[0].substring(0, 5);
+                        setMyProfile({ ...myProfile, checkedIn: true, checkedInAt: formattedTime });
+                        triggerToast('签到成功，通行证已核销');
+                      }}
+                      className="app-primary-cta mt-5 w-full"
+                    >
+                      <QrCode className="w-5 h-5" />
+                      扫描签到位核销通证
+                    </button>
+                  ) : (
+                    <div className="mt-5 w-full text-center text-[14px] text-teal-700 dark:text-teal-300 bg-teal-500/10 py-4 rounded-[22px] font-black select-none">
+                      已签到 · VIP 权益已开启
                     </div>
                   )}
                 </div>
-                <div className="real-pass-id">凭证ID&nbsp;&nbsp; ME-2026-VIP-8891</div>
               </div>
-              {!myProfile.checkedIn ? (
-                <button
-                  onClick={() => {
-                    const now = new Date();
-                    const formattedTime = now.toTimeString().split(' ')[0].substring(0, 5);
-                    setMyProfile({ ...myProfile, checkedIn: true, checkedInAt: formattedTime });
-                    triggerToast('签到核销成功，已开启你的大会权益');
-                  }}
-                  className="real-cta-button"
-                >
-                  <span className="text-xl leading-none">⌗</span>
-                  扫描签到位核销通证
-                </button>
-              ) : (
-                <div className="real-checked-tip">已核签入场 · 权益已开启</div>
-              )}
             </div>
 
-            <div className="real-action-grid">
-              <button onClick={() => { setActiveTab('me'); setSurveyStep(0); }} className="real-action-card">
-                <div className="real-action-icon real-action-pink"><IdCard className="h-6 w-6" /></div>
-                <span>我的肖像</span>
-                <ChevronRight className="h-4 w-4 real-action-chevron" />
+            {/* Quick actions */}
+            <div className="grid grid-cols-3 gap-3">
+              <button onClick={() => { setActiveTab('me'); setSurveyStep(0); }} className="app-action-card group">
+                <div className="app-action-icon bg-pink-500/10 text-pink-500"><IdCard className="w-6 h-6" /></div>
+                <div className="mt-3 flex items-center justify-center gap-1.5 text-[14px] font-black text-slate-700 dark:text-slate-100">我的肖像 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition" /></div>
               </button>
-              <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="real-action-card">
-                <div className="real-action-icon real-action-purple"><MessageSquare className="h-6 w-6" /></div>
-                <span>主场发言</span>
-                <ChevronRight className="h-4 w-4 real-action-chevron" />
+              <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="app-action-card group">
+                <div className="app-action-icon bg-pink-500/10 text-pink-500"><MessageSquare className="w-6 h-6" /></div>
+                <div className="mt-3 flex items-center justify-center gap-1.5 text-[14px] font-black text-slate-700 dark:text-slate-100">主场发言 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition" /></div>
               </button>
-              <button onClick={() => { setActiveTab('co'); setActiveSessionTab('exhibits'); }} className="real-action-card">
-                <div className="real-action-icon real-action-teal"><Award className="h-6 w-6" /></div>
-                <span>实地展品</span>
-                <ChevronRight className="h-4 w-4 real-action-chevron" />
+              <button onClick={() => { setActiveTab('co'); setActiveSessionTab('exhibits'); }} className="app-action-card group">
+                <div className="app-action-icon bg-teal-500/10 text-teal-500"><Award className="w-6 h-6" /></div>
+                <div className="mt-3 flex items-center justify-center gap-1.5 text-[14px] font-black text-slate-700 dark:text-slate-100">实地展品 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition" /></div>
               </button>
             </div>
 
-            <div className="real-agenda-card">
-              <div className="real-section-header">
+            {/* Current agenda */}
+            <div className="app-glass-card p-4">
+              <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="real-fire">🔥</span>
-                  <span className="real-section-title">此时段热门议程</span>
+                  <span className="text-pink-500 text-xl">🔥</span>
+                  <h4 className="text-[17px] leading-6 font-black text-slate-950 dark:text-white truncate">此时段热门议程</h4>
                 </div>
-                <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="real-view-btn">查看</button>
-              </div>
-              {sessions.slice(0, 1).map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => {
-                    setActiveSessionId(s.id);
-                    setActiveTab('co');
-                    setActiveSessionTab('sessions');
-                    triggerToast('已切换到该议程');
-                  }}
-                  className="real-agenda-item"
-                >
-                  <div className="real-agenda-time">
-                    <strong>{s.timeStr.split(' - ')[0] || '10:30'}</strong>
-                    <span>{s.isLive ? '进行中' : '即将开始'}</span>
-                  </div>
-                  <div className="real-agenda-info">
-                    <div className="real-agenda-title">{s.title}</div>
-                    <div className="real-agenda-meta">{s.speakerName} · {s.location}</div>
-                  </div>
-                  <div className="real-agenda-thumb">
-                    <span>{s.speakerAvatarEmoji}</span>
-                  </div>
+                <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="px-5 py-2.5 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[13px] font-black shrink-0">
+                  查看
                 </button>
-              ))}
-              <div className="real-dots"><span /><span /><span /></div>
+              </div>
+
+              <div
+                onClick={() => {
+                  setActiveSessionId(sessions[0]?.id || activeSessionId);
+                  setActiveTab('co');
+                  setActiveSessionTab('sessions');
+                  triggerToast('已进入当前热门议程');
+                }}
+                className="mt-4 rounded-[24px] border border-slate-200/70 dark:border-slate-800 bg-white/78 dark:bg-slate-900/78 p-3.5 flex items-center gap-3 cursor-pointer active:scale-[0.99] transition"
+              >
+                <div className="w-20 h-18 rounded-[20px] bg-gradient-to-br from-pink-50 to-purple-50 dark:from-slate-800 dark:to-slate-900 flex flex-col items-center justify-center shrink-0">
+                  <span className="text-[18px] font-black text-slate-950 dark:text-white">{(sessions[0]?.timeStr || '10:30').split(' - ')[0]}</span>
+                  <span className="mt-1 text-[11px] font-black text-teal-600 dark:text-teal-300">进行中</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h5 className="text-[14px] leading-5 font-black text-slate-950 dark:text-white line-clamp-2">{sessions[0]?.title || '设计的同理心：为真实世界而创造'}</h5>
+                  <p className="mt-1.5 text-[12px] text-slate-500 dark:text-slate-300 truncate">{sessions[0]?.speakerName || '林见微'} · {sessions[0]?.location || '主舞台 · A1馆'}</p>
+                </div>
+                <div className="w-18 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shrink-0 flex items-center justify-center text-2xl text-white shadow-sm">
+                  🎤
+                </div>
+              </div>
+              <div className="mt-3 flex justify-center gap-1.5">
+                <span className="w-5 h-1.5 rounded-full bg-pink-500"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+              </div>
+            </div>
+
+            {/* Venue environment */}
+            <div className="app-env-card">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-12 h-12 rounded-2xl bg-teal-500/12 text-teal-600 dark:text-teal-300 flex items-center justify-center shrink-0">
+                  <Map className="w-6 h-6" />
+                </div>
+                <div className="min-w-0">
+                  <h5 className="text-[15px] font-black text-slate-950 dark:text-white truncate">A馆现场微气候传感器</h5>
+                  <p className="mt-1 text-[12px] text-slate-500 dark:text-slate-300 truncate">会场舒适，适合交流与逛展</p>
+                </div>
+              </div>
+              <span className="px-3 py-2 rounded-full bg-teal-500 text-white font-black text-[13px] shrink-0">23.2°C · 51%</span>
             </div>
           </div>
         )}
@@ -3436,52 +3436,24 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         </div>
       )}
 
-      {/* -------------------- PHONE NAVIGATION TABS (OPTIMIZED TO 4 TABS) -------------------- */}
+      {/* -------------------- PHONE NAVIGATION TABS -------------------- */}
       {isLoggedIn ? (
-        <div className="bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900 px-3 pt-2.5 pb-5.5 flex items-center justify-around shrink-0 relative z-30 select-none shadow-[0_-8px_24px_rgba(0,0,0,0.012)] animate-slideUp">
-          
-          {/* Tab 1: Lobby & Pass */}
-          <button 
-            onClick={() => { setActiveTab('home'); }} 
-            className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'home' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
-            }`}
-          >
-            <Home className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">首页</span>
+        <div className="app-bottom-nav">
+          <button onClick={() => setActiveTab('home')} className={`app-nav-item ${activeTab === 'home' ? 'app-nav-active' : ''}`}>
+            <Home className="w-5 h-5" />
+            <span>会场入口</span>
           </button>
-
-          {/* Tab 2: Concordant network & living report */}
-          <button 
-            onClick={() => { setActiveTab('we'); }} 
-            className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'we' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
-            }`}
-          >
-            <Users className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">同行</span>
+          <button onClick={() => setActiveTab('we')} className={`app-nav-item ${activeTab === 'we' ? 'app-nav-active' : ''}`}>
+            <Users className="w-5 h-5" />
+            <span>同频圈层</span>
           </button>
-
-          {/* Tab 3: Sandbox Interaction */}
-          <button 
-            onClick={() => { setActiveTab('co'); }} 
-            className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'co' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
-            }`}
-          >
-            <MessageCircle className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">互动</span>
+          <button onClick={() => setActiveTab('co')} className={`app-nav-item ${activeTab === 'co' ? 'app-nav-active' : ''}`}>
+            <MessageCircle className="w-5 h-5" />
+            <span>现场互动</span>
           </button>
-
-          {/* Tab 4: ME Image Card */}
-          <button 
-            onClick={() => { setActiveTab('me'); }} 
-            className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'me' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
-            }`}
-          >
-            <IdCard className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-[9px] font-bold tracking-tight scale-90">我的</span>
+          <button onClick={() => setActiveTab('me')} className={`app-nav-item ${activeTab === 'me' ? 'app-nav-active' : ''}`}>
+            <IdCard className="w-5 h-5" />
+            <span>ME信息卡</span>
           </button>
         </div>
       ) : (
