@@ -66,7 +66,7 @@ const menuItems: { id: AdminTab; label: string; desc: string; icon: React.Elemen
   { id: 'portfolio', label: '作品资料', desc: '设计作品与图像墙', icon: ImageIcon },
   { id: 'content', label: '互动内容', desc: '提问、弹幕、审核', icon: MessageCircle },
   { id: 'schedule', label: '议程管理', desc: '议程排期与直播状态', icon: CalendarDays },
-  { id: 'reports', label: '报告中心', desc: '个人报告与导出', icon: FileText },
+  { id: 'reports', label: '报告中心', desc: '个人报告 + 会议报告', icon: FileText },
   { id: 'settings', label: '系统设置', desc: '品牌与后台配置', icon: Settings }
 ];
 
@@ -308,6 +308,15 @@ export default function AdminDashboard({
     return Array.from(map.entries()).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value).slice(0, 6);
   }, [allAttendees]);
 
+  const groupDistribution = useMemo(() => {
+    const map = new Map<string, number>();
+    allAttendees.forEach((person) => {
+      const label = person.group || '参会者';
+      map.set(label, (map.get(label) || 0) + 1);
+    });
+    return Array.from(map.entries()).map(([label, value]) => ({ label, value }));
+  }, [allAttendees]);
+
   const phaseValues = [58, 72, 66, 82, 77, 91, 86];
   const recentQuestions = questions.slice(0, 3);
   const recentBullets = bulletMessages.slice(0, 4);
@@ -462,23 +471,23 @@ export default function AdminDashboard({
                         <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 text-[11px] font-black tracking-[0.22em] uppercase text-white/80">
                           <Sparkles className="w-3.5 h-3.5" /> 现场总控面板
                         </div>
-                        <h3 className="mt-4 text-3xl md:text-4xl font-black tracking-tight leading-tight">让后台也像一个成熟产品，而不是 Demo 页面</h3>
-                        <p className="mt-3 text-sm leading-7 text-white/70 max-w-xl">这一版强化了服务端视觉层次：加入数据可视化、图像模块、作品墙、用户资料卡与运营状态卡，让主办方网页和前台小程序在风格上保持统一。</p>
+                        <h3 className="mt-4 text-3xl md:text-4xl font-black tracking-tight leading-tight text-white drop-shadow-[0_2px_10px_rgba(15,23,42,0.28)] max-w-2xl">让后台也像一个成熟产品，而不是演示页面</h3>
+                        <p className="mt-4 text-base leading-8 text-white/88 max-w-2xl">这一版继续强化服务端视觉层次：加入更清晰的数据可视化、图像视觉模块、作品墙、用户资料卡与运营状态卡，并修正低对比度文本，让主办方网页和前台小程序在风格上保持统一、可读、专业。</p>
                         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
                           <div className="rounded-2xl bg-white/10 border border-white/10 p-3">
-                            <div className="text-[11px] text-white/60 font-bold">注册用户</div>
-                            <div className="mt-1 text-2xl font-black">{allAttendees.length}</div>
+                            <div className="text-[11px] text-white/80 font-bold">注册用户</div>
+                            <div className="mt-1 text-2xl font-black text-white">{allAttendees.length}</div>
                           </div>
                           <div className="rounded-2xl bg-white/10 border border-white/10 p-3">
-                            <div className="text-[11px] text-white/60 font-bold">签到率</div>
+                            <div className="text-[11px] text-white/80 font-bold">签到率</div>
                             <div className="mt-1 text-2xl font-black">{fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)}</div>
                           </div>
                           <div className="rounded-2xl bg-white/10 border border-white/10 p-3">
-                            <div className="text-[11px] text-white/60 font-bold">作品总数</div>
+                            <div className="text-[11px] text-white/80 font-bold">作品总数</div>
                             <div className="mt-1 text-2xl font-black">{workCards.length}</div>
                           </div>
                           <div className="rounded-2xl bg-white/10 border border-white/10 p-3">
-                            <div className="text-[11px] text-white/60 font-bold">报告可生成</div>
+                            <div className="text-[11px] text-white/80 font-bold">报告可生成</div>
                             <div className="mt-1 text-2xl font-black">{stats.reportReadyCount}</div>
                           </div>
                         </div>
@@ -488,7 +497,7 @@ export default function AdminDashboard({
                         <div className="flex items-center justify-between mb-3">
                           <div>
                             <div className="text-xs uppercase tracking-[0.18em] font-black text-white/50">Visual Board</div>
-                            <div className="text-xl font-black">活动封面与热度趋势</div>
+                            <div className="text-xl font-black text-white">活动封面与热度趋势</div>
                           </div>
                           <TrendingUp className="w-5 h-5 text-pink-300" />
                         </div>
@@ -571,21 +580,35 @@ export default function AdminDashboard({
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr] gap-6">
-                  <SectionCard title="嘉宾与用户照片墙" subtitle="让后台更有‘人’的感觉，也能快速看到关键用户。" action={<Users className="w-5 h-5 text-purple-500" />}>
+                  <SectionCard title="嘉宾与用户照片墙" subtitle="按更符合交互规范的卡片结构展示人物信息：头像、主信息、次信息、状态与明确 CTA。" action={<Users className="w-5 h-5 text-purple-500" />}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {allAttendees.slice(0, 4).map((person) => (
-                        <button key={person.id} onClick={() => { setSelectedUserId(person.id); setActiveTab('attendees'); }} className="text-left rounded-[26px] p-4 border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hover:border-pink-300 dark:hover:border-pink-500/30 transition">
-                          <div className="flex items-center gap-3">
+                        <button
+                          key={person.id}
+                          onClick={() => { setSelectedUserId(person.id); setActiveTab('attendees'); }}
+                          className="group text-left rounded-[28px] p-5 border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-pink-300 dark:hover:border-pink-500/30 transition-all"
+                        >
+                          <div className="flex items-start gap-4">
                             <Avatar person={person} size="lg" />
-                            <div className="min-w-0">
-                              <div className="font-black text-slate-950 dark:text-white truncate">{person.nickName}</div>
-                              <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 truncate">{person.organization}</div>
-                              <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">{person.designArchetype || person.title}</div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                  <div className="font-black text-2xl leading-none text-slate-950 dark:text-white truncate">{person.nickName}</div>
+                                  <div className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-300 truncate">{person.organization}</div>
+                                  <div className="mt-1 text-sm text-slate-500 dark:text-slate-400 truncate">{person.designArchetype || person.title}</div>
+                                </div>
+                                <span className={classNames('shrink-0 px-3 py-1.5 rounded-full text-[11px] font-black', completionTone(person.personaCompletion))}>{person.personaCompletion}% 完整度</span>
+                              </div>
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                {person.designDirections.slice(0, 2).map((tag) => (
+                                  <span key={tag} className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[11px] font-bold">{tag}</span>
+                                ))}
+                              </div>
+                              <div className="mt-4 flex items-center justify-between gap-3">
+                                <span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black', person.checkedIn ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300')}>{person.checkedIn ? '已签到' : '未签到'}</span>
+                                <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 bg-pink-500 text-white text-xs font-black shadow-sm group-hover:translate-x-0.5 transition-transform">查看详情 <ArrowRight className="w-3.5 h-3.5" /></span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="mt-3 flex items-center justify-between">
-                            <span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black', completionTone(person.personaCompletion))}>{person.personaCompletion}% 完整度</span>
-                            <span className="text-xs font-bold text-pink-600 dark:text-pink-400 flex items-center gap-1">查看详情 <ArrowRight className="w-3.5 h-3.5" /></span>
                           </div>
                         </button>
                       ))}
@@ -937,50 +960,179 @@ export default function AdminDashboard({
             )}
 
             {activeTab === 'reports' && (
-              <div className="grid grid-cols-1 xl:grid-cols-[0.9fr_1.1fr] gap-6">
-                <SectionCard title="报告中心概览" subtitle="面向用户的个人报告，应当更像成品而不是后台说明。" action={<FileText className="w-5 h-5 text-pink-500" />}>
-                  <div className="space-y-4">
-                    <div className="rounded-[28px] bg-gradient-to-br from-pink-500 via-purple-500 to-teal-400 text-white p-5">
-                      <div className="text-xs uppercase tracking-[0.2em] font-black text-white/70">Report Pipeline</div>
-                      <div className="mt-2 text-3xl font-black">{stats.reportReadyCount} 份可生成</div>
-                      <div className="mt-2 text-sm text-white/80">满足签到 + 资料完整度条件的用户可直接生成完整长图页，并支持一键导出 PNG。</div>
-                    </div>
-                    {allAttendees.slice(0, 5).map((person) => (
-                      <div key={person.id} className="rounded-[24px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex items-center gap-3">
-                        <Avatar person={person} size="md" />
-                        <div className="flex-1 min-w-0">
-                          <div className="font-black text-slate-950 dark:text-white">{person.nickName}</div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400">{person.designArchetype || person.title}</div>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 xl:grid-cols-[0.92fr_1.08fr] gap-6">
+                  <SectionCard title="个人报告生成" subtitle="除了用户个人长图报告，这里也保留生成状态、入口与成品预览。" action={<FileText className="w-5 h-5 text-pink-500" />}>
+                    <div className="space-y-4">
+                      <div className="rounded-[28px] bg-gradient-to-br from-pink-500 via-purple-500 to-teal-400 text-white p-5">
+                        <div className="text-xs uppercase tracking-[0.2em] font-black text-white/75">Personal Report Pipeline</div>
+                        <div className="mt-2 text-3xl font-black">{stats.reportReadyCount} 份可生成</div>
+                        <div className="mt-2 text-sm leading-7 text-white/90">满足签到 + 资料完整度条件的用户可生成完整长图页；长图中应包含头像、关键词、设计方向、代表作品、关系网络摘要以及多种图表。</div>
+                      </div>
+                      {allAttendees.slice(0, 5).map((person) => (
+                        <div key={person.id} className="rounded-[24px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex items-center gap-3">
+                          <Avatar person={person} size="md" />
+                          <div className="flex-1 min-w-0">
+                            <div className="font-black text-slate-950 dark:text-white">{person.nickName}</div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400">{person.designArchetype || person.title}</div>
+                          </div>
+                          <span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black', person.checkedIn && person.personaCompletion >= 70 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300')}>{person.checkedIn && person.personaCompletion >= 70 ? '可生成' : '待完善'}</span>
                         </div>
-                        <span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black', person.checkedIn && person.personaCompletion >= 70 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300')}>{person.checkedIn && person.personaCompletion >= 70 ? '可生成' : '待完善'}</span>
-                      </div>
-                    ))}
-                  </div>
-                </SectionCard>
-
-                <SectionCard title="报告成品感参考结构" subtitle="这里强调最终用户会看到的体验：图像、数据图表、关键词标签、社交关系与作品摘要。" action={<Download className="w-5 h-5 text-teal-500" />}>
-                  <div className="rounded-[30px] border border-slate-200/80 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900">
-                    <div className="h-40 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 text-white p-6 flex items-end justify-between">
-                      <div>
-                        <div className="text-xs uppercase tracking-[0.2em] font-black text-white/60">Personal Report</div>
-                        <div className="mt-2 text-2xl font-black">设计者个人报告长图页</div>
-                      </div>
-                      <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center text-3xl">🪪</div>
+                      ))}
                     </div>
-                    <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 p-4 bg-slate-50 dark:bg-slate-950">
-                        <div className="font-black text-slate-950 dark:text-white">视觉模块</div>
-                        <div className="mt-3 grid grid-cols-3 gap-2">
-                          {workCards.slice(0, 3).map((work) => (
-                            <div key={work.id} className="rounded-2xl overflow-hidden h-20 bg-slate-200 dark:bg-slate-800">
-                              {work.imageUrl ? <img src={work.imageUrl} alt={work.title} className="w-full h-full object-cover" /> : null}
+                  </SectionCard>
+
+                  <SectionCard title="个人报告版式预览" subtitle="用成品视角组织内容：图像、标签、数据图与作品摘要。" action={<Download className="w-5 h-5 text-teal-500" />}>
+                    <div className="rounded-[30px] border border-slate-200/80 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900">
+                      <div className="h-44 bg-gradient-to-br from-slate-950 via-violet-950 to-slate-900 text-white p-6 flex items-end justify-between">
+                        <div>
+                          <div className="text-xs uppercase tracking-[0.2em] font-black text-white/65">Personal Report Preview</div>
+                          <div className="mt-2 text-2xl font-black">设计者个人报告长图页</div>
+                          <div className="mt-2 text-sm text-white/80">更像真正给用户看的成品，而不是内部说明。</div>
+                        </div>
+                        <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center text-3xl">🪪</div>
+                      </div>
+                      <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 p-4 bg-slate-50 dark:bg-slate-950">
+                          <div className="font-black text-slate-950 dark:text-white">视觉模块</div>
+                          <div className="mt-3 grid grid-cols-3 gap-2">
+                            {workCards.slice(0, 3).map((work) => (
+                              <div key={work.id} className="rounded-2xl overflow-hidden h-20 bg-slate-200 dark:bg-slate-800">
+                                {work.imageUrl ? <img src={work.imageUrl} alt={work.title} className="w-full h-full object-cover" /> : null}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {distribution.slice(0, 3).map((item) => (
+                              <span key={item.label} className="px-2.5 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-300">{item.label}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 p-4 bg-slate-50 dark:bg-slate-950">
+                          <div className="font-black text-slate-950 dark:text-white">个人成长曲线</div>
+                          <SimpleAreaChart values={[40, 52, 61, 74, 68, 82]} />
+                        </div>
+                      </div>
+                    </div>
+                  </SectionCard>
+                </div>
+
+                <SectionCard title="会议总报告" subtitle="除个人报告外，还应生成本次会议的整体报告，包含签到、活跃、内容、议程与作品等多维视图。" action={<BarChart3 className="w-5 h-5 text-violet-500" />}>
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                      <MiniMetric label="会议参与人数" value={allAttendees.length} helper="当前注册 / 导入总人数" icon={Users} accent="bg-gradient-to-br from-pink-500 to-purple-500" />
+                      <MiniMetric label="会议签到率" value={fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} helper="现场签到完成情况" icon={QrCode} accent="bg-gradient-to-br from-teal-400 to-cyan-500" />
+                      <MiniMetric label="互动总量" value={questions.length + bulletMessages.length + connections.length} helper="提问 + 弹幕 + 同频连接" icon={MessageCircle} accent="bg-gradient-to-br from-violet-500 to-indigo-500" />
+                      <MiniMetric label="作品浏览样本" value={workCards.length} helper="报告可引用的图片模块" icon={ImageIcon} accent="bg-gradient-to-br from-amber-400 to-orange-500" />
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-6">
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <div className="text-lg font-black text-slate-950 dark:text-white">会议热度趋势</div>
+                            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">适合放在会议总报告首页的趋势型可视化。</div>
+                          </div>
+                          <TrendingUp className="w-5 h-5 text-pink-500" />
+                        </div>
+                        <div className="mt-4 rounded-[24px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4">
+                          <SimpleAreaChart values={[52, 66, 63, 79, 72, 86, 82, 91]} />
+                          <div className="grid grid-cols-4 gap-2 mt-2 text-center text-xs font-bold text-slate-500 dark:text-slate-400">
+                            <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 py-2">报名热度</div>
+                            <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 py-2">签到峰值</div>
+                            <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 py-2">互动峰值</div>
+                            <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 py-2">会后回看</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <div className="text-lg font-black text-slate-950 dark:text-white">会议健康度</div>
+                            <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">用环图 + 指标条展示总体完成度。</div>
+                          </div>
+                          <Activity className="w-5 h-5 text-teal-500" />
+                        </div>
+                        <div className="mt-4 grid grid-cols-[160px_1fr] gap-5 items-center">
+                          <div className="flex justify-center"><DonutChart value={Math.round((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} /></div>
+                          <div className="space-y-4">
+                            {[
+                              { label: '签到完成', value: (checkedInCount / Math.max(allAttendees.length, 1)) * 100 },
+                              { label: '内容活跃', value: ((questions.length + bulletMessages.length) / Math.max(allAttendees.length * 2, 1)) * 100 },
+                              { label: '社交连接', value: (connections.filter((c) => c.status === 'confirmed').length / Math.max(allAttendees.length, 1)) * 100 },
+                              { label: '报告覆盖', value: (stats.reportReadyCount / Math.max(allAttendees.length, 1)) * 100 }
+                            ].map((row) => (
+                              <div key={row.label}>
+                                <div className="mb-2 flex items-center justify-between text-sm">
+                                  <span className="font-bold text-slate-700 dark:text-slate-200">{row.label}</span>
+                                  <span className="font-black text-slate-950 dark:text-white">{fmtPercent(row.value)}</span>
+                                </div>
+                                <div className="h-3 rounded-full bg-slate-200/80 dark:bg-slate-800 overflow-hidden">
+                                  <div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400" style={{ width: `${Math.max(12, Math.min(100, row.value))}%` }} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                        <div className="text-lg font-black text-slate-950 dark:text-white">用户结构分布</div>
+                        <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">用横向柱图表现不同设计方向的人群构成，当前共 {groupDistribution.length} 类参会身份。</div>
+                        <div className="mt-4 space-y-4">
+                          {distribution.slice(0, 5).map((item) => {
+                            const pct = (item.value / Math.max(allAttendees.length, 1)) * 100;
+                            return (
+                              <div key={item.label}>
+                                <div className="mb-2 flex items-center justify-between text-sm">
+                                  <span className="font-bold text-slate-700 dark:text-slate-200">{item.label}</span>
+                                  <span className="font-black text-slate-950 dark:text-white">{item.value}</span>
+                                </div>
+                                <div className="h-3 rounded-full bg-slate-200/80 dark:bg-slate-800 overflow-hidden">
+                                  <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500" style={{ width: `${Math.max(16, pct)}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                        <div className="text-lg font-black text-slate-950 dark:text-white">议程热度排行</div>
+                        <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">适合在会议总报告中作为 TOP Sessions 模块。</div>
+                        <div className="mt-4 space-y-3">
+                          {topSessions.slice(0, 4).map((session, index) => (
+                            <div key={session.id} className="rounded-[22px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4">
+                              <div className="flex items-start justify-between gap-3">
+                                <div>
+                                  <div className="text-xs font-bold text-slate-500 dark:text-slate-400">TOP {index + 1}</div>
+                                  <div className="mt-1 font-black text-slate-950 dark:text-white leading-6">{session.title}</div>
+                                  <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">{session.timeStr} · {session.location}</div>
+                                </div>
+                                <span className="px-2.5 py-1 rounded-full bg-pink-500/10 text-pink-600 dark:text-pink-300 text-[11px] font-black">{session.likesCount} 热度</span>
+                              </div>
                             </div>
                           ))}
                         </div>
                       </div>
-                      <div className="rounded-[22px] border border-slate-200/80 dark:border-slate-800 p-4 bg-slate-50 dark:bg-slate-950">
-                        <div className="font-black text-slate-950 dark:text-white">数据图表</div>
-                        <SimpleAreaChart values={[40, 52, 61, 74, 68, 82]} />
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5">
+                        <div className="text-lg font-black text-slate-950 dark:text-white">图像与作品摘要</div>
+                        <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">会议总报告不仅是数字，也应带有图片表达。</div>
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                          {workCards.slice(0, 4).map((work) => (
+                            <div key={work.id} className="rounded-[20px] overflow-hidden border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900">
+                              <div className="h-24 bg-slate-200 dark:bg-slate-800">{work.imageUrl ? <img src={work.imageUrl} alt={work.title} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center">🖼️</div>}</div>
+                              <div className="p-3">
+                                <div className="text-xs font-black text-slate-950 dark:text-white line-clamp-1">{work.title}</div>
+                                <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{work.owner}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
