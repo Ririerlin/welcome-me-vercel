@@ -1324,7 +1324,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         ) : (
           <>
             {/* Dynamic event phase block - highly visualized with bright Macaron accents - borderless */}
-            <div className={`bg-gradient-to-r from-pink-500/10 via-teal-500/10 to-purple-500/10 rounded-2xl p-3.5 items-center justify-between text-[11px] hover:shadow-[0_8px_20px_rgba(244,114,182,0.05)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ${activeTab === 'home' ? 'hidden' : 'flex'}`}>
+            <div className="bg-gradient-to-r from-pink-500/10 via-teal-500/10 to-purple-500/10 rounded-2xl p-3.5 flex items-center justify-between text-[11px] hover:shadow-[0_8px_20px_rgba(244,114,182,0.05)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
               <div className="flex items-center space-x-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-405 opacity-70"></span>
@@ -1341,123 +1341,165 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
         {/* -------------------- TAB 1: HOME & PASSPORT -------------------- */}
         {activeTab === 'home' && (
-          <div className="real-app-home animate-fadeIn">
-            <div className="real-app-header">
-              <div className="real-app-logo">ME</div>
-              <div className="min-w-0">
-                <div className="real-app-title">欢迎ME</div>
-                <div className="real-app-subtitle">跨界设计峰会用户端</div>
+          <div className="space-y-4 animate-fadeIn">
+            
+            {/* Greet & Stats ring - borderless */}
+            <div className="flex items-center justify-between bg-white/90 dark:bg-slate-900/90 p-4 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.015)] hover:shadow-[0_12px_32px_rgba(244,114,182,0.06)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-350 cursor-pointer">
+              <div className="space-y-1">
+                <p className="text-[10px] text-pink-500 font-bold uppercase tracking-widest leading-none">WELCOME BACK</p>
+                <h2 className="text-md font-extrabold tracking-tight">你好，{myProfile.nickName || '参会者'} 🔮</h2>
+                <span className="text-[10px] text-slate-400 block">您是本次大会第 <strong className="font-bold text-rose-500">#042</strong> 位打卡创作者</span>
               </div>
-              <div className="real-app-status">
-                <span className="real-app-status-dot" />
-                {eventPhase === 'during' ? '进行中' : eventPhase === 'before' ? '预热中' : '已结束'}
-              </div>
-            </div>
-
-            <div className="real-welcome-card">
-              <div className="min-w-0">
-                <div className="real-card-kicker">WELCOME BACK</div>
-                <div className="real-welcome-name">你好，{myProfile.nickName || '参会者'}</div>
-                <div className="real-welcome-meta">{myProfile.organization || '明眸设计工作室'} · {myProfile.title || '资深体验探路师'}</div>
-              </div>
-              <div className="real-progress-ring" style={{ ['--progress' as string]: myProfile.personaCompletion }}>
-                <span>{myProfile.personaCompletion}%</span>
+              <div className="relative w-12 h-12 flex items-center justify-center shrink-0 select-none">
+                <svg className="w-12 h-12 transform -rotate-90">
+                  <circle cx="24" cy="24" r="20" stroke="#f1f5f9" strokeWidth="4" fill="transparent" className="dark:stroke-slate-800" />
+                  <circle cx="24" cy="24" r="20" stroke="#0ea5e9" strokeWidth="4" fill="transparent" strokeDasharray={`${2 * Math.PI * 20}`} strokeDashoffset={`${2 * Math.PI * 20 * (1 - myProfile.personaCompletion / 100)}`} className="text-teal-400 stroke-teal-400 transition-all duration-500" />
+                </svg>
+                <span className="absolute text-[9px] font-black font-mono text-teal-600 dark:text-teal-400">{myProfile.personaCompletion}%</span>
               </div>
             </div>
 
-            <div className="real-pass-card">
-              <div className="real-pass-bg real-pass-bg-pink" />
-              <div className="real-pass-bg real-pass-bg-teal" />
-              <div className="real-pass-top">
-                <div className="min-w-0">
-                  <div className="real-pass-title">2026 跨界设计与人性体验峰会</div>
-                  <div className="real-pass-location">⌖ 上海当代艺术创意园 · A1馆</div>
+            {/* Simulated Live NFC Pass & Ticket QR Card (Original 'i' merged seamlessly here) - borderless */}
+            <div className="bg-gradient-to-tr from-pink-100/60 via-teal-100/25 via-purple-150/45 to-orange-100/35 dark:from-pink-950/20 dark:via-purple-950/10 dark:to-slate-905 rounded-[32px] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.015)] hover:shadow-[0_20px_50px_rgba(244,114,182,0.08)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-350 relative overflow-hidden group cursor-pointer">
+              <div className="absolute right-0 top-0 bg-gradient-to-r from-pink-550 to-purple-550 text-white font-black text-[8px] px-4 py-1.5 rounded-bl-2xl tracking-widest uppercase">
+                VIP 特权入场券
+              </div>
+
+              <div className="border-b border-dashed border-slate-205/60 dark:border-slate-800/60 pb-3 mt-1.5">
+                <h4 className="font-extrabold text-sm text-slate-850 dark:text-slate-100 tracking-tight">2026 跨界设计与人性体验峰会</h4>
+                <div className="flex justify-between items-center text-[9px] text-slate-400 mt-1">
+                  <span>上海当代艺术创意园 • A1馆</span>
+                  <span className="text-purple-650 font-bold">2026-05-25</span>
                 </div>
-                <div className="real-pass-date">2026-05-25</div>
               </div>
-              <div className="real-dashed-line" />
-              <div className="real-qr-wrap">
-                <div className="real-qr-box">
-                  <QrCode className={`real-qr-icon ${myProfile.checkedIn ? 'opacity-20' : 'opacity-100'}`} />
+
+              {/* QR Code Graphic or dynamic verified stamp */}
+              <div className="py-2 flex flex-col items-center space-y-2.5">
+                <div className="relative p-3.5 bg-white rounded-3xl shadow-inner flex items-center justify-center hover:scale-108 active:scale-95 transition-all duration-300">
+                  <QrCode className={`h-28 w-28 text-slate-900 transition-all duration-300 ${myProfile.checkedIn ? 'opacity-20' : 'opacity-100'}`} />
+                  
+                  {/* Dynamic stamp feedback - borderless */}
                   {myProfile.checkedIn && (
-                    <div className="real-qr-passed">
-                      <Check className="h-6 w-6" />
-                      <span>已核销</span>
+                    <div className="absolute inset-x-2 inset-y-2 bg-white/95 dark:bg-slate-950/95 rounded-2xl flex flex-col items-center justify-center text-rose-500 dark:text-rose-400 text-xs font-black select-none">
+                      <div className="h-11 w-11 bg-rose-50 text-rose-550 rounded-full flex items-center justify-center text-xs font-black animate-scaleIn select-none transform rotate-[-12deg] shadow-md shadow-rose-500/5">
+                        PASSED
+                      </div>
+                      <span className="mt-1.5 font-extrabold text-[10px]">核销通行证已解锁</span>
+                      <span className="text-[8px] font-mono text-slate-400 font-normal">核销时间: {myProfile.checkedInAt || '09:12'}</span>
                     </div>
                   )}
                 </div>
-                <div className="real-pass-id">凭证ID&nbsp;&nbsp; ME-2026-VIP-8891</div>
+                <span className="font-mono text-[9px] text-slate-400 tracking-wide select-all">凭证ID: ME-2026-VIP-8891</span>
               </div>
+
+              {/* Action buttons with custom scale feedback */}
               {!myProfile.checkedIn ? (
-                <button
+                <button 
                   onClick={() => {
                     const now = new Date();
                     const formattedTime = now.toTimeString().split(' ')[0].substring(0, 5);
                     setMyProfile({ ...myProfile, checkedIn: true, checkedInAt: formattedTime });
-                    triggerToast('签到核销成功，已开启你的大会权益');
+                    triggerToast('🎟️ 电子通签核销成功！物理伴盖已同步，快去绑定 NFC 设备！');
                   }}
-                  className="real-cta-button"
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 active:scale-95 text-white font-bold text-xs py-3 rounded-2xl shadow-lg shadow-pink-500/10 transition-all text-center cursor-pointer"
                 >
-                  <span className="text-xl leading-none">⌗</span>
-                  扫描签到位核销通证
+                  【模拟到场】扫描签到位核销通证
                 </button>
               ) : (
-                <div className="real-checked-tip">已核签入场 · 权益已开启</div>
+                <div className="text-center text-[10px] text-teal-600 dark:text-teal-400 bg-teal-500/10 py-2.5 rounded-2xl font-bold select-none shadow-xs">
+                  🎉 已核签入场，前排 VIP 座席专属权益已开启
+                </div>
               )}
             </div>
 
-            <div className="real-action-grid">
-              <button onClick={() => { setActiveTab('me'); setSurveyStep(0); }} className="real-action-card">
-                <div className="real-action-icon real-action-pink"><IdCard className="h-6 w-6" /></div>
-                <span>我的肖像</span>
-                <ChevronRight className="h-4 w-4 real-action-chevron" />
+            {/* Quick dashboard features - highly visualized cards */}
+            <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
+              <button 
+                onClick={() => { setActiveTab('me'); setSurveyStep(0); }} 
+                className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-2.5 rounded-2xl border border-white/60 dark:border-white/10 hover:border-pink-300 dark:hover:border-pink-500 hover:scale-[1.03] active:scale-[0.97] transition-all flex flex-col items-center space-y-1 block shadow-xs"
+              >
+                <div className="p-1.5 bg-pink-100 dark:bg-pink-950/40 rounded-xl text-pink-600 dark:text-pink-400">
+                  <IdCard className="h-4.5 w-4.5" />
+                </div>
+                <span className="font-bold text-slate-600 dark:text-slate-400">我的肖像</span>
               </button>
-              <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="real-action-card">
-                <div className="real-action-icon real-action-purple"><MessageSquare className="h-6 w-6" /></div>
-                <span>主场发言</span>
-                <ChevronRight className="h-4 w-4 real-action-chevron" />
+              
+              <button 
+                onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} 
+                className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-2.5 rounded-2xl border border-white/60 dark:border-white/10 hover:border-teal-300 dark:hover:border-teal-500 hover:scale-[1.03] active:scale-[0.97] transition-all flex flex-col items-center space-y-1 block shadow-xs"
+              >
+                <div className="p-1.5 bg-teal-100 dark:bg-teal-950/40 rounded-xl text-teal-600 dark:text-teal-400">
+                  <MessageSquare className="h-4.5 w-4.5" />
+                </div>
+                <span className="font-bold text-slate-600 dark:text-slate-400">主场发言</span>
               </button>
-              <button onClick={() => { setActiveTab('co'); setActiveSessionTab('exhibits'); }} className="real-action-card">
-                <div className="real-action-icon real-action-teal"><Award className="h-6 w-6" /></div>
-                <span>实地展品</span>
-                <ChevronRight className="h-4 w-4 real-action-chevron" />
+
+              <button 
+                onClick={() => { setActiveTab('co'); setActiveSessionTab('exhibits'); }} 
+                className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-2.5 rounded-2xl border border-white/60 dark:border-white/10 hover:border-purple-300 dark:hover:border-purple-500 hover:scale-[1.03] active:scale-[0.97] transition-all flex flex-col items-center space-y-1 block shadow-xs"
+              >
+                <div className="p-1.5 bg-purple-100 dark:bg-purple-950/40 rounded-xl text-purple-600 dark:text-purple-400">
+                  <Award className="h-4.5 w-4.5" />
+                </div>
+                <span className="font-bold text-slate-600 dark:text-slate-400">实地展品</span>
               </button>
             </div>
 
-            <div className="real-agenda-card">
-              <div className="real-section-header">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="real-fire">🔥</span>
-                  <span className="real-section-title">此时段热门议程</span>
-                </div>
-                <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="real-view-btn">查看</button>
+            {/* Quick timeline schedules */}
+            <div className="space-y-2 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/60 dark:border-white/10">
+              <div className="flex items-center justify-between border-b dark:border-slate-850 pb-2">
+                <h4 className="text-[11px] font-black text-slate-500 flex items-center space-x-1.5 uppercase tracking-wider">
+                  <Compass className="h-3.5 w-3.5 text-pink-500 animate-spin" />
+                  <span>此时段热门议程 (点击联动)</span>
+                </h4>
+                <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="text-[10px] text-pink-500 font-bold hover:underline">查看全议程 →</button>
               </div>
-              {sessions.slice(0, 1).map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => {
-                    setActiveSessionId(s.id);
-                    setActiveTab('co');
-                    setActiveSessionTab('sessions');
-                    triggerToast('已切换到该议程');
-                  }}
-                  className="real-agenda-item"
-                >
-                  <div className="real-agenda-time">
-                    <strong>{s.timeStr.split(' - ')[0] || '10:30'}</strong>
-                    <span>{s.isLive ? '进行中' : '即将开始'}</span>
+
+              <div className="space-y-2 pt-1">
+                {sessions.slice(0, 2).map(s => (
+                  <div 
+                    key={s.id}
+                    onClick={() => {
+                      setActiveSessionId(s.id);
+                      setActiveTab('co');
+                      setActiveSessionTab('sessions');
+                      triggerToast(`已联动切换主论坛关注场次，进入共创板块！🐳`);
+                    }}
+                    className={`border rounded-xl p-2.5 cursor-pointer hover:scale-[1.01] hover:shadow-xs transition duration-200 flex items-center justify-between ${
+                      s.isLive 
+                        ? 'bg-gradient-to-r from-pink-500/5 to-purple-500/5 border-pink-200/50' 
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-150 dark:border-slate-855'
+                    }`}
+                  >
+                    <div className="flex-1 min-w-0 pr-2">
+                      <div className="flex items-center space-x-1.5 mb-1 text-[9px]">
+                        <span className="bg-pink-100 dark:bg-pink-950/50 text-pink-650 px-1.5 py-0.2 rounded font-mono font-bold">{s.timeStr}</span>
+                        {s.isLive && <span className="text-[9px] font-bold text-rose-500 animate-pulse">● LIVE</span>}
+                      </div>
+                      <h5 className="font-bold text-[11px] leading-snug truncate text-slate-700 dark:text-slate-205">{s.title}</h5>
+                    </div>
+                    <span className="text-[10px] text-slate-400 shrink-0 font-medium">👉</span>
                   </div>
-                  <div className="real-agenda-info">
-                    <div className="real-agenda-title">{s.title}</div>
-                    <div className="real-agenda-meta">{s.speakerName} · {s.location}</div>
-                  </div>
-                  <div className="real-agenda-thumb">
-                    <span>{s.speakerAvatarEmoji}</span>
-                  </div>
-                </button>
-              ))}
-              <div className="real-dots"><span /><span /><span /></div>
+                ))}
+              </div>
             </div>
+
+            {/* Architectural Map & Climate state (Info Visualization Instead of raw descriptions) - borderless */}
+            <div className="bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-slate-900/50 dark:to-slate-950/50 rounded-2xl p-3.5 flex items-center justify-between hover:scale-[1.03] duration-300 transition-all cursor-pointer">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-950/60 flex items-center justify-center text-teal-650">
+                  <Map className="h-4.5 w-4.5" />
+                </div>
+                <div>
+                  <h5 className="text-[11px] font-extrabold text-slate-850 dark:text-slate-200">A馆现场微气候传感器</h5>
+                  <p className="text-[9px] text-slate-400 font-medium">今日天气舒适，适合逛展与交流</p>
+                </div>
+              </div>
+              <div className="text-right font-mono shrink-0 select-none">
+                <span className="text-[10px] bg-teal-500 text-white font-black px-2.5 py-1 rounded-full shadow-md shadow-teal-500/10">23.2°C • 51%</span>
+              </div>
+            </div>
+
           </div>
         )}
 
