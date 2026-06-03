@@ -446,18 +446,25 @@ export default function AdminDashboard({
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={classNames(
-                    'w-full text-left rounded-[24px] border transition px-4 py-4 flex items-start gap-4',
+                    'w-full text-left rounded-[20px] border transition px-3 py-3 flex items-center gap-3',
                     active
                       ? 'border-pink-200 dark:border-pink-500/20 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-teal-500/10 shadow-sm'
                       : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-900'
                   )}
                 >
-                  <div className={classNames('w-14 h-14 rounded-[20px] flex items-center justify-center shrink-0', active ? 'bg-white dark:bg-slate-900 text-pink-600 shadow-sm' : 'bg-slate-100 dark:bg-slate-900 text-slate-500')}>
+                  <div
+                    className={classNames(
+                      'w-10 h-10 rounded-2xl flex items-center justify-center shrink-0',
+                      active
+                        ? 'bg-white dark:bg-slate-900 text-pink-600 shadow-sm'
+                        : 'bg-slate-100 dark:bg-slate-900 text-slate-500'
+                    )}
+                  >
                     <Icon className="w-4.5 h-4.5" />
                   </div>
-                  <div className="min-w-0 pt-0.5">
-                    <div className="text-[17px] leading-6 font-extrabold tracking-tight text-slate-900 dark:text-white">{item.label}</div>
-                    <div className="mt-1 text-[14px] leading-5 text-slate-500 dark:text-slate-400">{item.desc}</div>
+                  <div className="min-w-0">
+                    <div className="text-sm leading-5 font-black tracking-tight text-slate-900 dark:text-white">{item.label}</div>
+                    <div className="mt-0.5 text-[11px] leading-4 text-slate-500 dark:text-slate-400 truncate">{item.desc}</div>
                   </div>
                 </button>
               );
@@ -729,22 +736,82 @@ export default function AdminDashboard({
 
             {activeTab === 'attendees' && (
               <div className="grid grid-cols-1 2xl:grid-cols-[1.05fr_0.95fr] gap-6">
-                <SectionCard title="参会用户资料" subtitle="支持搜索、浏览与查看详细个人信息。" action={<div className="relative"><Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜索姓名 / 机构 / 方向" className="pl-9 pr-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm" /></div>}>
+                <SectionCard title="参会用户资料" subtitle="支持搜索、浏览与查看详细个人信息。" action={
+                  <div className="relative w-full md:w-[340px]">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="搜索姓名 / 机构 / 方向"
+                      className="w-full pl-9 pr-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-sm text-slate-700 dark:text-slate-100"
+                    />
+                  </div>
+                }>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredAttendees.map((person) => (
-                      <button key={person.id} onClick={() => setSelectedUserId(person.id)} className={classNames('text-left rounded-[26px] border p-4 transition', selectedUserId === person.id ? 'border-pink-300 dark:border-pink-500/30 bg-pink-50/60 dark:bg-slate-950' : 'border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700')}>
-                        <div className="flex items-start gap-3">
+                      <button
+                        key={person.id}
+                        onClick={() => setSelectedUserId(person.id)}
+                        className={classNames(
+                          'admin-user-card text-left border p-5 transition min-h-[220px] w-full',
+                          selectedUserId === person.id
+                            ? 'border-pink-300 dark:border-pink-500/30 bg-pink-50/70 dark:bg-slate-900 shadow-sm'
+                            : 'border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-pink-200 dark:hover:border-pink-500/30 hover:shadow-md'
+                        )}
+                      >
+                        <div className="flex items-start gap-4">
                           <Avatar person={person} size="lg" />
+
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="font-black text-slate-950 dark:text-white truncate">{person.nickName}</div>
-                              <span className={classNames('px-2 py-1 rounded-full text-[11px] font-black', completionTone(person.personaCompletion))}>{person.personaCompletion}%</span>
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <div className="font-black text-2xl leading-none text-slate-950 dark:text-white truncate">
+                                  {person.nickName}
+                                </div>
+
+                                <div className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-300 truncate">
+                                  {person.organization}
+                                </div>
+
+                                <div className="mt-1 text-sm text-slate-500 dark:text-slate-400 truncate">
+                                  {person.title}
+                                </div>
+                              </div>
+
+                              <span
+                                className={classNames(
+                                  'admin-chip shrink-0',
+                                  completionTone(person.personaCompletion)
+                                )}
+                              >
+                                {person.personaCompletion}%
+                              </span>
                             </div>
-                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 truncate">{person.organization} · {person.title}</div>
-                            <div className="mt-2 text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">{person.quote || person.industry}</div>
-                            <div className="mt-3 flex items-center justify-between">
-                              <TagList tags={person.designDirections.slice(0, 2)} />
-                              <span className={classNames('text-[11px] font-black px-2.5 py-1 rounded-full', person.checkedIn ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300')}>{person.checkedIn ? '已签到' : '未签到'}</span>
+
+                            <div className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300 line-clamp-2">
+                              {person.quote || person.industry}
+                            </div>
+
+                            <div className="mt-4 flex flex-wrap items-center gap-2">
+                              {person.designDirections.slice(0, 2).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="admin-chip bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+
+                              <span
+                                className={classNames(
+                                  'admin-chip ml-auto',
+                                  person.checkedIn
+                                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300'
+                                )}
+                              >
+                                {person.checkedIn ? '已签到' : '未签到'}
+                              </span>
                             </div>
                           </div>
                         </div>

@@ -53,25 +53,27 @@ export default function App() {
 
   if (isAdminRoute) {
     return (
-      <AdminDashboard
-        myProfile={myProfile}
-        setMyProfile={setMyProfile}
-        attendees={attendees}
-        setAttendees={setAttendees}
-        sessions={sessions}
-        setSessions={setSessions}
-        questions={questions}
-        setQuestions={setQuestions}
-        polls={polls}
-        exhibits={exhibits}
-        setExhibits={setExhibits}
-        connections={connections}
-        setConnections={setConnections}
-        bulletMessages={bulletMessages}
-        setBulletMessages={setBulletMessages}
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-      />
+      <div className="admin-console">
+        <AdminDashboard
+          myProfile={myProfile}
+          setMyProfile={setMyProfile}
+          attendees={attendees}
+          setAttendees={setAttendees}
+          sessions={sessions}
+          setSessions={setSessions}
+          questions={questions}
+          setQuestions={setQuestions}
+          polls={polls}
+          exhibits={exhibits}
+          setExhibits={setExhibits}
+          connections={connections}
+          setConnections={setConnections}
+          bulletMessages={bulletMessages}
+          setBulletMessages={setBulletMessages}
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+        />
+      </div>
     );
   }
 
@@ -154,7 +156,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
+    <div className="mini-app-theme min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       
       {/* Outer master Header bar */}
       <header className="hidden md:flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 items-center justify-between sticky top-0 z-50">

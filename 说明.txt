@@ -1,22 +1,20 @@
-欢迎ME 服务端报告中心字体 + 会议词云补丁
+欢迎ME 服务端卡片布局与夜间模式修复补丁
 
 修复内容：
-1. 修复“报告中心”菜单副标题字体和符号问题
-   - 将“个人报告+会议报告”改成“个人报告 · 会议总报告”
-   - 调整左侧菜单卡片字号、行高、图标尺寸、留白和对齐方式
-
-2. 增强会议总报告
-   - 新增会议关键词词云
-   - 词云数据来自：用户设计方向、兴趣标签、议程标签、展品标签、同频关系标签
-   - 会议总报告包含多种可视化：趋势图、健康度环图、横向柱图、热度排行、图像摘要、词云
-
-3. 继续优化可读性
-   - 提高深色区域标题和说明文字对比度
-   - 调整部分卡片视觉层级，避免字过灰或信息挤压
+1. 给后台增加 admin-console 样式作用域，避免前台小程序全局 CSS 污染后台。
+2. 给用户端增加 mini-app-theme 标记，方便前后台样式隔离。
+3. 修复左侧菜单卡片结构：字号、图标、间距恢复到更标准的后台导航。
+4. 修复“参会用户资料”卡片：不再像大胶囊，标签与签到状态不再挤压。
+5. 修复搜索框交互格式。
+6. 增强后台夜间模式可读性，提亮灰字、修正深色卡片和输入框。
 
 安装方式：
-unzip -o welcome-me-admin-report-wordcloud-fix.zip
+unzip -o ~/Downloads/welcome-me-admin-card-dark-fix.zip
 npm run build
 git add .
-git commit -m "fix admin report typography and add word cloud"
+git commit -m "fix admin card layout and dark mode readability"
+git push
+
+如果想回滚：
+git revert HEAD --no-edit
 git push
