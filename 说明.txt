@@ -1,25 +1,27 @@
-欢迎ME 服务端真实交互补丁
+欢迎ME 后台会议总报告增强补丁
 
 本补丁只覆盖：
 - src/components/AdminDashboard.tsx
 
-修复/新增：
-1. 系统设置页的输入框、开关、上传、角色人数、报告模块、导出格式都可以真实交互
-2. 设置内容会保存到浏览器 localStorage
-3. 活动基础信息可编辑
-4. 品牌 Logo 文案、主题色、封面图、报告背景可修改
-5. 报名资料开关、通知开关、集成状态开关可切换
-6. 权限角色人数可加减
-7. 报告模块可勾选/取消，导出格式可切换
-8. 高级设置里的导出快照、重置本机演示数据、管理员访问控制都能点击生效
-9. 其他后台模块也保留可交互：签到、关系确认、提问审核、议程直播/推荐切换、导出报告数据等
+更新内容：
+1. 优化“会议总报告”模块，整体更接近真实 SaaS 数据仪表板。
+2. 增强顶部 KPI 卡片：参与人数、签到率、互动总量、作品浏览样本。
+3. 新增更完整的会议热度趋势图：访问热度、互动提问、作品浏览三条线。
+4. 优化会议关键词词云布局，增强暗色模式可读性。
+5. 新增签到结构模块：环图 + 已签到 / 未签到 / 待审核进度条。
+6. 新增参会角色占比模块。
+7. 新增高频议题排行模块。
+8. 新增活跃嘉宾 / 用户模块，可点击跳转到参会用户详情。
+9. 新增互动情绪分布模块。
+10. 新增作品方向分布模块。
+11. 保留“导出报告数据”按钮，继续可导出 JSON。
 
-说明：
-这是前端本地可交互版本，数据保存在当前浏览器。真正多设备同步需要后续接 Supabase / Firebase / 数据库。
-
-安装：
-unzip -o ~/Downloads/welcome-me-admin-real-interactions.zip
+安装方式：
+unzip -o ~/Downloads/welcome-me-admin-meeting-report-rich.zip
 npm run build
 git add .
-git commit -m "make admin dashboard interactive"
+git commit -m "enhance admin meeting report"
 git push
+
+部署后打开：
+https://welcome-me-vercel.vercel.app/admin?v=29

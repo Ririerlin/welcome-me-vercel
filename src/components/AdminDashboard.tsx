@@ -306,6 +306,100 @@ function WordCloudPanel({ items }: { items: { label: string; value: number }[] }
   );
 }
 
+
+function MeetingTrendChart() {
+  const times = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+  const series = [
+    { name: '访问热度', color: '#ec4899', values: [10, 49, 70, 76, 89, 83, 96, 78, 90] },
+    { name: '互动提问', color: '#8b5cf6', values: [8, 34, 44, 56, 52, 64, 68, 51, 58] },
+    { name: '作品浏览', color: '#14b8a6', values: [6, 16, 20, 24, 35, 45, 39, 34, 37] }
+  ];
+  const chartW = 520;
+  const chartH = 210;
+  const left = 44;
+  const top = 18;
+  const max = 100;
+  const pointList = (values: number[]) => values.map((value, index) => {
+    const x = left + (index / (values.length - 1)) * chartW;
+    const y = top + chartH - (value / max) * chartH;
+    return `${x},${y}`;
+  }).join(' ');
+  const areaList = (values: number[]) => `${left},${top + chartH} ${pointList(values)} ${left + chartW},${top + chartH}`;
+
+  return (
+    <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <h4 className="text-lg font-black text-slate-950 dark:text-white">会议热度趋势</h4>
+            <span className="rounded-full border border-slate-200 dark:border-slate-700 px-2 py-0.5 text-[10px] font-black text-slate-500 dark:text-slate-300">LIVE</span>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-3 text-xs font-bold text-slate-500 dark:text-slate-300">
+            {series.map((item) => <span key={item.name} className="inline-flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />{item.name}</span>)}
+          </div>
+        </div>
+        <div className="flex rounded-2xl bg-slate-100 dark:bg-slate-800 p-1 text-xs font-black">
+          {['时段', '小时', '累计'].map((item, index) => <span key={item} className={classNames('px-3 py-1.5 rounded-xl', index === 0 ? 'bg-violet-500 text-white shadow-sm' : 'text-slate-500 dark:text-slate-300')}>{item}</span>)}
+        </div>
+      </div>
+      <svg viewBox="0 0 600 280" className="mt-5 h-[270px] w-full overflow-visible">
+        <defs>
+          <linearGradient id="meetingTrendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ec4899" stopOpacity="0.28" /><stop offset="100%" stopColor="#14b8a6" stopOpacity="0.02" /></linearGradient>
+        </defs>
+        {[0, 25, 50, 75, 100].map((tick) => {
+          const y = top + chartH - (tick / max) * chartH;
+          return <g key={tick}><line x1={left} x2={left + chartW} y1={y} y2={y} stroke="rgba(148,163,184,0.18)" strokeDasharray="4 8" /><text x={8} y={y + 4} fill="currentColor" className="text-[10px] text-slate-400">{tick}</text></g>;
+        })}
+        <polygon points={areaList(series[0].values)} fill="url(#meetingTrendFill)" />
+        {series.map((item) => (
+          <g key={item.name}>
+            <polyline points={pointList(item.values)} fill="none" stroke={item.color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            {item.values.map((value, index) => {
+              const x = left + (index / (item.values.length - 1)) * chartW;
+              const y = top + chartH - (value / max) * chartH;
+              return <circle key={`${item.name}-${index}`} cx={x} cy={y} r="5" fill="#0f172a" stroke={item.color} strokeWidth="3" />;
+            })}
+          </g>
+        ))}
+        {times.map((time, index) => {
+          const x = left + (index / (times.length - 1)) * chartW;
+          return <text key={time} x={x} y={260} textAnchor="middle" fill="currentColor" className="text-[10px] text-slate-400">{time}</text>;
+        })}
+      </svg>
+    </div>
+  );
+}
+
+function ReportMiniBar({ label, value, color, suffix = '%' }: { label: string; value: number; color: string; suffix?: string }) {
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between gap-3 text-sm">
+        <span className="font-bold text-slate-600 dark:text-slate-200">{label}</span>
+        <span className="font-black text-slate-950 dark:text-white">{value}{suffix}</span>
+      </div>
+      <div className="h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+        <div className="h-full rounded-full" style={{ width: `${Math.max(6, Math.min(100, value))}%`, background: color }} />
+      </div>
+    </div>
+  );
+}
+
+function ReportDonut({ value, label }: { value: number; label: string }) {
+  const pct = Math.max(0, Math.min(100, value));
+  const circumference = 2 * Math.PI * 38;
+  const dash = (pct / 100) * circumference;
+  return (
+    <div className="relative h-32 w-32 shrink-0">
+      <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+        <circle cx="50" cy="50" r="38" stroke="rgba(148,163,184,0.18)" strokeWidth="12" fill="none" />
+        <circle cx="50" cy="50" r="38" stroke="url(#reportDonutGradient)" strokeWidth="12" fill="none" strokeLinecap="round" strokeDasharray={`${dash} ${circumference}`} />
+        <defs><linearGradient id="reportDonutGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#14b8a6" /><stop offset="100%" stopColor="#8b5cf6" /></linearGradient></defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center"><div className="text-2xl font-black text-slate-950 dark:text-white">{pct}%</div><div className="text-[11px] font-bold text-slate-500 dark:text-slate-300">{label}</div></div>
+    </div>
+  );
+}
+
 export default function AdminDashboard({
   myProfile,
   setMyProfile,
@@ -472,7 +566,70 @@ export default function AdminDashboard({
 
             {activeTab === 'schedule' && <SectionCard title="议程管理" subtitle="直播状态和推荐状态都可以点击切换。" action={<CalendarDays className="w-5 h-5 text-violet-500" />}><div className="grid grid-cols-1 xl:grid-cols-2 gap-4">{sessions.map((session) => <div key={session.id} className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden"><div className="p-5 bg-gradient-to-r from-pink-50 via-white to-teal-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"><div className="flex items-start justify-between gap-3"><div><div className="text-xs font-bold text-slate-500 dark:text-slate-300">{session.timeStr} · {session.location}</div><div className="mt-1 text-lg font-black text-slate-950 dark:text-white leading-snug">{session.title}</div></div><span className={classNames('px-2.5 py-1 rounded-full text-[11px] font-black', session.isLive ? 'bg-rose-500/10 text-rose-600 dark:text-rose-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300')}>{session.isLive ? '直播中' : '待开始'}</span></div></div><div className="p-5"><div className="flex items-center gap-3"><div className={classNames('w-12 h-12 rounded-2xl flex items-center justify-center text-white', session.speakerAvatarColor)}>{session.speakerAvatarEmoji}</div><div><div className="font-black text-slate-950 dark:text-white">{session.speakerName}</div><div className="text-xs text-slate-500 dark:text-slate-300">{session.speakerTitle}</div></div></div><div className="mt-4"><TagList tags={session.tags.slice(0, 4)} /></div><div className="mt-4 flex gap-2"><button onClick={() => toggleSessionLive(session.id)} className="px-3 py-2 rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-300 text-xs font-black">{session.isLive ? '结束直播' : '设为直播'}</button><button onClick={() => toggleSessionSubscribe(session.id)} className="px-3 py-2 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-black">{session.isSubscribed ? '取消推荐' : '设为推荐'}</button></div></div></div>)}</div></SectionCard>}
 
-            {activeTab === 'reports' && <div className="space-y-6"><SectionCard title="会议总报告" subtitle="包含趋势图、健康度、词云、排行和图像摘要。" action={<BarChart3 className="w-5 h-5 text-violet-500" />}><div className="space-y-6"><div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"><MiniMetric label="会议参与人数" value={allAttendees.length} helper="当前注册 / 导入总人数" icon={Users} accent="bg-gradient-to-br from-pink-500 to-purple-500" /><MiniMetric label="会议签到率" value={fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} helper="现场签到完成情况" icon={QrCode} accent="bg-gradient-to-br from-teal-400 to-cyan-500" /><MiniMetric label="互动总量" value={questions.length + bulletMessages.length + connections.length} helper="提问 + 弹幕 + 同频连接" icon={MessageCircle} accent="bg-gradient-to-br from-violet-500 to-indigo-500" /><MiniMetric label="作品浏览样本" value={workCards.length} helper="报告可引用图片模块" icon={ImageIcon} accent="bg-gradient-to-br from-amber-400 to-orange-500" /></div><div className="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-6"><div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5"><div className="text-lg font-black text-slate-950 dark:text-white">会议热度趋势</div><SimpleAreaChart values={[52, 66, 63, 79, 72, 86, 82, 91]} /></div><div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5"><div className="text-lg font-black text-slate-950 dark:text-white">会议关键词词云</div><div className="mt-5 rounded-[24px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-5"><WordCloudPanel items={meetingWordCloud} /></div></div></div><button onClick={exportAdminSnapshot} className="px-4 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-black flex items-center gap-2"><Download className="w-4 h-4" />导出会议报告数据</button></div></SectionCard></div>}
+            {activeTab === 'reports' && (
+              <div className="space-y-6">
+                <SectionCard
+                  title="会议总报告"
+                  subtitle="包含核心指标、热度趋势、关键词词云、签到结构、议题排行、活跃用户、情绪分布和作品方向摘要。"
+                  action={<div className="flex flex-wrap items-center gap-2"><button onClick={exportAdminSnapshot} className="px-4 py-2.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-black flex items-center gap-2"><Download className="w-4 h-4" />导出报告数据</button><BarChart3 className="w-5 h-5 text-violet-500" /></div>}
+                >
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                      <MiniMetric label="会议参与人数" value={allAttendees.length} helper="当前注册 / 导入总人数 · 较昨日 ↑20%" icon={Users} accent="bg-gradient-to-br from-pink-500 to-purple-500" />
+                      <MiniMetric label="会议签到率" value={fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} helper="现场签到完成情况 · 较昨日 ↑8.3%" icon={QrCode} accent="bg-gradient-to-br from-teal-400 to-cyan-500" />
+                      <MiniMetric label="互动总量" value={questions.length + bulletMessages.length + connections.length} helper="提问 + 弹幕 + 同频连接 · ↑32%" icon={MessageCircle} accent="bg-gradient-to-br from-violet-500 to-indigo-500" />
+                      <MiniMetric label="作品浏览样本" value={workCards.length} helper="报告可引用图片模块 · ↑50%" icon={ImageIcon} accent="bg-gradient-to-br from-amber-400 to-orange-500" />
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-[1.12fr_0.88fr] gap-6">
+                      <MeetingTrendChart />
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <h4 className="text-lg font-black text-slate-950 dark:text-white">会议关键词词云</h4>
+                            <p className="mt-1 text-sm text-slate-500 dark:text-slate-300">从用户标签、议程主题、作品方向与同频关系中提取热词。</p>
+                          </div>
+                          <span className="rounded-full bg-violet-500/10 px-3 py-1 text-xs font-black text-violet-600 dark:text-violet-300">更多</span>
+                        </div>
+                        <div className="mt-5 rounded-[24px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5 min-h-[270px]"><WordCloudPanel items={meetingWordCloud} /></div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-6 gap-4">
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 2xl:col-span-2">
+                        <div className="flex items-center justify-between"><h4 className="text-lg font-black text-slate-950 dark:text-white">签到结构</h4><span className="text-xs font-bold text-emerald-600 dark:text-emerald-300">较昨日 ↑8.3%</span></div>
+                        <div className="mt-5 flex items-center gap-5"><ReportDonut value={Math.round((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} label="已签到" /><div className="flex-1 space-y-3"><ReportMiniBar label={`已签到 (${checkedInCount})`} value={Math.round((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} color="#14b8a6" /><ReportMiniBar label={`未签到 (${Math.max(0, allAttendees.length - checkedInCount)})`} value={Math.round(((allAttendees.length - checkedInCount) / Math.max(allAttendees.length, 1)) * 100)} color="#8b5cf6" /><ReportMiniBar label="待审核" value={0} color="#f59e0b" /></div></div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 2xl:col-span-2">
+                        <div className="flex items-center justify-between"><h4 className="text-lg font-black text-slate-950 dark:text-white">参会角色占比</h4><span className="text-xs font-bold text-slate-500 dark:text-slate-300">共 {allAttendees.length} 人</span></div>
+                        <div className="mt-5 space-y-4"><ReportMiniBar label="观众" value={50} color="#8b5cf6" /><ReportMiniBar label="嘉宾" value={33} color="#0ea5e9" /><ReportMiniBar label="主办方" value={17} color="#ec4899" /></div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 2xl:col-span-2">
+                        <div className="flex items-center justify-between"><h4 className="text-lg font-black text-slate-950 dark:text-white">高频议题排行</h4><span className="text-xs font-bold text-slate-500 dark:text-slate-300">TOP 5</span></div>
+                        <div className="mt-4 space-y-3">{meetingWordCloud.slice(0, 5).map((item, index) => <div key={item.label} className="flex items-center gap-3"><span className={classNames('flex h-7 w-7 items-center justify-center rounded-full text-xs font-black text-white', index === 0 ? 'bg-rose-500' : index === 1 ? 'bg-orange-500' : index === 2 ? 'bg-amber-500' : index === 3 ? 'bg-sky-500' : 'bg-violet-500')}>{index + 1}</span><div className="min-w-0 flex-1"><div className="flex items-center justify-between gap-3 text-sm"><span className="truncate font-bold text-slate-700 dark:text-slate-200">{item.label}</span><span className="font-black text-slate-950 dark:text-white">{item.value * 4 + 8}</span></div><div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"><div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400" style={{ width: `${Math.max(18, Math.min(100, item.value * 18))}%` }} /></div></div></div>)}</div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 2xl:col-span-2">
+                        <div className="flex items-center justify-between"><h4 className="text-lg font-black text-slate-950 dark:text-white">活跃嘉宾 / 用户</h4><span className="text-xs font-bold text-violet-600 dark:text-violet-300">更多</span></div>
+                        <div className="mt-4 space-y-3">{allAttendees.slice(0, 5).map((person, index) => <button key={person.id} onClick={() => { setSelectedUserId(person.id); setActiveTab('attendees'); }} className="w-full rounded-[20px] border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-3 text-left flex items-center gap-3"><Avatar person={person} size="sm" /><div className="min-w-0 flex-1"><div className="truncate text-sm font-black text-slate-950 dark:text-white">{person.nickName}</div><div className="text-xs text-slate-500 dark:text-slate-300">互动 {18 - index * 2}</div></div><ChevronRight className="w-4 h-4 text-slate-400" /></button>)}</div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 2xl:col-span-2">
+                        <div className="flex items-center justify-between"><h4 className="text-lg font-black text-slate-950 dark:text-white">互动情绪分布</h4><span className="text-xs font-bold text-slate-500 dark:text-slate-300">基于弹幕与提问</span></div>
+                        <div className="mt-5 space-y-4"><ReportMiniBar label="积极 😊" value={68} color="#22c55e" /><ReportMiniBar label="中性 😐" value={22} color="#facc15" /><ReportMiniBar label="疑问 🤔" value={7} color="#8b5cf6" /><ReportMiniBar label="负面 😡" value={3} color="#ef4444" /></div>
+                      </div>
+
+                      <div className="rounded-[28px] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 2xl:col-span-2">
+                        <div className="flex items-center justify-between"><h4 className="text-lg font-black text-slate-950 dark:text-white">作品方向分布</h4><span className="text-xs font-bold text-slate-500 dark:text-slate-300">浏览样本统计</span></div>
+                        <div className="mt-5 space-y-4"><ReportMiniBar label="交互装置" value={40} color="#8b5cf6" /><ReportMiniBar label="数字影像" value={28} color="#ec4899" /><ReportMiniBar label="空间艺术" value={16} color="#14b8a6" /><ReportMiniBar label="声音艺术" value={10} color="#0ea5e9" /><ReportMiniBar label="其他" value={6} color="#f59e0b" /></div>
+                      </div>
+                    </div>
+                  </div>
+                </SectionCard>
+              </div>
+            )}
 
             {activeTab === 'settings' && (
               <div className="space-y-6">
