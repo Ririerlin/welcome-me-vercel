@@ -1,17 +1,25 @@
-欢迎ME 服务端系统设置真实网站化补丁
+欢迎ME 服务端真实交互补丁
 
-本补丁基于上一版 admin-card-dark-fix 做增量优化：
-1. 将“系统设置”从简单说明卡片改成真实 SaaS 后台设置页
-2. 新增活动基础配置、品牌视觉系统、报名与用户资料、权限角色、通知自动化、数据集成、报告导出配置、高级设置与安全区
-3. 继续保留后台样式隔离与夜间模式可读性修复
-4. 保留 /admin 后台入口，不影响用户端小程序
+本补丁只覆盖：
+- src/components/AdminDashboard.tsx
 
-安装方式：
-unzip -o ~/Downloads/welcome-me-admin-real-settings-upgrade.zip
+修复/新增：
+1. 系统设置页的输入框、开关、上传、角色人数、报告模块、导出格式都可以真实交互
+2. 设置内容会保存到浏览器 localStorage
+3. 活动基础信息可编辑
+4. 品牌 Logo 文案、主题色、封面图、报告背景可修改
+5. 报名资料开关、通知开关、集成状态开关可切换
+6. 权限角色人数可加减
+7. 报告模块可勾选/取消，导出格式可切换
+8. 高级设置里的导出快照、重置本机演示数据、管理员访问控制都能点击生效
+9. 其他后台模块也保留可交互：签到、关系确认、提问审核、议程直播/推荐切换、导出报告数据等
+
+说明：
+这是前端本地可交互版本，数据保存在当前浏览器。真正多设备同步需要后续接 Supabase / Firebase / 数据库。
+
+安装：
+unzip -o ~/Downloads/welcome-me-admin-real-interactions.zip
 npm run build
 git add .
-git commit -m "upgrade admin settings page"
+git commit -m "make admin dashboard interactive"
 git push
-
-部署后打开：
-https://welcome-me-vercel.vercel.app/admin?v=27
