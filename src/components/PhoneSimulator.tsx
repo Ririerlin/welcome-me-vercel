@@ -51,6 +51,23 @@ const ANTHROPOMORPHIC_AVATARS = [
   { emoji: '🧙‍♂️', label: '体验巫', desc: '感官魔法使 (美学)' }
 ];
 
+
+
+const DESIGNER_AVATAR_OPTIONS = [
+  { id: 'designer-avatar-01', name: '锋利平面设计师', imageUrl: '/images/avatars/designer-avatar-01.webp', colorClass: 'bg-rose-500', emoji: '✒️' },
+  { id: 'designer-avatar-02', name: '梦幻插画师', imageUrl: '/images/avatars/designer-avatar-02.webp', colorClass: 'bg-violet-500', emoji: '🪻' },
+  { id: 'designer-avatar-03', name: '精准字体设计师', imageUrl: '/images/avatars/designer-avatar-03.webp', colorClass: 'bg-slate-700', emoji: '🔠' },
+  { id: 'designer-avatar-04', name: '时尚艺术总监', imageUrl: '/images/avatars/designer-avatar-04.webp', colorClass: 'bg-stone-700', emoji: '🌹' },
+  { id: 'designer-avatar-05', name: '活力品牌设计师', imageUrl: '/images/avatars/designer-avatar-05.webp', colorClass: 'bg-blue-500', emoji: '🙂' },
+  { id: 'designer-avatar-06', name: '可持续设计师', imageUrl: '/images/avatars/designer-avatar-06.webp', colorClass: 'bg-emerald-600', emoji: '🌿' },
+  { id: 'designer-avatar-07', name: '复古视觉设计师', imageUrl: '/images/avatars/designer-avatar-07.webp', colorClass: 'bg-amber-700', emoji: '📷' },
+  { id: 'designer-avatar-08', name: '未来动效设计师', imageUrl: '/images/avatars/designer-avatar-08.webp', colorClass: 'bg-indigo-600', emoji: '🌀' },
+  { id: 'designer-avatar-09', name: '工业产品设计师', imageUrl: '/images/avatars/designer-avatar-09.webp', colorClass: 'bg-orange-500', emoji: '🧩' },
+  { id: 'designer-avatar-10', name: '服务体验设计师', imageUrl: '/images/avatars/designer-avatar-10.webp', colorClass: 'bg-teal-600', emoji: '💚' },
+  { id: 'designer-avatar-11', name: '建筑空间设计师', imageUrl: '/images/avatars/designer-avatar-11.webp', colorClass: 'bg-sky-700', emoji: '🏛️' },
+  { id: 'designer-avatar-12', name: '包装策略设计师', imageUrl: '/images/avatars/designer-avatar-12.webp', colorClass: 'bg-green-700', emoji: '📦' }
+];
+
 const MBTI_OPTIONS = [
   { value: 'ENFP - 灵感策动机 (感官魔法使)', label: 'ENFP 魔法使' },
   { value: 'INTJ - 战略策划家 (冷酷架构师)', label: 'INTJ 架构师' },
@@ -1099,16 +1116,49 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       </div>
                       <div className="flex-1 text-left min-w-0">
                         <div className="text-[10px] font-black text-slate-900 dark:text-white flex items-center space-x-1">
-                          <span>{regAvatarImage ? '已上传头像' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象')}</span>
+                          <span>{regAvatarImage ? (DESIGNER_AVATAR_OPTIONS.find(a => a.imageUrl === regAvatarImage)?.name || '已选择头像') : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象')}</span>
                           <span className="text-[8px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-1.5 py-0.5 rounded font-normal font-mono select-none">PREVIEW</span>
                         </div>
                         <div className="text-[9px] text-slate-400 truncate mt-0.5">
-                          {regAvatarImage ? '也可以继续选择系统形象覆盖展示风格' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态')}
+                          {regAvatarImage ? '已使用你的十二款设计师头像之一，也可上传自己的头像' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态')}
                         </div>
                         <label className="mt-2 inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[9px] font-black text-indigo-600 dark:text-indigo-300 cursor-pointer active:scale-95 transition">
                           上传头像
                           <input type="file" accept="image/*" onChange={handleRegisterAvatarUpload} hidden />
                         </label>
+                      </div>
+                    </div>
+
+                    {/* Designer Avatar Photo Select Grid */}
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between px-0.5">
+                        <span className="text-[9px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wider">选择头像照片</span>
+                        <span className="text-[8px] font-black text-indigo-500 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-full">12款</span>
+                      </div>
+                      <div className="grid grid-cols-4 gap-2 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border dark:border-slate-800">
+                        {DESIGNER_AVATAR_OPTIONS.map(item => (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              setRegAvatarImage(item.imageUrl);
+                              setRegEmoji(item.emoji);
+                              setRegActiveColor(item.colorClass);
+                              triggerToast(`已选择头像：${item.name}`);
+                            }}
+                            title={item.name}
+                            className={`relative h-16 rounded-2xl overflow-hidden border transition-all active:scale-95 ${
+                              regAvatarImage === item.imageUrl
+                                ? 'border-indigo-400 ring-2 ring-indigo-300 shadow-lg scale-[1.03]'
+                                : 'border-white/70 dark:border-slate-800 opacity-85 hover:opacity-100 hover:scale-[1.02]'
+                            }`}
+                          >
+                            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                            {regAvatarImage === item.imageUrl && (
+                              <span className="absolute right-1 top-1 w-4 h-4 rounded-full bg-indigo-500 text-white flex items-center justify-center text-[9px] shadow">✓</span>
+                            )}
+                          </button>
+                        ))}
                       </div>
                     </div>
 
@@ -1673,17 +1723,48 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     />
                   </div>
 
+                  {/* Designer Avatar Photo Library */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5 px-0.5">
+                      <label className="block text-[9px] text-slate-400 uppercase font-bold tracking-wider">头像照片库（点击选择）</label>
+                      <span className="text-[8px] font-black text-pink-500 bg-pink-50 dark:bg-pink-950/40 px-2 py-0.5 rounded-full">12款设计师形象</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border dark:border-slate-800">
+                      {DESIGNER_AVATAR_OPTIONS.map(item => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            setMyProfile({ ...myProfile, avatarImage: item.imageUrl, avatarEmoji: item.emoji, avatarColor: item.colorClass });
+                            triggerToast(`已更换头像：${item.name}`);
+                          }}
+                          title={item.name}
+                          className={`relative h-16 rounded-2xl overflow-hidden border transition-all active:scale-95 ${
+                            myProfile.avatarImage === item.imageUrl
+                              ? 'border-pink-400 ring-2 ring-pink-300 shadow-lg scale-[1.03]'
+                              : 'border-white/70 dark:border-slate-800 opacity-85 hover:opacity-100 hover:scale-[1.02]'
+                          }`}
+                        >
+                          <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                          {myProfile.avatarImage === item.imageUrl && (
+                            <span className="absolute right-1 top-1 w-4 h-4 rounded-full bg-pink-500 text-white flex items-center justify-center text-[9px] shadow">✓</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Select Anthropomorphic Avatar */}
                   <div>
-                    <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1.5 px-0.5 tracking-wider">拟人精选学者形象 (Click to swap)</label>
+                    <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1.5 px-0.5 tracking-wider">表情备选形象 (Click to swap)</label>
                     <div className="grid grid-cols-6 gap-1.5 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border dark:border-slate-800">
                       {ANTHROPOMORPHIC_AVATARS.map(item => (
                         <button
                           key={item.emoji}
                           type="button"
                           onClick={() => {
-                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji });
-                            triggerToast(`已瞬变学者灵魂印记：${item.label}`);
+                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji, avatarImage: undefined });
+                            triggerToast(`已切换为表情形象：${item.label}`);
                           }}
                           title={`${item.label}: ${item.desc}`}
                           className={`w-7.5 h-7.5 flex items-center justify-center text-sm rounded-lg transition-all ${
