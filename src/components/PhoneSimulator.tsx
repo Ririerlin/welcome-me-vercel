@@ -321,6 +321,7 @@ export default function PhoneSimulator({
   const [meetupTimeSelection, setMeetupTimeSelection] = useState<string>('下午茶歇 15:40 - 16:10');
   const [meetupAgendaSelection, setMeetupAgendaSelection] = useState<string>('探讨具身控制和传感器感知细节');
   const [showMeetupModal, setShowMeetupModal] = useState<boolean>(false);
+  const [showPhotoGalleryModal, setShowPhotoGalleryModal] = useState<boolean>(false);
 
   // States for Community Join Status and Lounge chats
   const [joinedCommunities, setJoinedCommunities] = useState<string[]>([]);
@@ -531,6 +532,59 @@ export default function PhoneSimulator({
       color: 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/15 dark:text-purple-300'
     }
   ];
+
+
+  const avatarPhotoFor = (person?: Partial<Attendee>, fallbackIndex = 0) => {
+    if (person?.avatarImage) return person.avatarImage;
+    return DESIGNER_AVATAR_OPTIONS[fallbackIndex % DESIGNER_AVATAR_OPTIONS.length].imageUrl;
+  };
+
+  const findPersonByNick = (nick: string) => {
+    const cleanNick = nick.replace(/\s+/g, '').replace(/我\(.+\)/g, '我');
+    const candidates = [myProfile, ...attendees];
+    return candidates.find((person) => {
+      const cleanName = (person.nickName || '').replace(/\s+/g, '');
+      const firstName = cleanName.split(/[A-Za-z]/)[0];
+      return cleanNick.includes(cleanName) || cleanName.includes(cleanNick) || (!!firstName && cleanNick.includes(firstName));
+    });
+  };
+
+  const avatarPhotoForNick = (nick: string) => {
+    const person = findPersonByNick(nick);
+    if (person) return avatarPhotoFor(person);
+    const knownByEmoji: Record<string, string> = {
+      '🦊': '/images/avatars/designer-avatar-02.webp',
+      '🐼': '/images/avatars/designer-avatar-06.webp',
+      '🦉': '/images/avatars/designer-avatar-03.webp',
+      '🤖': '/images/avatars/designer-avatar-09.webp',
+      '🐯': '/images/avatars/designer-avatar-08.webp',
+      '🧙‍♂️': '/images/avatars/designer-avatar-01.webp'
+    };
+    return knownByEmoji[nick] || DESIGNER_AVATAR_OPTIONS[0].imageUrl;
+  };
+
+  const renderAvatarPhoto = (person?: Partial<Attendee>, sizeClass = 'w-10 h-10', fallbackIndex = 0) => (
+    <span className={`${sizeClass} rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 shadow-sm shrink-0 inline-flex items-center justify-center`}>
+      <img
+        src={avatarPhotoFor(person, fallbackIndex)}
+        alt={person?.nickName || '用户头像'}
+        className="w-full h-full object-cover"
+      />
+    </span>
+  );
+
+  const renderNickPhoto = (nick: string, sizeClass = 'w-7 h-7') => (
+    <span className={`${sizeClass} rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 shadow-sm shrink-0 inline-flex items-center justify-center`}>
+      <img src={avatarPhotoForNick(nick)} alt={`${nick}头像`} className="w-full h-full object-cover" />
+    </span>
+  );
+
+  const reportSnapshots = [myProfile, ...attendees].slice(0, 6).map((person, index) => ({
+    id: person.id || `snapshot-${index}`,
+    name: person.nickName || DESIGNER_AVATAR_OPTIONS[index]?.name || '现场人物',
+    role: person.title || DESIGNER_AVATAR_OPTIONS[index]?.name || '设计师',
+    imageUrl: avatarPhotoFor(person, index)
+  }));
 
   const downloadPersonalReport = () => {
     const timeLabel = reportGeneratedAt || new Date().toLocaleString('zh-CN', { hour12: false });
@@ -856,6 +910,45 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         <div className="absolute top-16 left-4 right-4 z-50 bg-slate-950/95 dark:bg-slate-900/95 border-b-2 border-pink-400 text-white py-2.5 px-3.5 rounded-2xl shadow-xl flex items-center space-x-2.5 text-xs animate-slideDown">
           <Sparkles className="h-4 w-4 text-pink-400 shrink-0 animate-bounce" />
           <span className="flex-1 font-medium leading-tight">{showNotification}</span>
+        </div>
+      )}
+
+
+      {showPhotoGalleryModal && (
+        <div className="absolute inset-0 z-[70] bg-slate-950/55 backdrop-blur-sm flex flex-col justify-end animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 rounded-t-[34px] p-5 shadow-2xl max-h-[82%] overflow-y-auto scrollbar-none">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h4 className="text-sm font-black text-slate-900 dark:text-white">用户图像快照</h4>
+                <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 mt-1">真实照片墙，点击头像可切换为我的头像。</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPhotoGalleryModal(false)}
+                className="w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 flex items-center justify-center active:scale-95"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {DESIGNER_AVATAR_OPTIONS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setMyProfile({ ...myProfile, avatarImage: item.imageUrl, avatarEmoji: item.emoji, avatarColor: item.colorClass });
+                    setShowPhotoGalleryModal(false);
+                    triggerToast(`已切换为「${item.name}」照片头像`);
+                  }}
+                  className="rounded-[24px] bg-slate-50 dark:bg-slate-800/80 p-2.5 text-left active:scale-[0.98] transition shadow-sm"
+                >
+                  <img src={item.imageUrl} alt={item.name} className="w-full aspect-square rounded-[20px] object-cover" />
+                  <div className="mt-2 text-[10px] font-black text-slate-900 dark:text-white truncate">{item.name}</div>
+                  <div className="text-[8px] font-bold text-slate-500 dark:text-slate-300">点击设为我的照片</div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -1776,13 +1869,14 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   <div>
                     <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1.5 px-0.5 tracking-wider">表情备选形象 (Click to swap)</label>
                     <div className="grid grid-cols-6 gap-1.5 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border dark:border-slate-800">
-                      {ANTHROPOMORPHIC_AVATARS.map(item => (
+                      {ANTHROPOMORPHIC_AVATARS.map((item, index) => (
                         <button
                           key={item.emoji}
                           type="button"
                           onClick={() => {
-                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji, avatarImage: undefined });
-                            triggerToast(`已切换为表情形象：${item.label}`);
+                            const photo = DESIGNER_AVATAR_OPTIONS[index % DESIGNER_AVATAR_OPTIONS.length];
+                            setMyProfile({ ...myProfile, avatarEmoji: item.emoji, avatarImage: photo.imageUrl, avatarColor: photo.colorClass });
+                            triggerToast(`已切换为${item.label}的照片头像`);
                           }}
                           title={`${item.label}: ${item.desc}`}
                           className={`w-7.5 h-7.5 flex items-center justify-center text-sm rounded-lg transition-all ${
@@ -2028,23 +2122,24 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         <div className="mt-1 text-[10px] leading-relaxed text-slate-500 dark:text-slate-300">{item.note}</div>
                       </div>
                     ))}
-                    <div className="rounded-3xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-teal-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 border border-pink-200/70 dark:border-slate-800 p-3.5 shadow-sm">
-                      <span className="inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-100">图像快照</span>
-                      <div className="grid grid-cols-3 gap-2 mt-3">
-                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
-                          <div className="text-lg">🎤</div>
-                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">主旨现场</div>
-                        </div>
-                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
-                          <div className="text-lg">🖼️</div>
-                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">展品灵感</div>
-                        </div>
-                        <div className="rounded-2xl bg-white/80 dark:bg-slate-800 p-2 text-center">
-                          <div className="text-lg">🤝</div>
-                          <div className="text-[9px] font-bold text-slate-700 dark:text-slate-100 mt-1">连接瞬间</div>
-                        </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowPhotoGalleryModal(true)}
+                      className="rounded-3xl bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-teal-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 p-3.5 shadow-sm text-left active:scale-[0.98] transition-all cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center rounded-full px-2 py-1 text-[9px] font-black bg-white/70 dark:bg-slate-800 text-slate-700 dark:text-slate-100">图像快照</span>
+                        <span className="text-[9px] font-black text-indigo-600 dark:text-indigo-300">查看全部 →</span>
                       </div>
-                    </div>
+                      <div className="grid grid-cols-3 gap-2 mt-3">
+                        {reportSnapshots.slice(0, 3).map((snapshot) => (
+                          <div key={snapshot.id} className="rounded-2xl bg-white/80 dark:bg-slate-800 p-1.5 text-center">
+                            <img src={snapshot.imageUrl} alt={snapshot.name} className="w-full aspect-square rounded-xl object-cover" />
+                            <div className="text-[8px] font-bold text-slate-700 dark:text-slate-100 mt-1 truncate">{snapshot.name}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </button>
                   </div>
 
                   <div className="grid grid-cols-1 gap-3">
@@ -2248,7 +2343,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   <h3 className="text-xs font-bold leading-snug">{currentSession.title}</h3>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/10 text-[9px] text-slate-300">
                     <div className="flex items-center space-x-1">
-                      <span className="h-4 w-4 rounded-full bg-slate-800 flex items-center justify-center text-[10px]">{currentSession.speakerAvatarEmoji}</span>
+                      {renderNickPhoto(currentSession.speakerName, 'h-5 w-5')}
                       <span>讲者: {currentSession.speakerName}</span>
                     </div>
                     <select 
@@ -2439,7 +2534,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                           <div key={q.id} className="bg-slate-50/70 dark:bg-slate-900/40 p-2.5 rounded-xl border border-slate-100 hover:border-pink-200 transition-all text-[11px] leading-relaxed space-y-1">
                             <div className="flex items-center justify-between text-[10px]">
                               <span className="font-bold text-slate-500 flex items-center space-x-1">
-                                <span className="text-[9px]">{q.userAvatarEmoji}</span>
+                                {renderNickPhoto(q.userNick === '匿名观众' ? q.userAvatarEmoji : q.userNick, 'w-4 h-4')}
                                 <span>{q.userNick}</span>
                               </span>
                               <button
@@ -2580,9 +2675,14 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                           
                           <div className="space-y-1.5 max-h-32 overflow-y-auto">
                             {ex.comments.map(c => (
-                              <div key={c.id} className="bg-slate-55 dark:bg-slate-955/60 p-2.5 rounded-2xl text-[10px] leading-normal font-medium text-slate-705 dark:text-slate-305 border border-slate-150 dark:border-slate-850">
-                                <span className="font-bold text-slate-400 block text-[9px]">{c.userNick} • {c.createdAt}</span>
-                                <p className="mt-0.5">{c.text}</p>
+                              <div key={c.id} className="bg-slate-55 dark:bg-slate-955/60 p-2.5 rounded-2xl text-[10px] leading-normal font-medium text-slate-705 dark:text-slate-305">
+                                <div className="flex items-start gap-2">
+                                  {renderNickPhoto(c.userNick, 'w-6 h-6')}
+                                  <div className="min-w-0 flex-1">
+                                    <span className="font-bold text-slate-400 block text-[9px]">{c.userNick} • {c.createdAt}</span>
+                                    <p className="mt-0.5">{c.text}</p>
+                                  </div>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -2758,9 +2858,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     </div>
 
                     <div className="flex items-start space-x-3 pr-20 select-none">
-                      <div className={`h-11 w-11 ${other.avatarColor} text-white rounded-full flex items-center justify-center text-xl shadow-inner select-none shrink-0 border border-white/20`}>
-                        {other.avatarEmoji}
-                      </div>
+                      {renderAvatarPhoto(other, 'h-11 w-11', 1)}
                       <div className="space-y-0.5 min-w-0">
                         <div className="flex items-center space-x-1.5 flex-wrap">
                           <h4 className="font-bold text-xs truncate max-w-24 text-slate-900 dark:text-white leading-tight">{other.nickName}</h4>
@@ -3206,9 +3304,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                                 {(communityChats[comm.id] || []).map(chat => (
                                   <div key={chat.id} className="flex flex-col text-left space-y-0.5 shrink-0 animate-fadeInPlus">
                                     <div className="flex items-center space-x-1 select-none">
-                                      <span className={`w-3 h-3 rounded-full ${chat.avatarColor} text-white flex items-center justify-center text-[7px] shrink-0 font-black`}>
-                                        {chat.avatarEmoji}
-                                      </span>
+                                      {renderNickPhoto(chat.userNick, 'w-4 h-4')}
                                       <span className="text-[8px] font-black text-slate-300">{chat.userNick}</span>
                                       <span className="text-[6.5px] text-slate-550 font-mono ml-auto">{chat.createdAt}</span>
                                     </div>
@@ -3286,9 +3382,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   <span>返回</span>
                 </button>
                 <div className="flex items-center space-x-1.5 pl-1.5 border-l border-slate-200 dark:border-slate-800">
-                  <span className={`w-7.5 h-7.5 rounded-full ${activeChatAttendee.avatarColor} text-white flex items-center justify-center text-sm shadow-inner shrink-0`}>
-                    {activeChatAttendee.avatarEmoji}
-                  </span>
+                  {renderAvatarPhoto(activeChatAttendee, 'w-8 h-8', 2)}
                   <div className="min-w-0">
                     <h4 className="text-xs font-black text-slate-900 dark:text-white leading-tight truncate max-w-28">{activeChatAttendee.nickName}</h4>
                     <p className="text-[7.5px] text-slate-455 dark:text-slate-500 truncate max-w-[120px]">{activeChatAttendee.organization}</p>
@@ -3303,17 +3397,17 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
             {/* Meetup scheduler selection popover if toggled */}
             {showMeetupModal && (
-              <div className="absolute inset-x-0 bottom-0 top-0 bg-slate-950/60 backdrop-blur-xs z-50 flex flex-col justify-end text-slate-800 dark:text-slate-100">
-                <div className="bg-white dark:bg-slate-900 p-5 rounded-t-[32px] border-t border-slate-150 dark:border-slate-850 space-y-4 animate-slideUp">
+              <div className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm z-50 flex flex-col justify-end text-slate-800 dark:text-slate-100">
+                <div className="bg-white dark:bg-slate-900 p-5 rounded-t-[32px] space-y-4 animate-slideUp shadow-2xl">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-extrabold text-slate-900 dark:text-white flex items-center">
                       <span className="text-md mr-1.5 font-mono">☕</span> 发起会中茶叙约见提案
                     </h4>
                     <button 
                       onClick={() => setShowMeetupModal(false)}
-                      className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-505 dark:text-slate-400 cursor-pointer"
+                      className="w-11 h-11 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-505 dark:text-slate-400 cursor-pointer flex items-center justify-center"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-5 w-5" />
                     </button>
                   </div>
 
@@ -3321,7 +3415,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     {/* Time Slots */}
                     <div className="space-y-1">
                       <label className="text-[8px] font-black text-slate-405 dark:text-slate-500 block uppercase tracking-wider">选择期望约见的空闲时间 / TIME SLOT</label>
-                      <div className="grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-2 gap-2">
                         {[
                           '上午茶歇 10:30 - 11:00',
                           '午后脑暴 12:30 - 13:30',
@@ -3332,10 +3426,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             key={slot}
                             type="button"
                             onClick={() => setMeetupTimeSelection(slot)}
-                            className={`p-2 rounded-xl text-left text-[9px] font-bold border transition duration-200 cursor-pointer ${
+                            className={`min-h-12 px-3 py-2.5 rounded-2xl text-left text-[10px] leading-snug font-black transition duration-200 cursor-pointer ${
                               meetupTimeSelection === slot 
-                                ? 'border-pink-500 bg-pink-50/50 dark:border-pink-500/50 dark:bg-pink-950/20 text-pink-600 dark:text-pink-400' 
-                                : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                ? 'bg-pink-50 dark:bg-pink-950/20 text-pink-600 dark:text-pink-300 shadow-sm ring-2 ring-pink-400/25' 
+                                : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                             }`}
                           >
                             {slot}
@@ -3358,10 +3452,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             key={agenda}
                             type="button"
                             onClick={() => setMeetupAgendaSelection(agenda)}
-                            className={`w-full p-2.5 rounded-xl text-left text-[9px] font-semibold border transition duration-200 flex items-center space-x-1.5 cursor-pointer ${
+                            className={`w-full min-h-12 px-3 py-2.5 rounded-2xl text-left text-[10px] font-bold transition duration-200 flex items-center space-x-2 cursor-pointer ${
                               meetupAgendaSelection === agenda 
-                                ? 'border-indigo-505 bg-indigo-50/50 dark:border-indigo-505/50 dark:bg-indigo-950/20 text-indigo-650 dark:text-indigo-400' 
-                                : 'border-slate-150 dark:border-slate-850 hover:bg-slate-55 dark:hover:bg-slate-800'
+                                ? 'bg-indigo-50 dark:bg-indigo-950/20 text-indigo-650 dark:text-indigo-300 shadow-sm ring-2 ring-indigo-400/20' 
+                                : 'bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                             }`}
                           >
                             <span>☕</span>
@@ -3376,7 +3470,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         sendPrivateMessage(`【☕ 约见茶叙邀请】\n时段：${meetupTimeSelection}\n主题：${meetupAgendaSelection}`, true);
                         setShowMeetupModal(false);
                       }}
-                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.8 rounded-xl font-bold text-xs shadow-md active:scale-95 transition-all text-center cursor-pointer"
+                      className="w-full min-h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-all text-center cursor-pointer"
                     >
                       🚀 发送茶叙约见波频信号
                     </button>
@@ -3396,11 +3490,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   const isMe = msg.senderId === 'me';
                   return (
                     <div key={msg.id} className={`flex items-start ${isMe ? 'justify-end' : 'justify-start'} space-x-1.5 shrink-0`}>
-                      {!isMe && (
-                        <span className={`w-7 h-7 rounded-full ${activeChatAttendee.avatarColor} text-white flex items-center justify-center text-xs shadow-inner shrink-0 select-none`}>
-                          {activeChatAttendee.avatarEmoji}
-                        </span>
-                      )}
+                      {!isMe && renderAvatarPhoto(activeChatAttendee, 'w-7 h-7', 3)}
 
                       <div className="max-w-[82%] flex flex-col space-y-0.5">
                         {msg.isMeetupInvite && msg.meetupDetails ? (
@@ -3447,11 +3537,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         </span>
                       </div>
 
-                      {isMe && (
-                        <span className={`w-7 h-7 rounded-full ${myProfile.avatarColor} text-white flex items-center justify-center text-xs shadow-inner shrink-0 select-none`}>
-                          {myProfile.avatarEmoji}
-                        </span>
-                      )}
+                      {isMe && renderAvatarPhoto(myProfile, 'w-7 h-7', 0)}
                     </div>
                   );
                 })}
