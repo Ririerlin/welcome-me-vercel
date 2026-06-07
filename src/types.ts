@@ -23,6 +23,7 @@ export interface Attendee {
     role: string;
     year?: string;
     location?: string;
+    imageUrl?: string;
   }[];
   organization: string;
   title: string;

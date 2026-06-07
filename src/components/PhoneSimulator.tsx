@@ -694,9 +694,29 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
     triggerToast('✨ 个人报告已更新');
   };
 
+  const getProfilePhotoSet = (person: Attendee) => {
+    const avatarIndexMap: Record<string, number> = {
+      me: 1,
+      user_1: 6,
+      user_2: 9,
+      user_3: 3,
+      user_4: 2,
+      user_5: 8
+    };
+    const base = avatarIndexMap[person.id] || Math.max(1, Math.min(12, (person.nickName.charCodeAt(0) % 12) + 1));
+    const pick = (offset: number) => {
+      const index = ((base + offset - 1) % 12) + 1;
+      return `/images/avatars/designer-avatar-${String(index).padStart(2, '0')}.webp`;
+    };
+    return {
+      cover: person.avatarImage || pick(0),
+      gallery: [person.avatarImage || pick(0), pick(1), pick(2), pick(3), pick(4), pick(5)]
+    };
+  };
+
   const getDesignWorks = (person: Attendee) => {
-    if (person.designWorks?.length) return person.designWorks;
-    return [
+    const photos = getProfilePhotoSet(person).gallery;
+    const fallbackWorks = [
       {
         id: `${person.id}-work-1`,
         title: person.id === 'me' ? '感官通行证体验系统' : `${person.nickName} 的代表项目`,
@@ -712,13 +732,25 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         description: '基于现场观察与用户行为整理出的设计研究片段。',
         year: '2025',
         role: '研究与概念设计'
+      },
+      {
+        id: `${person.id}-work-3`,
+        title: '视觉身份与人物设定快照',
+        description: '用于展示设计师个人风格、作品语气和现场交流标签的图像资料。',
+        year: '2024',
+        role: '视觉策划 / 作品整理'
       }
     ];
+    const works = person.designWorks?.length ? person.designWorks : fallbackWorks;
+    return works.map((work, index) => ({
+      ...work,
+      imageUrl: work.imageUrl || photos[index % photos.length]
+    }));
   };
 
   const getDesignEvents = (person: Attendee) => {
-    if (person.designEvents?.length) return person.designEvents;
-    return [
+    const photos = getProfilePhotoSet(person).gallery;
+    const fallbackEvents = [
       {
         id: `${person.id}-event-1`,
         name: '跨界设计与人性体验峰会',
@@ -732,8 +764,20 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         role: '项目共创者',
         year: '2025',
         location: '线上 / 线下'
+      },
+      {
+        id: `${person.id}-event-3`,
+        name: '设计作品开放评审日',
+        role: '作品展示 / 评审交流',
+        year: '2024',
+        location: '上海 / 杭州'
       }
     ];
+    const events = person.designEvents?.length ? person.designEvents : fallbackEvents;
+    return events.map((event, index) => ({
+      ...event,
+      imageUrl: event.imageUrl || photos[(index + 3) % photos.length]
+    }));
   };
 
   const downloadPersonalReportPng = () => {
@@ -2225,6 +2269,32 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               )}
             </div>
 
+            {/* My profile portfolio entry */}
+            <div className="rounded-[32px] bg-white/95 dark:bg-slate-900/95 p-4.5 shadow-[0_16px_42px_rgba(15,23,42,0.06)] space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-[12px] font-black text-slate-900 dark:text-white">我的主页、作品和履历</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-300 mt-1 leading-relaxed">查看你的公开主页，包含真实照片作品墙、活动经历和设计履历。</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedProfileAttendee(myProfile)}
+                  className="shrink-0 min-h-11 px-4 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[11px] font-black active:scale-95 transition shadow-sm"
+                >
+                  查看
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedProfileAttendee(myProfile)}
+                className="w-full grid grid-cols-4 gap-2 text-left active:scale-[0.99] transition"
+              >
+                {getProfilePhotoSet(myProfile).gallery.slice(0, 4).map((photo, index) => (
+                  <img key={photo + index} src={photo} alt={`我的作品照片 ${index + 1}`} className="aspect-square w-full rounded-2xl object-cover shadow-sm" />
+                ))}
+              </button>
+            </div>
+
             {/* Custom Interactive Holographic NFC Device Binding - Border-free token card with pulsing indicator */}
             <div className={`p-5 rounded-[32px] transition-all duration-500 relative overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.012)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.035)] ${myProfile.nfcBound ? 'bg-gradient-to-tr from-teal-500/10 via-purple-500/5 to-teal-500/5 dark:from-slate-900/90 dark:via-teal-950/20' : 'bg-white/95 dark:bg-slate-900/95'}`}>
               
@@ -3640,16 +3710,13 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">设计作品</h4>
-              {getDesignWorks(selectedProfileAttendee).map((work, index) => (
-                <div key={work.id} className="rounded-[26px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                  {work.imageUrl ? (
-                    <img src={work.imageUrl} alt={work.title} className="w-full h-32 object-cover" />
-                  ) : (
-                    <div className={`h-32 bg-gradient-to-br ${index % 2 === 0 ? 'from-pink-100 via-purple-100 to-teal-100 dark:from-pink-950/30 dark:via-purple-950/30 dark:to-teal-950/30' : 'from-indigo-100 via-sky-100 to-emerald-100 dark:from-indigo-950/30 dark:via-sky-950/30 dark:to-emerald-950/30'} flex items-center justify-center`}>
-                      <span className="text-3xl">{index % 2 === 0 ? '🖼️' : '✨'}</span>
-                    </div>
-                  )}
+              <div className="flex items-center justify-between">
+                <h4 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">设计作品</h4>
+                <span className="text-[9px] font-bold text-slate-400">真实照片作品墙</span>
+              </div>
+              {getDesignWorks(selectedProfileAttendee).map((work) => (
+                <div key={work.id} className="rounded-[26px] bg-white dark:bg-slate-900 overflow-hidden shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
+                  <img src={work.imageUrl} alt={work.title} className="w-full h-40 object-cover" />
                   <div className="p-3.5">
                     <div className="flex items-start justify-between gap-2">
                       <h5 className="text-[12px] font-black text-slate-900 dark:text-white leading-snug">{work.title}</h5>
@@ -3663,13 +3730,16 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">设计活动经历</h4>
+              <div className="flex items-center justify-between">
+                <h4 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">设计活动履历</h4>
+                <span className="text-[9px] font-bold text-slate-400">照片记录</span>
+              </div>
               {getDesignEvents(selectedProfileAttendee).map(event => (
-                <div key={event.id} className="flex items-start gap-3 rounded-[22px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5">
-                  <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-950 flex items-center justify-center text-lg border border-slate-200 dark:border-slate-800 shrink-0">🎟️</div>
-                  <div className="min-w-0">
-                    <h5 className="text-[11px] font-black text-slate-900 dark:text-white">{event.name}</h5>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-300 mt-1">{event.role} · {event.year || '2026'}{event.location ? ` · ${event.location}` : ''}</p>
+                <div key={event.id} className="flex items-center gap-3 rounded-[24px] bg-slate-50 dark:bg-slate-900 p-3 shadow-sm">
+                  <img src={event.imageUrl} alt={event.name} className="w-17 h-17 rounded-2xl object-cover shrink-0 shadow-sm" />
+                  <div className="min-w-0 flex-1">
+                    <h5 className="text-[11px] font-black text-slate-900 dark:text-white leading-snug">{event.name}</h5>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-300 mt-1 leading-relaxed">{event.role} · {event.year || '2026'}{event.location ? ` · ${event.location}` : ''}</p>
                   </div>
                 </div>
               ))}
