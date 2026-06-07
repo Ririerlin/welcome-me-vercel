@@ -1,0 +1,27 @@
+欢迎ME 后台会议总报告增强补丁
+
+本补丁只覆盖：
+- src/components/AdminDashboard.tsx
+
+更新内容：
+1. 优化“会议总报告”模块，整体更接近真实 SaaS 数据仪表板。
+2. 增强顶部 KPI 卡片：参与人数、签到率、互动总量、作品浏览样本。
+3. 新增更完整的会议热度趋势图：访问热度、互动提问、作品浏览三条线。
+4. 优化会议关键词词云布局，增强暗色模式可读性。
+5. 新增签到结构模块：环图 + 已签到 / 未签到 / 待审核进度条。
+6. 新增参会角色占比模块。
+7. 新增高频议题排行模块。
+8. 新增活跃嘉宾 / 用户模块，可点击跳转到参会用户详情。
+9. 新增互动情绪分布模块。
+10. 新增作品方向分布模块。
+11. 保留“导出报告数据”按钮，继续可导出 JSON。
+
+安装方式：
+unzip -o ~/Downloads/welcome-me-admin-meeting-report-rich.zip
+npm run build
+git add .
+git commit -m "enhance admin meeting report"
+git push
+
+部署后打开：
+https://welcome-me-vercel.vercel.app/admin?v=29

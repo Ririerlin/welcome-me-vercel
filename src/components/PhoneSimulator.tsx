@@ -905,17 +905,26 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {!isLoggedIn ? (
           <div className="space-y-4 animate-fadeIn py-1">
             {/* Login visual cover: image-led first impression */}
-            <div className="relative h-44 rounded-[30px] overflow-hidden bg-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
-              <img
-                src="/images/event-cover.svg"
-                alt="欢迎ME活动会场海报"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/18 to-transparent" />
+            <div className="relative h-44 rounded-[30px] overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
+              <div className="absolute -top-12 -right-10 w-36 h-36 rounded-full bg-white/15 blur-2xl" />
+              <div className="absolute -bottom-14 -left-10 w-40 h-40 rounded-full bg-teal-300/20 blur-2xl" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent)]" />
+
+              <div className="absolute top-4 left-4">
+                <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md">
+                  WELCOME ME 2026
+                </span>
+              </div>
+
               <div className="absolute bottom-4 left-4 right-4 text-white">
-                <p className="text-[9px] font-black tracking-[0.22em] opacity-80">WELCOME ME 2026</p>
-                <h2 className="text-lg font-black leading-tight mt-1 text-white">从 me 到 we 的现场共创</h2>
-                <p className="text-[10px] text-white/80 mt-1">登录后查看通行证、议程、展品与同频推荐</p>
+                <h2 className="text-xl font-black leading-tight text-white drop-shadow-sm">
+                  从我到我们的现场共创
+                </h2>
+                <div className="mt-3 rounded-2xl bg-white/15 px-3 py-2 backdrop-blur-md">
+                  <p className="text-[11px] font-semibold text-white/90">
+                    登录后查看通行证、议程与同频推荐
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1409,20 +1418,29 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           <div className="space-y-4 animate-fadeIn">
             
             {/* Event poster hero: makes home page feel like a finished mini program */}
-            <div className="relative h-44 rounded-[30px] overflow-hidden bg-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
-              <img
-                src="/images/event-cover.svg"
-                alt="跨界设计与人性体验峰会活动海报"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/78 via-slate-950/18 to-transparent" />
+            <div className="relative h-44 rounded-[30px] overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
+              <div className="absolute -top-12 -right-10 w-36 h-36 rounded-full bg-white/15 blur-2xl" />
+              <div className="absolute -bottom-14 -left-10 w-40 h-40 rounded-full bg-teal-300/20 blur-2xl" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent)]" />
+
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[9px] font-black tracking-widest">WELCOME ME 2026</span>
-                <span className="px-2.5 py-1 rounded-full bg-emerald-400 text-slate-950 text-[9px] font-black">进行中</span>
+                <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md">
+                  WELCOME ME 2026
+                </span>
+                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950">
+                  进行中
+                </span>
               </div>
+
               <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h2 className="text-xl font-black leading-tight text-white">跨界设计与人性体验峰会</h2>
-                <p className="text-[10px] text-white/85 mt-1">上海当代艺术创意园 · A1馆 · 今日 09:30-18:00</p>
+                <h2 className="text-xl font-black leading-tight text-white drop-shadow-sm">
+                  从我到我们的现场共创
+                </h2>
+                <div className="mt-3 rounded-2xl bg-white/15 px-3 py-2 backdrop-blur-md">
+                  <p className="text-[11px] font-semibold text-white/90">
+                    上海当代艺术创意园 · A1馆 · 09:30-18:00
+                  </p>
+                </div>
               </div>
             </div>
 
