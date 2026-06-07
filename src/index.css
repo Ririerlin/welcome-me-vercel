@@ -462,3 +462,37 @@ input {
 .dark .admin-console .text-white\/80 {
   color: rgba(255, 255, 255, 0.92) !important;
 }
+
+
+/* ===== User requested clean cards: no visible border lines in mini app ===== */
+.wm-no-card-borders .border,
+.wm-no-card-borders .border-0,
+.wm-no-card-borders .border-2,
+.wm-no-card-borders .border-4,
+.wm-no-card-borders .border-8,
+.wm-no-card-borders .border-t,
+.wm-no-card-borders .border-r,
+.wm-no-card-borders .border-b,
+.wm-no-card-borders .border-l,
+.wm-no-card-borders [class*="border-"] {
+  border-color: transparent !important;
+}
+
+.wm-no-card-borders .card,
+.wm-no-card-borders .panel,
+.wm-no-card-borders .section,
+.wm-no-card-borders .module,
+.wm-no-card-borders .login-card,
+.wm-no-card-borders .profile-card,
+.wm-no-card-borders .teacher-card,
+.wm-no-card-borders .vip-card {
+  border-color: transparent !important;
+}
+
+/* Venue map should show the complete SVG instead of being cropped. */
+.wm-no-card-borders img[alt="A1馆场馆导览图"] {
+  display: block;
+  width: 100%;
+  height: auto !important;
+  object-fit: contain !important;
+}

@@ -843,7 +843,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
   };
 
   return (
-    <div className="phone-frame relative mx-auto w-screen md:w-full max-w-none md:max-w-[360px] min-h-[100dvh] md:min-h-[620px] h-[100dvh] md:h-[760px] max-h-none md:max-h-[820px] shrink-0 p-0 md:p-[3px] bg-transparent md:bg-gradient-to-tr md:from-pink-400 md:via-teal-300 md:via-purple-400 md:to-pink-500 rounded-none md:rounded-[58px] shadow-none md:shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-none md:dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 md:hover:scale-[1.01] md:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)]">
+    <div className="phone-frame wm-no-card-borders relative mx-auto w-screen md:w-full max-w-none md:max-w-[360px] min-h-[100dvh] md:min-h-[620px] h-[100dvh] md:h-[760px] max-h-none md:max-h-[820px] shrink-0 p-0 md:p-[3px] bg-transparent md:bg-gradient-to-tr md:from-pink-400 md:via-teal-300 md:via-purple-400 md:to-pink-500 rounded-none md:rounded-[58px] shadow-none md:shadow-[0_25px_60px_rgba(244,114,182,0.15)] dark:shadow-none md:dark:shadow-[0_25px_60px_rgba(139,92,246,0.15)] transition-all duration-500 md:hover:scale-[1.01] md:hover:shadow-[0_30px_75px_rgba(244,114,182,0.25)]">
       
       {/* Animated Stream light overlay inside borders */}
       <div className="pointer-events-none absolute inset-0 hidden md:block bg-gradient-to-r from-pink-500/10 via-teal-300/5 to-purple-500/10 animate-pulse rounded-[58px]"></div>
@@ -1586,8 +1586,8 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             </div>
 
             {/* A1 venue map image */}
-            <div className="overflow-hidden rounded-[28px] bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm">
-              <img src="/images/map-a1.svg" alt="A1馆场馆导览图" className="w-full h-36 object-cover" />
+            <div className="overflow-hidden rounded-[28px] bg-white dark:bg-slate-900 shadow-sm">
+              <img src="/images/map-a1.svg" alt="A1馆场馆导览图" className="w-full h-auto object-contain block" />
             </div>
 
             {/* Architectural Map & Climate state (Info Visualization Instead of raw descriptions) - borderless */}
@@ -3386,12 +3386,12 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             )}
 
             {/* Messages Body */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-3.5 scrollbar-none flex flex-col justify-end">
+            <div className="flex-1 overflow-y-auto p-3 space-y-3.5 scrollbar-none">
               <div className="text-center text-[7.5px] text-slate-400 py-1 font-mono tracking-wider shrink-0 select-none">
                 🛡️ 镜影私聊已解锁，学者极智通道搭建完毕
               </div>
 
-              <div className="flex-1 space-y-3 flex flex-col justify-end overflow-y-auto pr-0.5">
+              <div className="space-y-3 flex flex-col pr-0.5">
                 {(chatLogs[activeChatAttendee.id] || []).map(msg => {
                   const isMe = msg.senderId === 'me';
                   return (
