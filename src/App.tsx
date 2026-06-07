@@ -120,17 +120,7 @@ export default function App() {
                   </span>
                 </h1>
               </div>
-        {/* 主视觉图片：让首屏看起来像正式活动页面 */}
-        <div className="w-full rounded-[30px] bg-white/75 dark:bg-slate-900/70 border border-white/70 dark:border-white/10 shadow-sm overflow-hidden p-3">
-          <img
-            src="/welcome-hero.svg"
-            alt="欢迎ME活动主视觉"
-            className="w-full h-44 object-contain"
-          />
-        </div>
 
-        {/* Slogan */}
-        <div className="space-y-4">
               {/* Slogan */}
               <div className="space-y-4">
                 <h2 className="text-2xl md:text-3xl font-black text-slate-850 dark:text-white tracking-tight leading-tight px-2">
@@ -234,6 +224,5 @@ export default function App() {
       </footer>
 
     </div>
-  </div>
   );
 }
