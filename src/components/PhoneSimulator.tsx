@@ -353,6 +353,54 @@ export default function PhoneSimulator({
   });
 
   const [communityMsgInput, setCommunityMsgInput] = useState<string>('');
+  const [expandedCommunityId, setExpandedCommunityId] = useState<string | null>(null);
+
+  const communityCatalog = [
+    {
+      id: 'comm-druids',
+      name: '自然算法生态秘境',
+      engName: 'Druids Eco-Nexus',
+      accent: 'emerald',
+      mbti: 'INFJ / INFP 推荐人群',
+      sparkleText: '专注于生命计算、土壤微生物能源转化与有机气候共创。',
+      agenda: '免费申领提案契合及专属席位支持',
+      members: ['陈青川', '季雨桐'],
+      desc: '回归土地与生机逻辑。本组会后立项书获得清华创意实验室学术联署，目前正在招募空气介质物理反馈件与微电极传感器拼装师。',
+    },
+    {
+      id: 'comm-spectre',
+      name: '非线性体验感官幽灵阵线',
+      engName: 'Spectre Sensory Syndicate',
+      accent: 'indigo',
+      mbti: 'ENFP / ISFP / INFP 推荐人群',
+      sparkleText: '探索气味、温湿度调节与迷宫具身交互。',
+      agenda: '会后联合项目与作品展示机会',
+      members: ['苏格', '陈青川'],
+      desc: '致力于数字技术在物理感官上的非线性溢出。组委会将在静安艺术中心媒体室免费提供 4 周的联合学者驻留工位。',
+    },
+    {
+      id: 'comm-wizards',
+      name: '多模态媒介狂徒沙龙',
+      engName: 'Multimodal AI Wizards',
+      accent: 'pink',
+      mbti: 'ENTP / INTJ 推荐人群',
+      sparkleText: '具身感知、情感反馈硬件与 XR 穿戴设备研发。',
+      agenda: 'AI Studio 长期高能 GPU 限免接口与设备赞助',
+      members: ['米亚 Mia', '张赫轩 Mark'],
+      desc: '让交互硬件充溢情感。已预配置十组智能物联网调试套件，适合会后继续合作开发。',
+    },
+    {
+      id: 'comm-court',
+      name: '硬核深蓝批判哲学法庭',
+      engName: 'Critical Logic Court',
+      accent: 'slate',
+      mbti: 'INTJ / INTP 推荐人群',
+      sparkleText: '探讨算法社会考古学、系统霸权批判、人类非核心设计。',
+      agenda: '联刊出版《设计批判之刃》白皮书',
+      members: ['苏格', '米亚 Mia'],
+      desc: '对接各大高校与期刊提供后峰会学术发表席位与论文共创支持，适合深入理论讨论。',
+    }
+  ];
 
   const sendPrivateMessage = (content: string, isMeetupInvite = false) => {
     if (!activeChatAttendee) return;
@@ -1042,24 +1090,29 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {!isLoggedIn ? (
           <div className="space-y-4 animate-fadeIn py-1">
             {/* Login visual cover: image-led first impression */}
-            <div className="relative h-44 rounded-[30px] overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
-              <div className="absolute -top-12 -right-10 w-36 h-36 rounded-full bg-white/15 blur-2xl" />
-              <div className="absolute -bottom-14 -left-10 w-40 h-40 rounded-full bg-teal-300/20 blur-2xl" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent)]" />
+            <div className="relative h-44 rounded-[30px] overflow-hidden shadow-[0_18px_45px_rgba(31,35,51,0.20)]">
+              <img
+                src="/images/home-hero-photo.png"
+                alt="Welcome ME 2026 会场现场"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/78 via-slate-900/45 to-slate-950/68" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_38%,rgba(15,23,42,0.35))]" />
 
-              <div className="absolute top-4 left-4">
-                <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md">
+              <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                <span className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15">
                   WELCOME ME 2026
                 </span>
+                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm">进行中</span>
               </div>
 
               <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h2 className="text-xl font-black leading-tight text-white drop-shadow-sm">
+                <h2 className="text-[22px] font-black leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]">
                   从我到我们的现场共创
                 </h2>
-                <div className="mt-3 rounded-2xl bg-white/15 px-3 py-2 backdrop-blur-md">
-                  <p className="text-[11px] font-semibold text-white/90">
-                    登录后查看通行证、议程与同频推荐
+                <div className="mt-3 rounded-2xl bg-slate-950/35 px-3 py-2.5 backdrop-blur-md border border-white/12">
+                  <p className="text-[11px] font-semibold text-white/95">
+                    登录后查看通行证、议程、真实照片与同频推荐
                   </p>
                 </div>
               </div>
@@ -1555,26 +1608,30 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           <div className="space-y-4 animate-fadeIn">
             
             {/* Event poster hero: makes home page feel like a finished mini program */}
-            <div className="relative h-44 rounded-[30px] overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
-              <div className="absolute -top-12 -right-10 w-36 h-36 rounded-full bg-white/15 blur-2xl" />
-              <div className="absolute -bottom-14 -left-10 w-40 h-40 rounded-full bg-teal-300/20 blur-2xl" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent)]" />
+            <div className="relative h-44 rounded-[30px] overflow-hidden shadow-[0_18px_45px_rgba(31,35,51,0.20)]">
+              <img
+                src="/images/home-hero-photo.png"
+                alt="Welcome ME 2026 现场主会场"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/82 via-violet-950/35 to-slate-950/70" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_36%,rgba(15,23,42,0.38))]" />
 
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
-                <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md">
+                <span className="rounded-full bg-white/18 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15">
                   WELCOME ME 2026
                 </span>
-                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950">
+                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm">
                   进行中
                 </span>
               </div>
 
               <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h2 className="text-xl font-black leading-tight text-white drop-shadow-sm">
+                <h2 className="text-[23px] font-black leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]">
                   从我到我们的现场共创
                 </h2>
-                <div className="mt-3 rounded-2xl bg-white/15 px-3 py-2 backdrop-blur-md">
-                  <p className="text-[11px] font-semibold text-white/90">
+                <div className="mt-3 rounded-2xl bg-slate-950/38 px-3 py-2.5 backdrop-blur-md border border-white/12">
+                  <p className="text-[11px] font-semibold text-white/95">
                     上海当代艺术创意园 · A1馆 · 09:30-18:00
                   </p>
                 </div>
@@ -1716,7 +1773,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       </div>
                       <h5 className="font-bold text-[11px] leading-snug truncate text-slate-700 dark:text-slate-200">{s.title}</h5>
                     </div>
-                    <span className="text-[10px] text-slate-400 shrink-0 font-medium">👉</span>
+                    <span className="shrink-0 w-7 h-7 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-500 dark:text-slate-200"><ChevronRight className="h-4 w-4" /></span>
                   </div>
                 ))}
               </div>
@@ -2808,7 +2865,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {activeTab === 'we' && (
           <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
             {/* Top Sub Tabs for "Mirror Twins" vs "Alumni Communities" */}
-            <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl border dark:border-slate-800 shadow-inner select-none shrink-0">
+            <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl border dark:border-slate-800 shadow-inner select-none shrink-0">
               <button
                 type="button"
                 onClick={() => setWeSubTab('radar')}
@@ -2823,29 +2880,18 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               <button
                 type="button"
                 onClick={() => setWeSubTab('contacts')}
-                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer relative ${
+                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer ${
                   weSubTab === 'contacts' 
                     ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 shadow-sm font-black' 
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
-                通讯录
-                {myContactCards.length > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-pink-500 text-white text-[8px] flex items-center justify-center font-black">
-                    {myContactCards.length}
+                <span className="inline-flex items-center justify-center gap-1">
+                  <span>通讯录</span>
+                  <span className="rounded-full bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-[8px] font-black text-slate-600 dark:text-slate-100">
+                    {myContactCards.length} 人
                   </span>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => setWeSubTab('community')}
-                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer relative ${
-                  weSubTab === 'community' 
-                    ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 shadow-sm font-black' 
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
-                }`}
-              >
-                兴趣小组
+                </span>
               </button>
             </div>
 
@@ -3122,8 +3168,8 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       <div className="text-base font-black text-purple-600 dark:text-purple-300">{pendingContactCards.length}</div>
                     </div>
                     <div className="rounded-2xl bg-white/80 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800 p-2.5">
-                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">推荐</div>
-                      <div className="text-base font-black text-pink-600 dark:text-pink-300">{Math.max(0, attendees.length - myContactCards.length)}</div>
+                      <div className="text-[9px] text-slate-500 dark:text-slate-300 font-bold">群组</div>
+                      <div className="text-base font-black text-pink-600 dark:text-pink-300">{joinedCommunities.length}</div>
                     </div>
                   </div>
                 </div>
@@ -3216,6 +3262,95 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     })}
                   </div>
                 )}
+
+                <div className="rounded-[28px] p-4 bg-white/95 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white tracking-tight">通讯录中的群组</h4>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">
+                        小组统一收进通讯录，方便你和联系人一样管理、查看最新讨论与会后合作机会。
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-lg font-black text-pink-600 dark:text-pink-300 leading-none">{joinedCommunities.length}</div>
+                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-bold mt-1">已加入</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {communityCatalog.map((comm) => {
+                      const isJoined = joinedCommunities.includes(comm.id);
+                      const isExpanded = expandedCommunityId === comm.id;
+                      const commChats = communityChats[comm.id] || [];
+                      return (
+                        <div key={comm.id} className="rounded-[24px] bg-slate-50/90 dark:bg-slate-950/70 p-4 space-y-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-[8px] rounded-full bg-white dark:bg-slate-800 px-2 py-0.5 font-black text-emerald-700 dark:text-emerald-300">{comm.mbti}</span>
+                                {isJoined && <span className="text-[8px] rounded-full bg-teal-500/10 px-2 py-0.5 font-black text-teal-600 dark:text-teal-300">已加入</span>}
+                              </div>
+                              <h5 className="text-[12px] font-black text-slate-900 dark:text-white mt-2">{comm.name}</h5>
+                              <p className="text-[9px] text-slate-500 dark:text-slate-300 mt-1 leading-relaxed">{comm.desc}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setExpandedCommunityId(isExpanded ? null : comm.id)}
+                              className="shrink-0 h-10 px-3 rounded-2xl bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 text-[9.5px] font-black active:scale-95 transition shadow-sm"
+                            >
+                              {isExpanded ? '收起' : '查看'}
+                            </button>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="text-[9px] text-slate-500 dark:text-slate-300 font-semibold">成员 {comm.members.length + 1} · 最近讨论 {commChats.length} 条</div>
+                            {!isJoined ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setJoinedCommunities([...joinedCommunities, comm.id]);
+                                  setExpandedCommunityId(comm.id);
+                                  triggerToast(`已加入「${comm.name}」并收纳到通讯录`);
+                                }}
+                                className="min-h-11 px-4 rounded-2xl bg-indigo-600 text-white text-[10px] font-black active:scale-95 transition shadow-sm"
+                              >
+                                加入群组
+                              </button>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 rounded-2xl bg-teal-500/10 px-3 py-2 text-[9px] font-black text-teal-700 dark:text-teal-300">
+                                <Check className="h-3 w-3" /> 已在通讯录
+                              </span>
+                            )}
+                          </div>
+
+                          {isExpanded && (
+                            <div className="rounded-[20px] bg-white dark:bg-slate-900 p-3 space-y-3">
+                              <div className="text-[9px] text-slate-500 dark:text-slate-300 leading-relaxed">
+                                <span className="font-black text-slate-800 dark:text-white">研究方向：</span>{comm.sparkleText}
+                              </div>
+                              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-3">
+                                <div className="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wide">会后机会</div>
+                                <div className="text-[10px] font-black text-emerald-700 dark:text-emerald-300 mt-1">{comm.agenda}</div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wide">最近讨论</div>
+                                {commChats.slice(-2).map((chat) => (
+                                  <div key={chat.id} className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-2.5">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <div className="text-[9px] font-black text-slate-800 dark:text-white">{chat.userNick}</div>
+                                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-mono">{chat.createdAt}</div>
+                                    </div>
+                                    <div className="text-[9px] text-slate-600 dark:text-slate-200 mt-1 leading-relaxed">{chat.text}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
