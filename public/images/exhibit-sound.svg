@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480" role="img" aria-label="心率声磬交互展品">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4f0ff"/><stop offset="1" stop-color="#eafffb"/></linearGradient><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8def8"/><stop offset="1" stop-color="#7c8ba7"/></linearGradient></defs>
+  <rect width="720" height="480" rx="42" fill="url(#bg)"/>
+  <circle cx="360" cy="246" r="150" fill="#5b4bff" opacity="0.08"/>
+  <circle cx="360" cy="246" r="98" fill="#14b8a6" opacity="0.08"/>
+  <g stroke="#5b4bff" stroke-width="7" fill="none" opacity="0.48"><path d="M162 250 C230 110 489 110 558 250"/><path d="M192 282 C262 175 456 175 528 282"/><path d="M225 312 C288 245 432 245 496 312"/></g>
+  <g transform="translate(230 126)">
+    <ellipse cx="130" cy="262" rx="182" ry="35" fill="#1f2333" opacity="0.08"/>
+    <path d="M34 108 H226 L196 252 H64 Z" fill="url(#metal)"/>
+    <path d="M34 108 C62 74 199 74 226 108 C198 138 63 138 34 108Z" fill="#eef2ff"/>
+    <circle cx="130" cy="115" r="42" fill="#fff" opacity="0.75"/>
+    <circle cx="130" cy="115" r="22" fill="#ff6fae" opacity="0.72"/>
+    <path d="M78 205 H182" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity="0.45"/>
+  </g>
+  <circle cx="164" cy="120" r="12" fill="#ff6fae"/><circle cx="575" cy="360" r="16" fill="#14b8a6"/><circle cx="605" cy="132" r="10" fill="#5b4bff"/>
+  <text x="48" y="64" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#1f2333">心率声磬</text>
+  <text x="48" y="98" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#73788a">多点触碰 · 生理反馈 · 共振音乐</text>
+</svg>

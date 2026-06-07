@@ -321,7 +321,7 @@ export default function PhoneSimulator({
       { id: 'cd_2', userNick: '陈青川', avatarEmoji: '🐼', avatarColor: 'bg-teal-500', text: '对！这应该写进咱们会后的「微气候公共生态介入」联合项目申请书！', createdAt: '10:52' }
     ],
     'comm-spectre': [
-      { id: 'cs_1', userNick: '苏格 Dr.Su', avatarEmoji: '🦉', avatarColor: 'bg-rose-450', text: '气味采样陶罐能瞬间调出人体海马体的环境意识，感觉比纯屏幕刺激有灵性。', createdAt: '11:02' },
+      { id: 'cs_1', userNick: '苏格 Dr.Su', avatarEmoji: '🦉', avatarColor: 'bg-rose-400', text: '气味采样陶罐能瞬间调出人体海马体的环境意识，感觉比纯屏幕刺激有灵性。', createdAt: '11:02' },
       { id: 'cs_2', userNick: '陈青川', avatarEmoji: '🐼', avatarColor: 'bg-teal-500', text: '新唯物主义讲究物质自说其话，气味确实是极佳的空气幽灵介质。', createdAt: '11:05' }
     ],
     'comm-wizards': [
@@ -329,7 +329,7 @@ export default function PhoneSimulator({
       { id: 'cw_2', userNick: '张赫轩 Mark', avatarEmoji: '🐯', avatarColor: 'bg-purple-600', text: '必须把XR增强实体给加上去，最好把我们的智能心脏律动声音挂到一楼！', createdAt: '11:12' }
     ],
     'comm-court': [
-      { id: 'cc_1', userNick: '苏格 Dr.Su', avatarEmoji: '🦉', avatarColor: 'bg-rose-450', text: '本届最大的槽点：用算法同步人心相似度，这本身就是另外一种理性的数字冷血狂欢。', createdAt: '11:15' },
+      { id: 'cc_1', userNick: '苏格 Dr.Su', avatarEmoji: '🦉', avatarColor: 'bg-rose-400', text: '本届最大的槽点：用算法同步人心相似度，这本身就是另外一种理性的数字冷血狂欢。', createdAt: '11:15' },
       { id: 'cc_2', userNick: '米亚 Mia', avatarEmoji: '🤖', avatarColor: 'bg-indigo-500', text: '哈哈哈苏教授一如既往地毒辣，不过这也激起了有趣的认知张力。', createdAt: '11:18' }
     ]
   });
@@ -837,7 +837,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
       {/* Toast Notification with Macaron Pink glow */}
       {showNotification && (
         <div className="absolute top-16 left-4 right-4 z-50 bg-slate-950/95 dark:bg-slate-900/95 border-b-2 border-pink-400 text-white py-2.5 px-3.5 rounded-2xl shadow-xl flex items-center space-x-2.5 text-xs animate-slideDown">
-          <Sparkles className="h-4.5 w-4.5 text-pink-400 shrink-0 animate-bounce" />
+          <Sparkles className="h-4 w-4 text-pink-400 shrink-0 animate-bounce" />
           <span className="flex-1 font-medium leading-tight">{showNotification}</span>
         </div>
       )}
@@ -845,7 +845,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
       {/* Camera Hole */}
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-slate-950 rounded-b-2xl z-50 hidden md:flex items-center justify-center">
         <div className="w-14 h-1 bg-slate-800 rounded-full mb-1"></div>
-        <div className="w-2.5 h-2.5 bg-slate-850 border-2 border-slate-950 rounded-full ml-3 mb-1"></div>
+        <div className="w-2.5 h-2.5 bg-slate-800 border-2 border-slate-950 rounded-full ml-3 mb-1"></div>
       </div>
 
       {/* Top Banner Bar */}
@@ -853,13 +853,13 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         <div className="flex items-center space-x-1">
           <span className="text-xs text-slate-500 font-mono font-bold">09:41</span>
           {!isLoggedIn ? (
-            <span className="text-[9px] bg-indigo-100 text-indigo-655 dark:bg-indigo-950/40 dark:text-indigo-405 border border-indigo-200 dark:border-indigo-850 font-bold px-1.5 py-0.2 rounded-full scale-90">UNLOCKED</span>
+            <span className="text-[9px] bg-indigo-100 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 font-bold px-1.5 py-0.5 rounded-full scale-90">UNLOCKED</span>
           ) : (
-            <span className="text-[9px] bg-pink-100 text-pink-650 dark:bg-pink-950/40 dark:text-pink-450 border border-pink-200 dark:border-pink-850 font-bold px-1.5 py-0.2 rounded-full scale-90">欢迎ME</span>
+            <span className="text-[9px] bg-pink-100 text-pink-600 dark:bg-pink-950/40 dark:text-pink-400 border border-pink-200 dark:border-pink-800 font-bold px-1.5 py-0.5 rounded-full scale-90">欢迎ME</span>
           )}
         </div>
         
-        <div className="text-xs font-bold text-slate-850 dark:text-slate-100 truncate max-w-[185px] text-center flex items-center justify-center space-x-1">
+        <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate max-w-[185px] text-center flex items-center justify-center space-x-1">
           {!isLoggedIn ? (
             <span className="flex items-center space-x-1 text-indigo-600 dark:text-indigo-400">
               <Lock className="h-3 w-3 animate-pulse shrink-0" />
@@ -887,6 +887,21 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         
         {!isLoggedIn ? (
           <div className="space-y-4 animate-fadeIn py-1">
+            {/* Login visual cover: image-led first impression */}
+            <div className="relative h-44 rounded-[30px] overflow-hidden bg-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
+              <img
+                src="/images/event-cover.svg"
+                alt="欢迎ME活动会场海报"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/18 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <p className="text-[9px] font-black tracking-[0.22em] opacity-80">WELCOME ME 2026</p>
+                <h2 className="text-lg font-black leading-tight mt-1 text-white">从 me 到 we 的现场共创</h2>
+                <p className="text-[10px] text-white/80 mt-1">登录后查看通行证、议程、展品与同频推荐</p>
+              </div>
+            </div>
+
             {/* Immersive Welcome Glass card */}
             <div className="p-5 rounded-[28px] bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-teal-500/5 border border-indigo-200/80 dark:border-indigo-900/50 text-center select-none space-y-3 relative overflow-hidden">
               <div className="absolute inset-0 bg-radial-gradient from-indigo-500/10 via-transparent to-transparent opacity-60 pointer-events-none"></div>
@@ -901,7 +916,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               </div>
 
               {/* Segmented Control */}
-              <div className="flex p-0.5 bg-slate-100/90 dark:bg-slate-905 border border-slate-200 dark:border-slate-800 rounded-2xl">
+              <div className="flex p-0.5 bg-slate-100/90 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
                 <button
                   type="button"
                   onClick={() => setAuthMode('login')}
@@ -1014,7 +1029,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   }}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
-                  <Zap className="h-4.5 w-4.5 text-amber-300 animate-pulse shrink-0" />
+                  <Zap className="h-4 w-4 text-amber-300 animate-pulse shrink-0" />
                   <span>一键登录</span>
                 </button>
               </div>
@@ -1043,7 +1058,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       value={regOrg}
                       onChange={(e) => setRegOrg(e.target.value)}
                       placeholder="例：林泉多模态媒体室"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
@@ -1055,7 +1070,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       value={regTitle}
                       onChange={(e) => setRegTitle(e.target.value)}
                       placeholder="例：数智交互体验探索家"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
@@ -1067,7 +1082,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       value={regPhone}
                       onChange={(e) => setRegPhone(e.target.value)}
                       placeholder="例：138-0000-0000"
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 font-mono text-slate-800 dark:text-slate-100"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl px-3 py-1.8 focus:outline-none focus:border-indigo-400 font-mono text-slate-800 dark:text-slate-100"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -1085,9 +1100,9 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       <div className="flex-1 text-left min-w-0">
                         <div className="text-[10px] font-black text-slate-900 dark:text-white flex items-center space-x-1">
                           <span>{regAvatarImage ? '已上传头像' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.label || '学者形象')}</span>
-                          <span className="text-[8px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-1.5 py-0.2 rounded font-normal font-mono select-none">PREVIEW</span>
+                          <span className="text-[8px] bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 px-1.5 py-0.5 rounded font-normal font-mono select-none">PREVIEW</span>
                         </div>
-                        <div className="text-[9px] text-slate-450 truncate mt-0.5">
+                        <div className="text-[9px] text-slate-400 truncate mt-0.5">
                           {regAvatarImage ? '也可以继续选择系统形象覆盖展示风格' : (ANTHROPOMORPHIC_AVATARS.find(a => a.emoji === regEmoji)?.desc || '专属高能灵魂拟态')}
                         </div>
                         <label className="mt-2 inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[9px] font-black text-indigo-600 dark:text-indigo-300 cursor-pointer active:scale-95 transition">
@@ -1098,7 +1113,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     </div>
 
                     {/* Emoji Select Grid */}
-                    <div className="grid grid-cols-6 gap-1 bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-855">
+                    <div className="grid grid-cols-6 gap-1 bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-800">
                       {ANTHROPOMORPHIC_AVATARS.map(item => (
                         <button
                           key={item.emoji}
@@ -1117,7 +1132,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     </div>
 
                     {/* Theme color row */}
-                    <div className="flex justify-between items-center bg-slate-50/55 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-855">
+                    <div className="flex justify-between items-center bg-slate-50/55 dark:bg-slate-950 p-1.5 rounded-2xl border dark:border-slate-800">
                       <span className="text-[9px] text-slate-455 font-bold ml-1 select-none">专属磁极色底纹：</span>
                       <div className="flex space-x-1.5 mr-1">
                         {[
@@ -1130,7 +1145,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             key={col.name}
                             type="button"
                             onClick={() => setRegActiveColor(col.name)}
-                            className={`w-3.5 h-3.5 rounded-full border transition-all ${regActiveColor === col.name ? 'border-indigo-400 dark:border-white scale-120' : 'border-transparent opacity-60'}`}
+                            className={`w-3 h-3 rounded-full border transition-all ${regActiveColor === col.name ? 'border-indigo-400 dark:border-white scale-120' : 'border-transparent opacity-60'}`}
                             style={{ backgroundColor: col.color }}
                           />
                         ))}
@@ -1145,7 +1160,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       <select
                         value={regMbti}
                         onChange={(e) => setRegMbti(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-205"
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-200"
                       >
                         {MBTI_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -1158,7 +1173,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       <select
                         value={regArchetype}
                         onChange={(e) => setRegArchetype(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-855 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-205"
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl px-2 py-1 text-[10px] focus:outline-none text-slate-700 dark:text-slate-200"
                       >
                         {ARCHETYPE_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -1188,7 +1203,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                                 triggerToast('🔒 对齐设计方向数量限 2 个');
                               }
                             }}
-                            className={`p-1 px-1.8 text-[8.5px] font-bold rounded-lg border transition-all ${isSel ? 'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-955/20 dark:text-indigo-400' : 'bg-slate-50 dark:bg-slate-950 border-slate-150 dark:border-slate-855 text-slate-500'}`}
+                            className={`p-1 px-1.8 text-[8.5px] font-bold rounded-lg border transition-all ${isSel ? 'bg-indigo-100 text-indigo-700 border-indigo-300 dark:bg-indigo-955/20 dark:text-indigo-400' : 'bg-slate-50 dark:bg-slate-950 border-slate-150 dark:border-slate-800 text-slate-500'}`}
                           >
                             {dir}
                           </button>
@@ -1311,13 +1326,13 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   }}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3.5 rounded-2xl text-center active:scale-95 transition-all shadow-lg shadow-indigo-600/20 cursor-pointer flex items-center justify-center space-x-2 border border-indigo-500/30 tracking-wide font-sans"
                 >
-                  <Sparkles className="h-4.5 w-4.5 text-pink-300 animate-spin shrink-0" style={{ animationDuration: '3s' }} />
+                  <Sparkles className="h-4 w-4 text-pink-300 animate-spin shrink-0" style={{ animationDuration: '3s' }} />
                   <span>完成注册并进入会场</span>
                 </button>
               </div>
             )}
             
-            <div className="text-center text-[8px] text-slate-450 dark:text-slate-500 font-mono tracking-wide py-2 select-none">
+            <div className="text-center text-[8px] text-slate-400 dark:text-slate-500 font-mono tracking-wide py-2 select-none">
               🔒 信息仅用于本次活动体验
             </div>
           </div>
@@ -1327,13 +1342,13 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             <div className="bg-gradient-to-r from-pink-500/10 via-teal-500/10 to-purple-500/10 rounded-2xl p-3.5 flex items-center justify-between text-[11px] hover:shadow-[0_8px_20px_rgba(244,114,182,0.05)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
               <div className="flex items-center space-x-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-405 opacity-70"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-70"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
                 </span>
                 <span className="font-bold text-slate-600 dark:text-slate-400 tracking-wide">跨界体验峰会 2026</span>
               </div>
               <div className="flex items-center space-x-1">
-                <span className="text-[10px] font-bold bg-white dark:bg-slate-850 text-teal-600 dark:text-teal-400 px-2.5 py-1 rounded-full shadow-xs select-none">
+                <span className="text-[10px] font-bold bg-white dark:bg-slate-800 text-teal-600 dark:text-teal-400 px-2.5 py-1 rounded-full shadow-xs select-none">
                   {eventPhase === 'before' ? '📅 预加热中' : eventPhase === 'during' ? '🎙️ 进行中' : '🏁 已闭幕'}
                 </span>
               </div>
@@ -1343,6 +1358,24 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {activeTab === 'home' && (
           <div className="space-y-4 animate-fadeIn">
             
+            {/* Event poster hero: makes home page feel like a finished mini program */}
+            <div className="relative h-44 rounded-[30px] overflow-hidden bg-slate-950 shadow-[0_18px_45px_rgba(31,35,51,0.16)]">
+              <img
+                src="/images/event-cover.svg"
+                alt="跨界设计与人性体验峰会活动海报"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/78 via-slate-950/18 to-transparent" />
+              <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
+                <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[9px] font-black tracking-widest">WELCOME ME 2026</span>
+                <span className="px-2.5 py-1 rounded-full bg-emerald-400 text-slate-950 text-[9px] font-black">进行中</span>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <h2 className="text-xl font-black leading-tight text-white">跨界设计与人性体验峰会</h2>
+                <p className="text-[10px] text-white/85 mt-1">上海当代艺术创意园 · A1馆 · 今日 09:30-18:00</p>
+              </div>
+            </div>
+
             {/* Greet & Stats ring - borderless */}
             <div className="flex items-center justify-between bg-white/90 dark:bg-slate-900/90 p-4 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.015)] hover:shadow-[0_12px_32px_rgba(244,114,182,0.06)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-350 cursor-pointer">
               <div className="space-y-1">
@@ -1361,15 +1394,15 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
             {/* Simulated Live NFC Pass & Ticket QR Card (Original 'i' merged seamlessly here) - borderless */}
             <div className="bg-gradient-to-tr from-pink-100/60 via-teal-100/25 via-purple-150/45 to-orange-100/35 dark:from-pink-950/20 dark:via-purple-950/10 dark:to-slate-905 rounded-[32px] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.015)] hover:shadow-[0_20px_50px_rgba(244,114,182,0.08)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-350 relative overflow-hidden group cursor-pointer">
-              <div className="absolute right-0 top-0 bg-gradient-to-r from-pink-550 to-purple-550 text-white font-black text-[8px] px-4 py-1.5 rounded-bl-2xl tracking-widest uppercase">
+              <div className="absolute right-0 top-0 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-black text-[8px] px-4 py-1.5 rounded-bl-2xl tracking-widest uppercase">
                 VIP 特权入场券
               </div>
 
-              <div className="border-b border-dashed border-slate-205/60 dark:border-slate-800/60 pb-3 mt-1.5">
-                <h4 className="font-extrabold text-sm text-slate-850 dark:text-slate-100 tracking-tight">2026 跨界设计与人性体验峰会</h4>
+              <div className="border-b border-dashed border-slate-200/60 dark:border-slate-800/60 pb-3 mt-1.5">
+                <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 tracking-tight">2026 跨界设计与人性体验峰会</h4>
                 <div className="flex justify-between items-center text-[9px] text-slate-400 mt-1">
                   <span>上海当代艺术创意园 • A1馆</span>
-                  <span className="text-purple-650 font-bold">2026-05-25</span>
+                  <span className="text-purple-600 font-bold">2026-05-25</span>
                 </div>
               </div>
 
@@ -1419,7 +1452,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-2.5 rounded-2xl border border-white/60 dark:border-white/10 hover:border-pink-300 dark:hover:border-pink-500 hover:scale-[1.03] active:scale-[0.97] transition-all flex flex-col items-center space-y-1 block shadow-xs"
               >
                 <div className="p-1.5 bg-pink-100 dark:bg-pink-950/40 rounded-xl text-pink-600 dark:text-pink-400">
-                  <IdCard className="h-4.5 w-4.5" />
+                  <IdCard className="h-4 w-4" />
                 </div>
                 <span className="font-bold text-slate-600 dark:text-slate-400">我的肖像</span>
               </button>
@@ -1429,7 +1462,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-2.5 rounded-2xl border border-white/60 dark:border-white/10 hover:border-teal-300 dark:hover:border-teal-500 hover:scale-[1.03] active:scale-[0.97] transition-all flex flex-col items-center space-y-1 block shadow-xs"
               >
                 <div className="p-1.5 bg-teal-100 dark:bg-teal-950/40 rounded-xl text-teal-600 dark:text-teal-400">
-                  <MessageSquare className="h-4.5 w-4.5" />
+                  <MessageSquare className="h-4 w-4" />
                 </div>
                 <span className="font-bold text-slate-600 dark:text-slate-400">主场发言</span>
               </button>
@@ -1439,7 +1472,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-2.5 rounded-2xl border border-white/60 dark:border-white/10 hover:border-purple-300 dark:hover:border-purple-500 hover:scale-[1.03] active:scale-[0.97] transition-all flex flex-col items-center space-y-1 block shadow-xs"
               >
                 <div className="p-1.5 bg-purple-100 dark:bg-purple-950/40 rounded-xl text-purple-600 dark:text-purple-400">
-                  <Award className="h-4.5 w-4.5" />
+                  <Award className="h-4 w-4" />
                 </div>
                 <span className="font-bold text-slate-600 dark:text-slate-400">实地展品</span>
               </button>
@@ -1449,7 +1482,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
             <div className="space-y-2 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/60 dark:border-white/10">
               <div className="flex items-center justify-between border-b dark:border-slate-850 pb-2">
                 <h4 className="text-[11px] font-black text-slate-500 flex items-center space-x-1.5 uppercase tracking-wider">
-                  <Compass className="h-3.5 w-3.5 text-pink-500 animate-spin" />
+                  <Compass className="h-3 w-3 text-pink-500 animate-spin" />
                   <span>此时段热门议程 (点击联动)</span>
                 </h4>
                 <button onClick={() => { setActiveTab('co'); setActiveSessionTab('sessions'); }} className="text-[10px] text-pink-500 font-bold hover:underline">查看全议程 →</button>
@@ -1468,15 +1501,15 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     className={`border rounded-xl p-2.5 cursor-pointer hover:scale-[1.01] hover:shadow-xs transition duration-200 flex items-center justify-between ${
                       s.isLive 
                         ? 'bg-gradient-to-r from-pink-500/5 to-purple-500/5 border-pink-200/50' 
-                        : 'bg-slate-50 dark:bg-slate-900 border-slate-150 dark:border-slate-855'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-150 dark:border-slate-800'
                     }`}
                   >
                     <div className="flex-1 min-w-0 pr-2">
                       <div className="flex items-center space-x-1.5 mb-1 text-[9px]">
-                        <span className="bg-pink-100 dark:bg-pink-950/50 text-pink-650 px-1.5 py-0.2 rounded font-mono font-bold">{s.timeStr}</span>
+                        <span className="bg-pink-100 dark:bg-pink-950/50 text-pink-600 px-1.5 py-0.5 rounded font-mono font-bold">{s.timeStr}</span>
                         {s.isLive && <span className="text-[9px] font-bold text-rose-500 animate-pulse">● LIVE</span>}
                       </div>
-                      <h5 className="font-bold text-[11px] leading-snug truncate text-slate-700 dark:text-slate-205">{s.title}</h5>
+                      <h5 className="font-bold text-[11px] leading-snug truncate text-slate-700 dark:text-slate-200">{s.title}</h5>
                     </div>
                     <span className="text-[10px] text-slate-400 shrink-0 font-medium">👉</span>
                   </div>
@@ -1484,14 +1517,19 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               </div>
             </div>
 
+            {/* A1 venue map image */}
+            <div className="overflow-hidden rounded-[28px] bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm">
+              <img src="/images/map-a1.svg" alt="A1馆场馆导览图" className="w-full h-36 object-cover" />
+            </div>
+
             {/* Architectural Map & Climate state (Info Visualization Instead of raw descriptions) - borderless */}
             <div className="bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-slate-900/50 dark:to-slate-950/50 rounded-2xl p-3.5 flex items-center justify-between hover:scale-[1.03] duration-300 transition-all cursor-pointer">
               <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-950/60 flex items-center justify-center text-teal-650">
-                  <Map className="h-4.5 w-4.5" />
+                <div className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-950/60 flex items-center justify-center text-teal-600">
+                  <Map className="h-4 w-4" />
                 </div>
                 <div>
-                  <h5 className="text-[11px] font-extrabold text-slate-850 dark:text-slate-200">A馆现场微气候传感器</h5>
+                  <h5 className="text-[11px] font-extrabold text-slate-900 dark:text-slate-200">A馆现场微气候传感器</h5>
                   <p className="text-[9px] text-slate-400 font-medium">今日天气舒适，适合逛展与交流</p>
                 </div>
               </div>
@@ -1524,9 +1562,9 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   )}
                 </div>
                 
-                <h3 className="text-sm font-black mt-3 text-slate-850 dark:text-white tracking-tight flex items-center justify-center space-x-1">
+                <h3 className="text-sm font-black mt-3 text-slate-900 dark:text-white tracking-tight flex items-center justify-center space-x-1">
                   <span>{myProfile.nickName}</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-450 animate-ping"></span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                 </h3>
                 <p className="text-[10px] text-slate-500 mt-0.5 font-medium">{myProfile.organization || '组织/工作室'} • {myProfile.title || '设计学者'}</p>
 
@@ -1560,7 +1598,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       </span>
                     )}
                     {myProfile.designArchetype && (
-                      <span className="inline-block bg-pink-500/10 text-pink-600 dark:text-pink-450 text-[9px] font-black px-3 py-1 rounded-full shadow-xs transform hover:scale-105 transition-transform">
+                      <span className="inline-block bg-pink-500/10 text-pink-600 dark:text-pink-400 text-[9px] font-black px-3 py-1 rounded-full shadow-xs transform hover:scale-105 transition-transform">
                         🎨 {myProfile.designArchetype}
                       </span>
                     )}
@@ -1581,7 +1619,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
                 {/* Completion percentage indicator - borderless bar */}
                 <div className="mt-4 flex items-center justify-between bg-white/70 dark:bg-slate-950/60 p-2 px-3 rounded-2xl text-[10px] shadow-inner">
-                  <span className="font-extrabold text-[9px] text-pink-650 tracking-wide uppercase">智库匹配权重状态</span>
+                  <span className="font-extrabold text-[9px] text-pink-600 tracking-wide uppercase">智库匹配权重状态</span>
                   <span className="font-mono text-xs font-black text-teal-600 dark:text-teal-400">{myProfile.personaCompletion}% 完成度</span>
                 </div>
               </div>
@@ -1605,7 +1643,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
                 <div className="space-y-3.5 text-xs">
                   <div>
-                    <label className="block text-[9px] text-slate-450 uppercase font-bold mb-1.5 tracking-wider">目前学者昵称与代表组织</label>
+                    <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1.5 tracking-wider">目前学者昵称与代表组织</label>
                     <div className="grid grid-cols-2 gap-2.5">
                       <input 
                         type="text" 
@@ -1625,7 +1663,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   </div>
 
                   <div>
-                    <label className="block text-[9px] text-slate-450 uppercase font-bold mb-1.5 tracking-wider">主要业务与跨界探索方向</label>
+                    <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1.5 tracking-wider">主要业务与跨界探索方向</label>
                     <input 
                       type="text" 
                       value={myProfile.industry}
@@ -1637,8 +1675,8 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
                   {/* Select Anthropomorphic Avatar */}
                   <div>
-                    <label className="block text-[9px] text-slate-450 uppercase font-bold mb-1.5 px-0.5 tracking-wider">拟人精选学者形象 (Click to swap)</label>
-                    <div className="grid grid-cols-6 gap-1.5 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border dark:border-slate-855">
+                    <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1.5 px-0.5 tracking-wider">拟人精选学者形象 (Click to swap)</label>
+                    <div className="grid grid-cols-6 gap-1.5 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border dark:border-slate-800">
                       {ANTHROPOMORPHIC_AVATARS.map(item => (
                         <button
                           key={item.emoji}
@@ -1663,7 +1701,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   {/* Character MBTI & Archetype selector inside Edit Profile */}
                   <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[9px] text-slate-450 uppercase font-bold mb-1 px-1 tracking-wider">MBTI 认知特性</label>
+                      <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1 px-1 tracking-wider">MBTI 认知特性</label>
                       <select
                         value={myProfile.mbti}
                         onChange={(e) => setMyProfile({ ...myProfile, mbti: e.target.value })}
@@ -1676,7 +1714,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     </div>
 
                     <div>
-                      <label className="block text-[9px] text-slate-450 uppercase font-bold mb-1 px-1 tracking-wider">学者设计原质</label>
+                      <label className="block text-[9px] text-slate-400 uppercase font-bold mb-1 px-1 tracking-wider">学者设计原质</label>
                       <select
                         value={myProfile.designArchetype}
                         onChange={(e) => setMyProfile({ ...myProfile, designArchetype: e.target.value })}
@@ -1691,18 +1729,18 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
                   {/* High visual tag clouds grouped under color styles */}
                   <div className="space-y-2 pt-1">
-                    <span className="text-[9px] text-slate-450 uppercase font-bold tracking-wider block">目前挂载的核心标签（雷达计算中）</span>
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">目前挂载的核心标签（雷达计算中）</span>
                     <div className="space-y-2.5 text-[10px] bg-slate-50/50 dark:bg-slate-950/50 p-3 rounded-2xl">
                       <div className="flex flex-wrap gap-1 items-center">
                         <span className="text-pink-500 font-extrabold mr-1.5 shrink-0">探究方向:</span>
                         {myProfile.designDirections.map(d => (
-                          <span key={d} className="inline-block bg-pink-550/10 text-pink-650 dark:text-pink-400 px-2 py-0.5 rounded-full font-bold text-[9px] shadow-xs">{d}</span>
+                          <span key={d} className="inline-block bg-pink-550/10 text-pink-600 dark:text-pink-400 px-2 py-0.5 rounded-full font-bold text-[9px] shadow-xs">{d}</span>
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-1 items-center">
                         <span className="text-teal-550 font-extrabold mr-1.5 shrink-0">技术兴趣:</span>
                         {myProfile.interests.map(i => (
-                          <span key={i} className="inline-block bg-teal-555/10 text-teal-650 dark:text-teal-400 px-2 py-0.5 rounded-full font-bold text-[9px] shadow-xs">{i}</span>
+                          <span key={i} className="inline-block bg-teal-555/10 text-teal-600 dark:text-teal-400 px-2 py-0.5 rounded-full font-bold text-[9px] shadow-xs">{i}</span>
                         ))}
                       </div>
                     </div>
@@ -1714,7 +1752,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     <div className="grid grid-cols-3 gap-1.5 px-0.5 mt-1 text-center text-[9px]">
                       <button 
                         onClick={() => { setMyProfile({ ...myProfile, privacyScope: 'public' }); triggerToast('已设置全场公开显示，任何智能检测仪均可发现您的设计气味'); }}
-                        className={`p-2 py-2.5 rounded-2xl font-bold transition-all duration-300 transform active:scale-95 cursor-pointer ${myProfile.privacyScope === 'public' ? 'bg-gradient-to-r from-pink-500 to-purple-550 text-white shadow-md shadow-pink-500/20 scale-102' : 'bg-slate-50 dark:bg-slate-950 text-slate-500 hover:bg-slate-100'}`}
+                        className={`p-2 py-2.5 rounded-2xl font-bold transition-all duration-300 transform active:scale-95 cursor-pointer ${myProfile.privacyScope === 'public' ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-md shadow-pink-500/20 scale-102' : 'bg-slate-50 dark:bg-slate-950 text-slate-500 hover:bg-slate-100'}`}
                       >
                         双向公开
                       </button>
@@ -2010,7 +2048,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               )}
 
               <div className="flex items-center space-x-2 mb-2">
-                <Cpu className={`h-4.5 w-4.5 ${myProfile.nfcBound ? 'text-teal-500 animate-bounce' : 'text-slate-400'}`} />
+                <Cpu className={`h-4 w-4 ${myProfile.nfcBound ? 'text-teal-500 animate-bounce' : 'text-slate-400'}`} />
                 <h4 className="text-xs font-black">NFC「物理挂载会伴」配对</h4>
               </div>
 
@@ -2055,7 +2093,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       : 'bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-505 hover:opacity-90 text-white shadow-teal-500/10'
                   }`}
                 >
-                  <Zap className="h-3.5 w-3.5 animate-bounce" />
+                  <Zap className="h-3 w-3 animate-bounce" />
                   <span>{!myProfile.checkedIn ? '请先完成签到' : '绑定你的现场通行卡'}</span>
                 </button>
               )}
@@ -2074,7 +2112,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 onClick={() => { setActiveSessionTab('sessions'); setSelectedExId(null); }}
                 className={`py-2 text-center text-[11px] font-extrabold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] duration-300 cursor-pointer ${
                   activeSessionTab === 'sessions' 
-                    ? 'bg-white dark:bg-slate-800 text-pink-550 shadow-sm' 
+                    ? 'bg-white dark:bg-slate-800 text-pink-500 shadow-sm' 
                     : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -2084,7 +2122,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 onClick={() => { setActiveSessionTab('exhibits'); }}
                 className={`py-2 text-center text-[11px] font-extrabold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] duration-300 cursor-pointer ${
                   activeSessionTab === 'exhibits' 
-                    ? 'bg-white dark:bg-slate-800 text-pink-550 shadow-sm' 
+                    ? 'bg-white dark:bg-slate-800 text-pink-500 shadow-sm' 
                     : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -2111,7 +2149,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   <h3 className="text-xs font-bold leading-snug">{currentSession.title}</h3>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/10 text-[9px] text-slate-300">
                     <div className="flex items-center space-x-1">
-                      <span className="h-4.5 w-4.5 rounded-full bg-slate-800 flex items-center justify-center text-[10px]">{currentSession.speakerAvatarEmoji}</span>
+                      <span className="h-4 w-4 rounded-full bg-slate-800 flex items-center justify-center text-[10px]">{currentSession.speakerAvatarEmoji}</span>
                       <span>讲者: {currentSession.speakerName}</span>
                     </div>
                     <select 
@@ -2137,7 +2175,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   return (
                     <div key={p.id} className="bg-white/95 dark:bg-slate-900/95 rounded-3xl p-5 space-y-4 shadow-[0_4px_24px_rgba(0,0,0,0.015)] hover:shadow-[0_12px_32px_rgba(244,114,182,0.04)] transition-all">
                       <div className="flex items-center space-x-1.5">
-                        <Vote className="h-4.5 w-4.5 text-pink-500" />
+                        <Vote className="h-4 w-4 text-pink-500" />
                         <span className="text-xs font-black text-slate-805 dark:text-slate-100">正在发起的现场微投票</span>
                       </div>
                       <h4 className="text-[11px] font-bold leading-tight text-slate-600 dark:text-slate-350">{p.question}</h4>
@@ -2192,7 +2230,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 <div className="bg-white/95 dark:bg-slate-900/95 rounded-3xl p-4 space-y-2 shadow-[0_4px_24px_rgba(0,0,0,0.015)]">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-black text-slate-650 flex items-center">
-                      <Sparkles className="h-3.5 w-3.5 text-pink-500 mr-1" /> 发送实时弹幕 (公开漂流)
+                      <Sparkles className="h-3 w-3 text-pink-500 mr-1" /> 发送实时弹幕 (公开漂流)
                     </span>
                   </div>
                   <div className="flex space-x-1.5">
@@ -2239,7 +2277,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       }}
                       className="p-1.5 bg-pink-500 text-white hover:bg-pink-600 rounded-xl transition-all disabled:opacity-30 active:scale-95"
                     >
-                      <Send className="h-4.5 w-4.5" />
+                      <Send className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
@@ -2349,12 +2387,12 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         >
                           <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 shrink-0 relative select-none">
                             <img src={ex.imageUrl} alt={ex.name} referrerPolicy="no-referrer" className="w-[102%] h-[102%] object-cover" />
-                            <span className="absolute bottom-0 inset-x-0 bg-slate-950/70 text-[7px] text-white py-0.2 rounded-b text-center tracking-tight truncate">{ex.zone}</span>
+                            <span className="absolute bottom-0 inset-x-0 bg-slate-950/70 text-[7px] text-white py-0.5 rounded-b text-center tracking-tight truncate">{ex.zone}</span>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-xs truncate text-slate-850 dark:text-slate-100 leading-tight">{ex.name}</h4>
+                            <h4 className="font-bold text-xs truncate text-slate-900 dark:text-slate-100 leading-tight">{ex.name}</h4>
                             <p className="text-[10px] text-slate-400 mt-0.5 truncate">作者 / 主研: {ex.artist}</p>
-                            <div className="flex items-center justify-between text-[10px] text-pink-550 font-bold mt-1.5 pt-1.5 border-t border-dashed border-slate-100 dark:border-slate-800">
+                            <div className="flex items-center justify-between text-[10px] text-pink-500 font-bold mt-1.5 pt-1.5 border-t border-dashed border-slate-100 dark:border-slate-800">
                               <span className="text-slate-400 font-normal">共鸣数: <strong className="font-bold font-mono text-slate-600 dark:text-slate-350">{ex.likes}</strong></span>
                               <span>触碰打卡并点评 →</span>
                             </div>
@@ -2382,11 +2420,11 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         </div>
 
                         <div>
-                          <h3 className="font-bold text-xs text-slate-850 dark:text-white leading-tight">{ex.name}</h3>
+                          <h3 className="font-bold text-xs text-slate-900 dark:text-white leading-tight">{ex.name}</h3>
                           <span className="text-[10px] text-slate-400">主研学者: {ex.artist}</span>
                         </div>
 
-                        <p className="text-[10px] text-slate-500 dark:text-slate-450 leading-relaxed bg-slate-55 dark:bg-slate-955 p-3 rounded-2xl text-slate-805 dark:text-slate-305">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed bg-slate-55 dark:bg-slate-955 p-3 rounded-2xl text-slate-805 dark:text-slate-305">
                           {ex.description}
                         </p>
 
@@ -2407,7 +2445,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all duration-300 hover:scale-102 active:scale-95 cursor-pointer ${
                               ex.isLikedByUser 
                                 ? 'bg-pink-500 text-white shadow-md shadow-pink-550/10' 
-                                : 'bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-350 hover:bg-pink-50/50'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-350 hover:bg-pink-50/50'
                             }`}
                           >
                             <Heart className={`h-4 w-4 ${ex.isLikedByUser ? 'fill-current animate-bounce' : ''}`} />
@@ -2429,7 +2467,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all duration-300 hover:scale-102 active:scale-95 cursor-pointer ${
                               ex.isFavoritedByUser 
                                 ? 'bg-teal-500 text-white shadow-md shadow-teal-555/10 border border-teal-400/20' 
-                                : 'bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-300 hover:bg-teal-50/50 border border-slate-200/50 dark:border-slate-800/40'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-teal-50/50 border border-slate-200/50 dark:border-slate-800/40'
                             }`}
                           >
                             <Bookmark className={`h-4 w-4 ${ex.isFavoritedByUser ? 'fill-current' : ''}`} />
@@ -2507,7 +2545,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 onClick={() => setWeSubTab('radar')}
                 className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer ${
                   weSubTab === 'radar' 
-                    ? 'bg-white dark:bg-slate-800 text-indigo-755 dark:text-indigo-400 shadow-sm font-black' 
+                    ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 shadow-sm font-black' 
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
@@ -2518,7 +2556,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 onClick={() => setWeSubTab('contacts')}
                 className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer relative ${
                   weSubTab === 'contacts' 
-                    ? 'bg-white dark:bg-slate-800 text-indigo-755 dark:text-indigo-400 shadow-sm font-black' 
+                    ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 shadow-sm font-black' 
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
@@ -2534,7 +2572,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 onClick={() => setWeSubTab('community')}
                 className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer relative ${
                   weSubTab === 'community' 
-                    ? 'bg-white dark:bg-slate-800 text-indigo-755 dark:text-indigo-400 shadow-sm font-black' 
+                    ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 shadow-sm font-black' 
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
@@ -2582,7 +2620,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               ) : (
                 <div className="space-y-1.5 select-none w-full">
                   <div className="flex items-center justify-center space-x-1.5 bg-indigo-100/80 dark:bg-purple-950/40 px-3.5 py-1.5 rounded-2xl border border-indigo-200/50 dark:border-indigo-900/50 w-fit mx-auto shadow-xs">
-                    <Sparkles className="h-3.5 w-3.5 text-pink-550 animate-bounce" />
+                    <Sparkles className="h-3 w-3 text-pink-500 animate-bounce" />
                     <span className="text-[10px] font-black text-indigo-700 dark:text-indigo-400 uppercase tracking-widest">
                       已找到 {attendees.length} 位可能同频的人
                     </span>
@@ -2628,7 +2666,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         <div className="flex items-center space-x-1.5 flex-wrap">
                           <h4 className="font-bold text-xs truncate max-w-24 text-slate-900 dark:text-white leading-tight">{other.nickName}</h4>
                           {other.group === 'Guest' && (
-                            <span className="text-[7px] bg-gradient-to-r from-amber-500 to-rose-500 text-white font-black px-1.5 py-0.2 rounded-full uppercase scale-90 shrink-0 select-none">特邀嘉宾</span>
+                            <span className="text-[7px] bg-gradient-to-r from-amber-500 to-rose-500 text-white font-black px-1.5 py-0.5 rounded-full uppercase scale-90 shrink-0 select-none">特邀嘉宾</span>
                           )}
                         </div>
                         <p className="text-[9px] text-slate-505 dark:text-slate-400 font-semibold leading-none truncate">{other.organization} • {other.title}</p>
@@ -2636,12 +2674,12 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         {/* Whimsical properties in radar list */}
                         <div className="flex flex-wrap gap-1 pt-1.5">
                           {other.mbti && (
-                            <span className="text-[8px] bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/40 font-bold px-1.5 py-0.2 rounded shrink-0">
+                            <span className="text-[8px] bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/40 font-bold px-1.5 py-0.5 rounded shrink-0">
                               🧬 {other.mbti.split(' - ')[0]}
                             </span>
                           )}
                           {other.designArchetype && (
-                            <span className="text-[8px] bg-pink-500/10 text-pink-650 dark:text-pink-400 border border-pink-200/50 dark:border-pink-800/40 font-bold px-1.5 py-0.2 rounded shrink-0">
+                            <span className="text-[8px] bg-pink-500/10 text-pink-600 dark:text-pink-400 border border-pink-200/50 dark:border-pink-800/40 font-bold px-1.5 py-0.5 rounded shrink-0">
                               🎨 {other.designArchetype}
                             </span>
                           )}
@@ -2666,7 +2704,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-indigo-500/5 to-transparent pointer-events-none"></div>
                       
                       <span className="text-[9.5px] font-black text-indigo-700 dark:text-indigo-400 uppercase tracking-widest block mb-1.5 flex items-center select-none font-sans">
-                        <Sparkles className="h-3.5 w-3.5 mr-1 text-pink-550 animate-pulse" />
+                        <Sparkles className="h-3 w-3 mr-1 text-pink-500 animate-pulse" />
                         智能推荐理由
                       </span>
                       <p className="font-semibold text-slate-650 dark:text-slate-300">
@@ -2679,7 +2717,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       <span className="text-[9px] text-slate-505 dark:text-slate-400 font-extrabold block">共同兴趣</span>
                       <div className="flex flex-wrap gap-1">
                         {commonTags.slice(0, 3).map(t => (
-                          <span key={t} className="text-[8px] bg-purple-55 dark:bg-purple-950/40 text-purple-650 dark:text-purple-400 border border-purple-100 dark:border-purple-800/45 px-2.5 py-0.5 rounded-full font-black shadow-xs">{t}</span>
+                          <span key={t} className="text-[8px] bg-purple-55 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-800/45 px-2.5 py-0.5 rounded-full font-black shadow-xs">{t}</span>
                         ))}
                       </div>
                     </div>
@@ -2699,7 +2737,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                           <div className="space-y-1.5 w-full">
                             <div className="w-full flex items-center justify-between bg-teal-50 dark:bg-teal-950/30 p-2.5 rounded-2xl border-2 border-teal-500/60 dark:border-teal-700 shadow-sm">
                               <span className="text-teal-850 dark:text-teal-400 font-extrabold flex items-center select-none text-[10.5px]">
-                                <Check className="h-4.5 w-4.5 mr-1 bg-teal-100 dark:bg-teal-900 border border-teal-400 dark:border-teal-700 rounded-full text-teal-600 dark:text-teal-400 p-0.5" />
+                                <Check className="h-4 w-4 mr-1 bg-teal-100 dark:bg-teal-900 border border-teal-400 dark:border-teal-700 rounded-full text-teal-600 dark:text-teal-400 p-0.5" />
                                 已交换联系方式
                               </span>
                               <span className="bg-white dark:bg-slate-950 border border-teal-300 dark:border-slate-850 px-2.5 py-0.8 rounded-xl font-mono text-[10px] font-black text-slate-900 dark:text-teal-350 select-all shadow-xs">
@@ -2713,7 +2751,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                               }}
                               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[10px] py-2.5 rounded-xl cursor-pointer transition-all duration-300 flex items-center justify-center space-x-1 shadow-md shadow-indigo-650/15 active:scale-[0.98]"
                             >
-                              <MessageSquare className="h-3.5 w-3.5 shrink-0" />
+                              <MessageSquare className="h-3 w-3 shrink-0" />
                               <span>与 {other.nickName} 私聊</span>
                             </button>
                           </div>
@@ -2918,7 +2956,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 <div className="bg-gradient-to-tr from-purple-500/10 via-indigo-500/10 to-teal-500/5 p-4 rounded-[24px] border border-indigo-200/40 dark:border-indigo-900/45 text-slate-800 dark:text-slate-100 select-none space-y-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]">
                   <h4 className="text-xs font-black text-slate-900 dark:text-white flex items-center space-x-1.5 select-none">
                     <span>会后兴趣小组</span>
-                    <span className="text-[7.5px] bg-rose-500 text-white font-black px-1.5 py-0.2 rounded-full scale-90 uppercase animate-pulse shrink-0">推荐</span>
+                    <span className="text-[7.5px] bg-rose-500 text-white font-black px-1.5 py-0.5 rounded-full scale-90 uppercase animate-pulse shrink-0">推荐</span>
                   </h4>
                   <p className="text-[10px] text-slate-505 dark:text-slate-400 leading-relaxed font-semibold pr-1 text-left">
                     根据你的兴趣标签推荐会后小组。加入后可以继续交流、查看资源和发起合作。
@@ -2960,7 +2998,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                       engName: 'Multimodal AI Wizards',
                       color: 'from-pink-505/10 via-rose-500/5 to-slate-50/50 dark:from-pink-950/20 dark:via-purple-950/10 dark:to-slate-950/60',
                       borderColor: 'border-pink-300 dark:border-pink-800/40',
-                      badgeColor: 'bg-pink-505/10 text-pink-650 dark:text-pink-400 border border-pink-500/20',
+                      badgeColor: 'bg-pink-505/10 text-pink-600 dark:text-pink-400 border border-pink-500/20',
                       sparkleText: '🧠 具身感知、情感反馈硬件与 XR 穿戴设备研发。',
                       mbti: 'ENTP / INTJ 推荐人群',
                       agenda: 'AI Studio 长期高能 GPU 限免接口与设备赞助',
@@ -3034,7 +3072,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                           <div className="space-y-3.5 pt-1 relative z-10 animate-fadeIn">
                             {/* Claim Benefits Section */}
                             <div className="bg-teal-500/5 dark:bg-teal-500/10 border border-teal-500/25 p-3 rounded-2xl space-y-2 text-left">
-                              <span className="text-[8px] font-black text-teal-650 dark:text-teal-400 block tracking-widest uppercase select-none">
+                              <span className="text-[8px] font-black text-teal-600 dark:text-teal-400 block tracking-widest uppercase select-none">
                                 🎁 学术与服务衍生红利认领
                               </span>
                               
@@ -3069,7 +3107,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                                 {(communityChats[comm.id] || []).map(chat => (
                                   <div key={chat.id} className="flex flex-col text-left space-y-0.5 shrink-0 animate-fadeInPlus">
                                     <div className="flex items-center space-x-1 select-none">
-                                      <span className={`w-3.5 h-3.5 rounded-full ${chat.avatarColor} text-white flex items-center justify-center text-[7px] shrink-0 font-black`}>
+                                      <span className={`w-3 h-3 rounded-full ${chat.avatarColor} text-white flex items-center justify-center text-[7px] shrink-0 font-black`}>
                                         {chat.avatarEmoji}
                                       </span>
                                       <span className="text-[8px] font-black text-slate-300">{chat.userNick}</span>
@@ -3108,7 +3146,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                                   value={communityMsgInput}
                                   onChange={(e) => setCommunityMsgInput(e.target.value)}
                                   placeholder="参与后续共创课题讨论与脑思风暴..."
-                                  className="flex-1 h-8 px-2.5 bg-slate-850 border border-slate-750 rounded-lg outline-none text-[8.5px] text-white focus:border-indigo-500 font-semibold"
+                                  className="flex-1 h-8 px-2.5 bg-slate-800 border border-slate-750 rounded-lg outline-none text-[8.5px] text-white focus:border-indigo-500 font-semibold"
                                 />
                                 <button
                                   type="submit"
@@ -3121,7 +3159,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                           </div>
                         ) : (
                           /* Locked Preview instructions */
-                          <div className="p-2.5 bg-slate-100/50 dark:bg-slate-905/30 rounded-xl text-[8px] font-bold text-slate-455 text-left border border-dashed border-slate-300 dark:border-slate-800/85 select-none leading-normal">
+                          <div className="p-2.5 bg-slate-100/50 dark:bg-slate-900/30 rounded-xl text-[8px] font-bold text-slate-455 text-left border border-dashed border-slate-300 dark:border-slate-800/85 select-none leading-normal">
                             🔒 同频学术衍生锁定中。申领大门仅对智商与灵魂共振的「{comm.mbti}」镜友开放。解锁本契约签署后即可同步开启上述衍生扶持功能并激活高频学术讨论沙龙。
                           </div>
                         )}
@@ -3144,11 +3182,11 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setActiveChatAttendee(null)}
-                  className="p-1 px-2 mb-0.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold text-[10px] flex items-center space-x-1 border border-slate-205 dark:border-slate-800 cursor-pointer"
+                  className="p-1 px-2 mb-0.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold text-[10px] flex items-center space-x-1 border border-slate-200 dark:border-slate-800 cursor-pointer"
                 >
                   <span>返回</span>
                 </button>
-                <div className="flex items-center space-x-1.5 pl-1.5 border-l border-slate-205 dark:border-slate-800">
+                <div className="flex items-center space-x-1.5 pl-1.5 border-l border-slate-200 dark:border-slate-800">
                   <span className={`w-7.5 h-7.5 rounded-full ${activeChatAttendee.avatarColor} text-white flex items-center justify-center text-sm shadow-inner shrink-0`}>
                     {activeChatAttendee.avatarEmoji}
                   </span>
@@ -3174,9 +3212,9 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     </h4>
                     <button 
                       onClick={() => setShowMeetupModal(false)}
-                      className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-850 hover:bg-slate-200 text-slate-505 dark:text-slate-400 cursor-pointer"
+                      className="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-505 dark:text-slate-400 cursor-pointer"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <X className="h-3 w-3" />
                     </button>
                   </div>
 
@@ -3197,8 +3235,8 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             onClick={() => setMeetupTimeSelection(slot)}
                             className={`p-2 rounded-xl text-left text-[9px] font-bold border transition duration-200 cursor-pointer ${
                               meetupTimeSelection === slot 
-                                ? 'border-pink-500 bg-pink-50/50 dark:border-pink-500/50 dark:bg-pink-950/20 text-pink-650 dark:text-pink-450' 
-                                : 'border-slate-205 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850'
+                                ? 'border-pink-500 bg-pink-50/50 dark:border-pink-500/50 dark:bg-pink-950/20 text-pink-600 dark:text-pink-400' 
+                                : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
                             }`}
                           >
                             {slot}
@@ -3224,7 +3262,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                             className={`w-full p-2.5 rounded-xl text-left text-[9px] font-semibold border transition duration-200 flex items-center space-x-1.5 cursor-pointer ${
                               meetupAgendaSelection === agenda 
                                 ? 'border-indigo-505 bg-indigo-50/50 dark:border-indigo-505/50 dark:bg-indigo-950/20 text-indigo-650 dark:text-indigo-400' 
-                                : 'border-slate-150 dark:border-slate-850 hover:bg-slate-55 dark:hover:bg-slate-850'
+                                : 'border-slate-150 dark:border-slate-850 hover:bg-slate-55 dark:hover:bg-slate-800'
                             }`}
                           >
                             <span>☕</span>
@@ -3269,7 +3307,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                         {msg.isMeetupInvite && msg.meetupDetails ? (
                           /* Meetup Invitation Bubble */
                           <div className="bg-gradient-to-tr from-pink-50 to-purple-50 dark:from-slate-900 dark:to-purple-950/20 border-2 border-pink-400/50 p-3 rounded-2xl shadow-sm text-left space-y-2">
-                            <span className="text-[8px] font-black text-pink-650 dark:text-pink-400 tracking-wider block uppercase select-none">
+                            <span className="text-[8px] font-black text-pink-600 dark:text-pink-400 tracking-wider block uppercase select-none">
                               ☕ 茶叙约见提案 • PRE-MEETING
                             </span>
                             <div className="space-y-0.5 text-slate-700 dark:text-slate-350 text-[10px]">
@@ -3285,7 +3323,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
 
                             <div className="pt-1 select-none">
                               {msg.meetupDetails.status === 'accepted' ? (
-                                <span className="inline-flex items-center bg-teal-500/10 text-teal-650 dark:bg-teal-950/30 dark:text-teal-400 px-2 py-0.5 rounded-lg text-[8px] font-black border border-teal-500/20">
+                                <span className="inline-flex items-center bg-teal-500/10 text-teal-600 dark:bg-teal-950/30 dark:text-teal-400 px-2 py-0.5 rounded-lg text-[8px] font-black border border-teal-500/20">
                                   ✓ 对流成功：一楼茶歇碰头
                                 </span>
                               ) : (
@@ -3329,9 +3367,9 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   setMeetupAgendaSelection('探讨具身控制和传感器感知细节');
                   setShowMeetupModal(true);
                 }}
-                className="h-9 px-2.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-650 dark:text-pink-400 rounded-xl flex items-center justify-center space-x-1 border border-pink-400/20 cursor-pointer active:scale-95 transition text-[10px] font-black"
+                className="h-9 px-2.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 rounded-xl flex items-center justify-center space-x-1 border border-pink-400/20 cursor-pointer active:scale-95 transition text-[10px] font-black"
               >
-                <Coffee className="h-3.5 w-3.5" />
+                <Coffee className="h-3 w-3" />
                 <span>约见</span>
               </button>
 
@@ -3348,13 +3386,13 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                   value={privateMsgText}
                   onChange={(e) => setPrivateMsgText(e.target.value)}
                   placeholder="说点什么碰撞一下思考..."
-                  className="flex-1 h-9 px-3 bg-slate-50 dark:bg-slate-950 border border-slate-205 dark:border-slate-800 rounded-xl outline-none text-[10px] focus:border-indigo-400 font-bold"
+                  className="flex-1 h-9 px-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl outline-none text-[10px] focus:border-indigo-400 font-bold"
                 />
                 <button
                   type="submit"
                   className="h-9 w-9 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center justify-center cursor-pointer active:scale-95 transition"
                 >
-                  <Send className="h-3.5 w-3.5" />
+                  <Send className="h-3 w-3" />
                 </button>
               </form>
             </div>
@@ -3486,10 +3524,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           <button 
             onClick={() => { setActiveTab('home'); }} 
             className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'home' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
+              activeTab === 'home' ? 'text-pink-500 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
             }`}
           >
-            <Home className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
+            <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-[9px] font-bold tracking-tight scale-90">首页</span>
           </button>
 
@@ -3497,10 +3535,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           <button 
             onClick={() => { setActiveTab('we'); }} 
             className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'we' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
+              activeTab === 'we' ? 'text-pink-500 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
             }`}
           >
-            <Users className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
+            <Users className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-[9px] font-bold tracking-tight scale-90">同行</span>
           </button>
 
@@ -3508,10 +3546,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           <button 
             onClick={() => { setActiveTab('co'); }} 
             className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'co' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
+              activeTab === 'co' ? 'text-pink-500 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
             }`}
           >
-            <MessageCircle className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
+            <MessageCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-[9px] font-bold tracking-tight scale-90">互动</span>
           </button>
 
@@ -3519,10 +3557,10 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
           <button 
             onClick={() => { setActiveTab('me'); }} 
             className={`flex flex-col items-center space-y-1 cursor-pointer flex-1 transition-all duration-300 transform ${
-              activeTab === 'me' ? 'text-pink-550 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
+              activeTab === 'me' ? 'text-pink-500 scale-110 font-black -translate-y-0.5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600'
             }`}
           >
-            <IdCard className="h-4.5 w-4.5 transition-transform duration-300 group-hover:scale-110" />
+            <IdCard className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
             <span className="text-[9px] font-bold tracking-tight scale-90">我的</span>
           </button>
         </div>

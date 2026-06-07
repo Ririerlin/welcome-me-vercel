@@ -111,24 +111,33 @@ export default function App() {
               <div className="space-y-3">
                 <div className="inline-flex items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-pink-300 via-purple-300 to-teal-300">
                   <span className="bg-white dark:bg-slate-950 px-4 py-1 text-[10px] font-mono font-extrabold tracking-[0.25em] text-pink-500 dark:text-pink-400 rounded-full uppercase">
-                    WElcoME APPLET
+                    WELCOME APPLET
                   </span>
                 </div>
                 <h1 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
                   <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400 bg-clip-text text-transparent">
-                    WElcoME
+                    WelcomeME
                   </span>
                 </h1>
               </div>
 
+              {/* Brand visual image: makes the opening screen feel complete */}
+              <div className="w-full overflow-hidden rounded-[30px] bg-white/80 dark:bg-slate-900/75 border border-white/70 dark:border-white/10 shadow-[0_18px_45px_rgba(91,75,255,0.12)]">
+                <img
+                  src="/images/hero-welcome.svg"
+                  alt="欢迎ME活动主视觉"
+                  className="w-full h-48 object-cover"
+                />
+              </div>
+
               {/* Slogan */}
               <div className="space-y-4">
-                <h2 className="text-2xl md:text-3xl font-black text-slate-850 dark:text-white tracking-tight leading-tight px-2">
+                <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight px-2">
                   “From me to we,<br />欢迎你的加入”
                 </h2>
                 <div className="w-10 h-[3px] bg-gradient-to-r from-pink-400 to-teal-300 mx-auto rounded-full"></div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium px-4 leading-relaxed">
-                  解锁你的专属感官设计性格画。将个体的审美代码融入暖融、克制、极简的学者元自治圈，一碰同频，一触共创。
+                  发现同频嘉宾，记录现场互动，生成你的专属会议关系图谱。
                 </p>
               </div>
 
@@ -161,7 +170,7 @@ export default function App() {
       {/* Outer master Header bar */}
       <header className="hidden md:flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 items-center justify-between sticky top-0 z-50">
         <div className="flex items-center space-x-2.5">
-          <div className="h-9 w-9 bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-550 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-pink-500/15">
+          <div className="h-9 w-9 bg-gradient-to-tr from-pink-500 via-purple-500 to-teal-500 rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-pink-500/15">
             ME
           </div>
           <div>
@@ -181,7 +190,7 @@ export default function App() {
           {/* Light/Dark mode toggle */}
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-500 dark:text-slate-400 transition"
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition"
             title="切换深海黑/春山白主调"
           >
             {isDarkMode ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}

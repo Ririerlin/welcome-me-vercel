@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="400" viewBox="0 0 720 400" role="img" aria-label="A1馆场馆地图">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient></defs>
+  <rect width="720" height="400" rx="42" fill="url(#bg)"/>
+  <rect x="70" y="70" width="580" height="260" rx="34" fill="#fff" stroke="#d8ddec" stroke-width="4"/>
+  <rect x="100" y="104" width="220" height="120" rx="24" fill="#5b4bff" opacity="0.12" stroke="#5b4bff" stroke-width="3"/>
+  <rect x="350" y="104" width="270" height="82" rx="24" fill="#14b8a6" opacity="0.13" stroke="#14b8a6" stroke-width="3"/>
+  <rect x="350" y="210" width="124" height="86" rx="24" fill="#ff6fae" opacity="0.13" stroke="#ff6fae" stroke-width="3"/>
+  <rect x="496" y="210" width="124" height="86" rx="24" fill="#f59e0b" opacity="0.14" stroke="#f59e0b" stroke-width="3"/>
+  <path d="M328 80 V320 M80 240 H640" stroke="#d8ddec" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 12"/>
+  <circle cx="326" cy="242" r="19" fill="#1f2333"/><text x="326" y="249" text-anchor="middle" font-family="Arial" font-size="20" font-weight="900" fill="#fff">你</text>
+  <text x="125" y="165" font-family="Inter, Arial" font-size="24" font-weight="900" fill="#4f46e5">主报告厅 A</text>
+  <text x="386" y="154" font-family="Inter, Arial" font-size="22" font-weight="900" fill="#0f766e">展区 B/C</text>
+  <text x="376" y="260" font-family="Inter, Arial" font-size="18" font-weight="900" fill="#be185d">茶歇</text>
+  <text x="523" y="260" font-family="Inter, Arial" font-size="18" font-weight="900" fill="#b45309">服务台</text>
+  <text x="70" y="46" font-family="Inter, Arial" font-size="24" font-weight="900" fill="#1f2333">A1馆导览</text>
+  <text x="70" y="360" font-family="Inter, Arial" font-size="16" font-weight="700" fill="#73788a">建议路线：主会场 → 展区 B/C → 茶歇区 → 同频交流</text>
+</svg>
