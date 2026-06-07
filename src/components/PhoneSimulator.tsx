@@ -354,6 +354,7 @@ export default function PhoneSimulator({
 
   const [communityMsgInput, setCommunityMsgInput] = useState<string>('');
   const [expandedCommunityId, setExpandedCommunityId] = useState<string | null>(null);
+  const [activeCommunityId, setActiveCommunityId] = useState<string | null>(null);
 
   const communityCatalog = [
     {
@@ -2884,7 +2885,7 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {activeTab === 'we' && (
           <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
             {/* Top Sub Tabs for "Mirror Twins" vs "Alumni Communities" */}
-            <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl border dark:border-slate-800 shadow-inner select-none shrink-0">
+            <div className="grid grid-cols-3 gap-1 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl border dark:border-slate-800 shadow-inner select-none shrink-0">
               <button
                 type="button"
                 onClick={() => setWeSubTab('radar')}
@@ -2905,12 +2906,18 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                     : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
                 }`}
               >
-                <span className="inline-flex items-center justify-center gap-1">
-                  <span>通讯录</span>
-                  <span className="rounded-full bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-[8px] font-black text-slate-600 dark:text-slate-100">
-                    {myContactCards.length} 人
-                  </span>
-                </span>
+                通讯录
+              </button>
+              <button
+                type="button"
+                onClick={() => setWeSubTab('community')}
+                className={`py-2 text-center text-[10px] font-black rounded-xl transition cursor-pointer ${
+                  weSubTab === 'community' 
+                    ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 shadow-sm font-black' 
+                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-350'
+                }`}
+              >
+                群组
               </button>
             </div>
 
@@ -3285,303 +3292,146 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 <div className="rounded-[28px] p-4 bg-white/95 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h4 className="text-sm font-black text-slate-900 dark:text-white tracking-tight">通讯录中的群组</h4>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white tracking-tight">我的群组</h4>
                       <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">
-                        小组统一收进通讯录，方便你和联系人一样管理、查看最新讨论与会后合作机会。
+                        已加入的群组会像联系人一样保存在通讯录里，点开即可进入群聊。
                       </p>
                     </div>
                     <div className="text-right shrink-0">
                       <div className="text-lg font-black text-pink-600 dark:text-pink-300 leading-none">{joinedCommunities.length}</div>
-                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-bold mt-1">已加入</div>
+                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-bold mt-1">个群组</div>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    {communityCatalog.map((comm) => {
-                      const isJoined = joinedCommunities.includes(comm.id);
-                      const isExpanded = expandedCommunityId === comm.id;
-                      const commChats = communityChats[comm.id] || [];
-                      return (
-                        <div key={comm.id} className="rounded-[24px] bg-slate-50/90 dark:bg-slate-950/70 p-4 space-y-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="text-[8px] rounded-full bg-white dark:bg-slate-800 px-2 py-0.5 font-black text-emerald-700 dark:text-emerald-300">{comm.mbti}</span>
-                                {isJoined && <span className="text-[8px] rounded-full bg-teal-500/10 px-2 py-0.5 font-black text-teal-600 dark:text-teal-300">已加入</span>}
+                  {joinedCommunities.length === 0 ? (
+                    <div className="rounded-[24px] bg-slate-50 dark:bg-slate-950/60 p-5 text-center space-y-3">
+                      <div className="w-14 h-14 mx-auto rounded-3xl bg-pink-500/10 text-pink-600 dark:text-pink-300 flex items-center justify-center">
+                        <Users className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <h5 className="text-sm font-black text-slate-900 dark:text-white">还没有加入群组</h5>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">去「群组」里选择感兴趣的小组，加入后会自动出现在这里。</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setWeSubTab('community')}
+                        className="w-full min-h-11 rounded-2xl bg-indigo-600 text-white py-3 text-[11px] font-black active:scale-95 transition"
+                      >
+                        去看群组
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {communityCatalog.filter((comm) => joinedCommunities.includes(comm.id)).map((comm) => {
+                        const commChats = communityChats[comm.id] || [];
+                        return (
+                          <button
+                            key={comm.id}
+                            type="button"
+                            onClick={() => setActiveCommunityId(comm.id)}
+                            className="w-full rounded-[24px] bg-slate-50 dark:bg-slate-950/70 p-3.5 text-left active:scale-[0.99] transition shadow-[inset_0_1px_0_rgba(255,255,255,0.4)]"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-[8px] rounded-full bg-teal-500/10 px-2 py-0.5 font-black text-teal-700 dark:text-teal-300">已加入</span>
+                                  <span className="text-[8px] rounded-full bg-white dark:bg-slate-800 px-2 py-0.5 font-black text-slate-500 dark:text-slate-200">{comm.members.length + 1} 人</span>
+                                </div>
+                                <h5 className="text-[12px] font-black text-slate-900 dark:text-white mt-2 truncate">{comm.name}</h5>
+                                <p className="text-[9px] text-slate-500 dark:text-slate-300 mt-1 truncate">最近讨论 {commChats.length} 条 · {comm.engName}</p>
                               </div>
-                              <h5 className="text-[12px] font-black text-slate-900 dark:text-white mt-2">{comm.name}</h5>
-                              <p className="text-[9px] text-slate-500 dark:text-slate-300 mt-1 leading-relaxed">{comm.desc}</p>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => setExpandedCommunityId(isExpanded ? null : comm.id)}
-                              className="shrink-0 h-10 px-3 rounded-2xl bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-100 text-[9.5px] font-black active:scale-95 transition shadow-sm"
-                            >
-                              {isExpanded ? '收起' : '查看'}
-                            </button>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="text-[9px] text-slate-500 dark:text-slate-300 font-semibold">成员 {comm.members.length + 1} · 最近讨论 {commChats.length} 条</div>
-                            {!isJoined ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setJoinedCommunities([...joinedCommunities, comm.id]);
-                                  setExpandedCommunityId(comm.id);
-                                  triggerToast(`已加入「${comm.name}」并收纳到通讯录`);
-                                }}
-                                className="min-h-11 px-4 rounded-2xl bg-indigo-600 text-white text-[10px] font-black active:scale-95 transition shadow-sm"
-                              >
-                                加入群组
-                              </button>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 rounded-2xl bg-teal-500/10 px-3 py-2 text-[9px] font-black text-teal-700 dark:text-teal-300">
-                                <Check className="h-3 w-3" /> 已在通讯录
+                              <span className="shrink-0 h-9 px-3 rounded-2xl bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-300 text-[9px] font-black flex items-center justify-center shadow-sm">
+                                进入
                               </span>
-                            )}
-                          </div>
-
-                          {isExpanded && (
-                            <div className="rounded-[20px] bg-white dark:bg-slate-900 p-3 space-y-3">
-                              <div className="text-[9px] text-slate-500 dark:text-slate-300 leading-relaxed">
-                                <span className="font-black text-slate-800 dark:text-white">研究方向：</span>{comm.sparkleText}
-                              </div>
-                              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-3">
-                                <div className="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wide">会后机会</div>
-                                <div className="text-[10px] font-black text-emerald-700 dark:text-emerald-300 mt-1">{comm.agenda}</div>
-                              </div>
-                              <div className="space-y-2">
-                                <div className="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wide">最近讨论</div>
-                                {commChats.slice(-2).map((chat) => (
-                                  <div key={chat.id} className="rounded-2xl bg-slate-50 dark:bg-slate-800/80 p-2.5">
-                                    <div className="flex items-center justify-between gap-2">
-                                      <div className="text-[9px] font-black text-slate-800 dark:text-white">{chat.userNick}</div>
-                                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-mono">{chat.createdAt}</div>
-                                    </div>
-                                    <div className="text-[9px] text-slate-600 dark:text-slate-200 mt-1 leading-relaxed">{chat.text}</div>
-                                  </div>
-                                ))}
-                              </div>
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
               <div className="space-y-4 animate-fadeIn text-slate-800 dark:text-slate-100">
-                {/* Community Header Banner */}
-                <div className="bg-gradient-to-tr from-purple-500/10 via-indigo-500/10 to-teal-500/5 p-4 rounded-[24px] border border-indigo-200/40 dark:border-indigo-900/45 text-slate-800 dark:text-slate-100 select-none space-y-1.5 shadow-[inset_0_1px_2px_rgba(255,255,255,0.4)]">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white flex items-center space-x-1.5 select-none">
-                    <span>会后兴趣小组</span>
-                    <span className="text-[7.5px] bg-rose-500 text-white font-black px-1.5 py-0.5 rounded-full scale-90 uppercase animate-pulse shrink-0">推荐</span>
-                  </h4>
-                  <p className="text-[10px] text-slate-505 dark:text-slate-400 leading-relaxed font-semibold pr-1 text-left">
-                    根据你的兴趣标签推荐会后小组。加入后可以继续交流、查看资源和发起合作。
-                  </p>
+                <div className="rounded-[28px] p-4 bg-gradient-to-br from-white via-pink-50/35 to-indigo-50/45 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white tracking-tight">群组广场</h4>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">
+                        所有会后群组独立展示。点击任意群组进入独立群聊页；加入后也会同步出现在通讯录。
+                      </p>
+                    </div>
+                    <div className="shrink-0 rounded-2xl bg-white/85 dark:bg-slate-950/60 px-3 py-2 text-center shadow-sm">
+                      <div className="text-lg font-black text-indigo-600 dark:text-indigo-300 leading-none">{communityCatalog.length}</div>
+                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-bold mt-1">群组</div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Communities Cards Stack */}
-                <div className="space-y-4">
-                  {[
-                    {
-                      id: 'comm-druids',
-                      name: '自然算法生态秘境',
-                      engName: 'Druids Eco-Nexus',
-                      color: 'from-emerald-500/10 via-teal-500/5 to-slate-50/50 dark:from-emerald-950/20 dark:via-slate-900/10 dark:to-slate-950/60',
-                      borderColor: 'border-emerald-300 dark:border-emerald-800/40',
-                      badgeColor: 'bg-emerald-505/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
-                      sparkleText: '🌱 专注于生命计算、土壤微生物能源转化与有机气候共创。',
-                      mbti: 'INFJ / INFP 推荐人群',
-                      agenda: '$25,000 元余系列基金共创立项',
-                      members: ['陈青川 Panda 🐼', '季雨桐 Fox 🦊'],
-                      desc: '回归土地与生机逻辑。本组会后立项书获得清华创意实验室学术联署，目前正在招募空气介质物理反馈件与微电极传感器拼装师。',
-                    },
-                    {
-                      id: 'comm-spectre',
-                      name: '非线性体验感官幽灵阵线',
-                      engName: 'Spectre Sensory Syndicate',
-                      color: 'from-indigo-500/10 via-purple-500/5 to-slate-50/50 dark:from-indigo-950/20 dark:via-purple-950/10 dark:to-slate-950/60',
-                      borderColor: 'border-indigo-300 dark:border-indigo-800/40',
-                      badgeColor: 'bg-indigo-505/10 text-indigo-650 dark:text-indigo-400 border border-indigo-500/20',
-                      sparkleText: '🔮 探索气味、温湿度调节与迷宫具身交互。',
-                      mbti: 'ENFP / ISFP / INFP 推荐人群',
-                      agenda: '会后联合项目与作品展示机会',
-                      members: ['苏格 Dr.Su 🦉', '陈青川 Panda 🐼'],
-                      desc: '致力于数字技术在物理感官上的非线性溢出。组委会将在静安艺术中心媒体室免费提供4周的联合学者驻留工位。',
-                    },
-                    {
-                      id: 'comm-wizards',
-                      name: '多模态媒介狂徒沙龙',
-                      engName: 'Multimodal AI Wizards',
-                      color: 'from-pink-505/10 via-rose-500/5 to-slate-50/50 dark:from-pink-950/20 dark:via-purple-950/10 dark:to-slate-950/60',
-                      borderColor: 'border-pink-300 dark:border-pink-800/40',
-                      badgeColor: 'bg-pink-505/10 text-pink-600 dark:text-pink-400 border border-pink-500/20',
-                      sparkleText: '🧠 具身感知、情感反馈硬件与 XR 穿戴设备研发。',
-                      mbti: 'ENTP / INTJ 推荐人群',
-                      agenda: 'AI Studio 长期高能 GPU 限免接口与设备赞助',
-                      members: ['米亚 Mia 🤖', '张赫轩 Mark 🐯'],
-                      desc: '让交互硬件充溢情感。由 Google AI Studio 生态及上海微校集成电路提供赞助支持，已预配置十组智能物联网调试套件。',
-                    },
-                    {
-                      id: 'comm-court',
-                      name: '硬核深蓝批判哲学法庭',
-                      engName: 'Critical Logic Court',
-                      color: 'from-slate-500/10 via-slate-700/10 to-slate-50/50 dark:from-slate-900/30 dark:via-slate-950/40 dark:to-slate-950/60',
-                      borderColor: 'border-slate-350 dark:border-slate-800',
-                      badgeColor: 'bg-slate-205 text-slate-705 dark:bg-slate-900 dark:text-slate-400 border border-slate-300 dark:border-slate-800',
-                      sparkleText: '⚖️ 探讨算法社会考古学、系统霸权批判、人类非核心设计。',
-                      mbti: 'INTJ / INTP 推荐人群',
-                      agenda: '联刊出版《设计批判之刃》白皮书',
-                      members: ['苏格 Dr.Su 🦉', '米亚 Mia 🤖'],
-                      desc: '用冰寒的底层逻辑拆穿一切伪善的同构神话。对接各大高校与期刊提供后峰会学术发表席位与论文共创支持。',
-                    }
-                  ].map(comm => {
+                <div className="space-y-3">
+                  {communityCatalog.map((comm) => {
                     const isJoined = joinedCommunities.includes(comm.id);
+                    const commChats = communityChats[comm.id] || [];
                     return (
-                      <div 
-                        key={comm.id}
-                        className={`bg-gradient-to-br ${comm.color} border-2 ${comm.borderColor} rounded-[28px] p-4.5 space-y-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.01)] relative overflow-hidden`}
-                      >
-                        {/* Decorative background radial light */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/5 dark:bg-black/5 rounded-full blur-2xl pointer-events-none"></div>
-
-                        {/* Card Title */}
-                        <div className="flex justify-between items-start select-none relative z-10">
-                          <div>
-                            <span className={`text-[7px] font-black uppercase tracking-wider px-1.8 py-0.5 rounded-md ${comm.badgeColor}`}>
-                              {comm.mbti}
-                            </span>
-                            <h5 className="font-extrabold text-[11.5px] text-slate-900 dark:text-white mt-1 leading-none">{comm.name}</h5>
-                            <p className="text-[7.5px] font-mono font-bold text-slate-400 leading-none mt-0.5">{comm.engName}</p>
+                      <div key={comm.id} className="rounded-[28px] bg-white/95 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 space-y-3 overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => setActiveCommunityId(comm.id)}
+                          className="w-full text-left active:scale-[0.99] transition"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-[8px] rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-0.5 font-black text-emerald-700 dark:text-emerald-300">{comm.mbti}</span>
+                                {isJoined && <span className="text-[8px] rounded-full bg-teal-500/10 px-2 py-0.5 font-black text-teal-700 dark:text-teal-300">已加入</span>}
+                              </div>
+                              <h5 className="text-[13px] font-black text-slate-900 dark:text-white mt-2 leading-tight">{comm.name}</h5>
+                              <p className="text-[9px] font-mono font-bold text-slate-400 mt-0.5">{comm.engName}</p>
+                            </div>
+                            <div className="shrink-0 h-11 px-3 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-[9px] font-black text-slate-700 dark:text-slate-100 shadow-sm">
+                              进入群聊
+                            </div>
                           </div>
-                          
-                          {isJoined ? (
-                            <span className="bg-teal-500 text-white font-black text-[8px] px-2 py-0.8 rounded-xl border border-teal-400 shadow-xs uppercase select-none flex items-center animate-bounce shrink-0">
-                              已加入
-                            </span>
-                          ) : (
+
+                          <p className="mt-3 text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">{comm.desc}</p>
+                        </button>
+
+                        <div className="grid grid-cols-2 gap-2 text-[9px]">
+                          <div className="rounded-2xl bg-slate-50 dark:bg-slate-950/60 px-3 py-2.5">
+                            <div className="font-black text-slate-900 dark:text-white">{comm.members.length + 1} 位成员</div>
+                            <div className="text-slate-500 dark:text-slate-300 font-semibold mt-0.5">最近讨论 {commChats.length} 条</div>
+                          </div>
+                          <div className="rounded-2xl bg-slate-50 dark:bg-slate-950/60 px-3 py-2.5">
+                            <div className="font-black text-emerald-700 dark:text-emerald-300">会后机会</div>
+                            <div className="text-slate-500 dark:text-slate-300 font-semibold mt-0.5 truncate">{comm.agenda}</div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                          {!isJoined ? (
                             <button
                               type="button"
                               onClick={() => {
                                 setJoinedCommunities([...joinedCommunities, comm.id]);
-                                triggerToast(`🤝 契约结成！您已加入「${comm.name}」群组，衍生扶持窗口激活成功！`);
+                                triggerToast(`已加入「${comm.name}」，并同步保存到通讯录`);
                               }}
-                              className="px-3 py-1.2 bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-black text-[8.5px] rounded-xl active:scale-95 transition cursor-pointer select-none shrink-0 shadow-sm"
+                              className="flex-1 min-h-11 rounded-2xl bg-indigo-600 text-white text-[10.5px] font-black active:scale-95 transition shadow-sm"
                             >
-                              加入小组
+                              加入群组
                             </button>
+                          ) : (
+                            <div className="flex-1 min-h-11 rounded-2xl bg-teal-500/10 text-teal-700 dark:text-teal-300 text-[10.5px] font-black flex items-center justify-center gap-1">
+                              <Check className="h-3.5 w-3.5" /> 已加入通讯录
+                            </div>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => setActiveCommunityId(comm.id)}
+                            className="flex-1 min-h-11 rounded-2xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 text-[10.5px] font-black active:scale-95 transition shadow-sm"
+                          >
+                            打开群聊
+                          </button>
                         </div>
-
-                        {/* Context summary */}
-                        <div className="p-3 bg-white/70 dark:bg-slate-950/80 border border-slate-150 dark:border-slate-850 rounded-2xl text-[9px] text-slate-650 dark:text-slate-350 leading-relaxed font-semibold relative z-10">
-                          <p className="text-slate-800 dark:text-slate-100 font-extrabold pb-1 flex items-center">
-                            <Sparkles className="h-3 w-3 mr-1 text-pink-500" />
-                            <span>研究范式：{comm.sparkleText}</span>
-                          </p>
-                          <p className="text-[8.5px] text-slate-455 dark:text-slate-400 mt-1 pl-1.5 border-l border-indigo-400 dark:border-indigo-600 leading-normal select-text font-normal font-sans">
-                            {comm.desc}
-                          </p>
-                        </div>
-
-                        {isJoined ? (
-                          /* Interactive Chat Lobby & Derivative Claims Options */
-                          <div className="space-y-3.5 pt-1 relative z-10 animate-fadeIn">
-                            {/* Claim Benefits Section */}
-                            <div className="bg-teal-500/5 dark:bg-teal-500/10 border border-teal-500/25 p-3 rounded-2xl space-y-2 text-left">
-                              <span className="text-[8px] font-black text-teal-600 dark:text-teal-400 block tracking-widest uppercase select-none">
-                                🎁 学术与服务衍生红利认领
-                              </span>
-                              
-                              <div className="grid grid-cols-1 gap-1.5">
-                                <button
-                                  type="button"
-                                  onClick={() => triggerToast(`💾 【已推荐立项】共创申请资格校验通过！已向组委会推送：CO-CLAIM-2026-${comm.id.toUpperCase()}-${Date.now().toString().slice(-4)}`)}
-                                  className="w-full py-1.8 bg-white dark:bg-slate-900 border border-teal-300 dark:border-teal-850 hover:bg-slate-100 font-black text-[8.5px] text-teal-700 dark:text-teal-400 rounded-lg active:scale-95 transition-all cursor-pointer flex items-center justify-center space-x-1 shadow-xs"
-                                >
-                                  <Briefcase className="h-3 w-3 shrink-0" />
-                                  <span>免费申领提案契合及专属席位支持</span>
-                                </button>
-                                
-                                <div className="flex text-[7px] text-slate-400 justify-between items-center px-1 font-bold select-none leading-none">
-                                  <span>同盟成员：{comm.members.length + 1} 位学者</span>
-                                  <span>状态：契约签署终身托管</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Lounge Chat Hub (社内小群聊对敲) */}
-                            <div className="bg-slate-900/95 dark:bg-slate-950 p-3 rounded-2.5xl space-y-3 border border-slate-800 shadow-xl">
-                              <div className="text-[7.5px] font-black text-slate-400 tracking-wider uppercase pb-1.5 border-b border-slate-800 select-none text-left flex items-center justify-between">
-                                <span className="flex items-center text-teal-350 font-sans">
-                                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1 animate-pulse"></span>
-                                  本盟共创对流沙龙 (Live discussion)
-                                </span>
-                                <span className="scale-90 text-[7px] text-slate-500">双轴保护</span>
-                              </div>
-
-                              <div className="space-y-2.5 max-h-[140px] overflow-y-auto scrollbar-none pr-0.5">
-                                {(communityChats[comm.id] || []).map(chat => (
-                                  <div key={chat.id} className="flex flex-col text-left space-y-0.5 shrink-0 animate-fadeInPlus">
-                                    <div className="flex items-center space-x-1 select-none">
-                                      {renderNickPhoto(chat.userNick, 'w-4 h-4')}
-                                      <span className="text-[8px] font-black text-slate-300">{chat.userNick}</span>
-                                      <span className="text-[6.5px] text-slate-550 font-mono ml-auto">{chat.createdAt}</span>
-                                    </div>
-                                    <div className="bg-slate-800 text-slate-150 rounded-r-xl rounded-bl-xl p-2.5 text-[9.5px] font-medium leading-relaxed border border-slate-750 select-text">
-                                      {chat.text}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-
-                              {/* Lounge Text Form */}
-                              <form
-                                onSubmit={(e) => {
-                                  e.preventDefault();
-                                  if (!communityMsgInput.trim()) return;
-                                  const newChatObj = {
-                                    id: `cd_${Date.now()}`,
-                                    userNick: '我 (体验巫)',
-                                    avatarEmoji: myProfile.avatarEmoji,
-                                    avatarColor: myProfile.avatarColor,
-                                    text: communityMsgInput.trim(),
-                                    createdAt: '12:01 GMT+8'
-                                  };
-                                  setCommunityChats({
-                                    ...communityChats,
-                                    [comm.id]: [...(communityChats[comm.id] || []), newChatObj]
-                                  });
-                                  setCommunityMsgInput('');
-                                  triggerToast(`💬 观点对敲发射成功！【${comm.name}】智库盟友已安全接收。`);
-                                }}
-                                className="flex items-center space-x-1 border-t border-slate-800 pt-2 shrink-0"
-                              >
-                                <input
-                                  value={communityMsgInput}
-                                  onChange={(e) => setCommunityMsgInput(e.target.value)}
-                                  placeholder="参与后续共创课题讨论与脑思风暴..."
-                                  className="flex-1 h-8 px-2.5 bg-slate-800 border border-slate-750 rounded-lg outline-none text-[8.5px] text-white focus:border-indigo-500 font-semibold"
-                                />
-                                <button
-                                  type="submit"
-                                  className="h-8 w-8 bg-indigo-650 hover:bg-indigo-700 text-white rounded-lg flex items-center justify-center cursor-pointer active:scale-95 transition"
-                                >
-                                  <Send className="h-3 w-3" />
-                                </button>
-                              </form>
-                            </div>
-                          </div>
-                        ) : (
-                          /* Locked Preview instructions */
-                          <div className="p-2.5 bg-slate-100/50 dark:bg-slate-900/30 rounded-xl text-[8px] font-bold text-slate-455 text-left border border-dashed border-slate-300 dark:border-slate-800/85 select-none leading-normal">
-                            🔒 同频学术衍生锁定中。申领大门仅对智商与灵魂共振的「{comm.mbti}」镜友开放。解锁本契约签署后即可同步开启上述衍生扶持功能并激活高频学术讨论沙龙。
-                          </div>
-                        )}
                       </div>
                     );
                   })}
@@ -3592,6 +3442,134 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         )}
           </>
         )}
+
+        {/* -------------------- COMMUNITY CHAT OVERLAY -------------------- */}
+        {isLoggedIn && activeCommunityId && (() => {
+          const activeCommunity = communityCatalog.find((item) => item.id === activeCommunityId);
+          if (!activeCommunity) return null;
+          const chats = communityChats[activeCommunityId] || [];
+          const isJoined = joinedCommunities.includes(activeCommunityId);
+          return (
+            <div className="absolute inset-x-0 bottom-0 top-[65px] bg-slate-50 dark:bg-slate-950 z-[55] flex flex-col overflow-hidden animate-slideUp">
+              <div className="px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0 select-none shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <div className="flex items-center gap-2 min-w-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveCommunityId(null)}
+                    className="h-9 px-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-100 font-black text-[10px] active:scale-95 transition"
+                  >
+                    返回
+                  </button>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-black text-slate-900 dark:text-white truncate max-w-[180px]">{activeCommunity.name}</h4>
+                    <p className="text-[8px] font-bold text-slate-400 dark:text-slate-500 truncate max-w-[190px]">{activeCommunity.engName}</p>
+                  </div>
+                </div>
+                <span className={`shrink-0 rounded-full px-2.5 py-1 text-[8px] font-black ${isJoined ? 'bg-teal-500/10 text-teal-700 dark:text-teal-300' : 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-300'}`}>
+                  {isJoined ? '已加入' : '未加入'}
+                </span>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-none">
+                <div className="rounded-[28px] bg-gradient-to-br from-white via-indigo-50/45 to-teal-50/45 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-4 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <span className="text-[8px] rounded-full bg-white/85 dark:bg-slate-800 px-2 py-0.5 font-black text-emerald-700 dark:text-emerald-300">{activeCommunity.mbti}</span>
+                      <h3 className="text-base font-black text-slate-900 dark:text-white mt-2 leading-tight">{activeCommunity.name}</h3>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-300 leading-relaxed mt-1">{activeCommunity.desc}</p>
+                    </div>
+                    <div className="shrink-0 text-right rounded-2xl bg-white/80 dark:bg-slate-950/60 px-3 py-2 shadow-sm">
+                      <div className="text-lg font-black text-indigo-600 dark:text-indigo-300 leading-none">{activeCommunity.members.length + 1}</div>
+                      <div className="text-[8px] text-slate-400 dark:text-slate-500 font-bold mt-1">成员</div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="rounded-2xl bg-white/80 dark:bg-slate-950/70 p-3">
+                      <div className="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wide">研究方向</div>
+                      <div className="text-[10px] text-slate-700 dark:text-slate-100 font-bold mt-1 leading-relaxed">{activeCommunity.sparkleText}</div>
+                    </div>
+                    <div className="rounded-2xl bg-white/80 dark:bg-slate-950/70 p-3">
+                      <div className="text-[8px] font-black text-slate-500 dark:text-slate-300 uppercase tracking-wide">会后机会</div>
+                      <div className="text-[10px] text-emerald-700 dark:text-emerald-300 font-black mt-1 leading-relaxed">{activeCommunity.agenda}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pb-2">
+                  {chats.map((chat) => {
+                    const isMine = chat.userNick === myProfile.nickName || chat.userNick.startsWith('我');
+                    return (
+                      <div key={chat.id} className={`flex gap-2 ${isMine ? 'justify-end' : 'justify-start'}`}>
+                        {!isMine && renderNickPhoto(chat.userNick, 'w-8 h-8')}
+                        <div className={`max-w-[78%] ${isMine ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
+                          <div className={`flex items-center gap-2 ${isMine ? 'flex-row-reverse' : ''}`}>
+                            <span className="text-[8px] font-black text-slate-500 dark:text-slate-400">{isMine ? '我' : chat.userNick}</span>
+                            <span className="text-[7px] font-mono text-slate-400 dark:text-slate-500">{chat.createdAt}</span>
+                          </div>
+                          <div className={`rounded-[22px] px-3.5 py-3 text-[10.5px] font-semibold leading-relaxed shadow-sm ${isMine ? 'bg-indigo-600 text-white rounded-br-md' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-100 rounded-bl-md'}`}>
+                            {chat.text}
+                          </div>
+                        </div>
+                        {isMine && renderAvatarPhoto(myProfile, 'w-8 h-8', 0)}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {isJoined ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!communityMsgInput.trim()) return;
+                    const newChatObj = {
+                      id: `cg_${Date.now()}`,
+                      userNick: myProfile.nickName || '我',
+                      avatarEmoji: myProfile.avatarEmoji,
+                      avatarColor: myProfile.avatarColor,
+                      text: communityMsgInput.trim(),
+                      createdAt: new Date().toTimeString().split(' ')[0].substring(0, 5)
+                    };
+                    setCommunityChats({
+                      ...communityChats,
+                      [activeCommunityId]: [...(communityChats[activeCommunityId] || []), newChatObj]
+                    });
+                    setCommunityMsgInput('');
+                    triggerToast(`已发送到「${activeCommunity.name}」群聊`);
+                  }}
+                  className="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 shrink-0"
+                >
+                  <input
+                    value={communityMsgInput}
+                    onChange={(e) => setCommunityMsgInput(e.target.value)}
+                    placeholder="在群聊中输入想法..."
+                    className="flex-1 h-11 px-4 bg-slate-100 dark:bg-slate-800 rounded-2xl outline-none text-[11px] font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500/25"
+                  />
+                  <button
+                    type="submit"
+                    className="h-11 w-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center active:scale-95 transition shadow-sm"
+                  >
+                    <Send className="h-4 w-4" />
+                  </button>
+                </form>
+              ) : (
+                <div className="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setJoinedCommunities([...joinedCommunities, activeCommunityId]);
+                      setWeSubTab('contacts');
+                      triggerToast(`已加入「${activeCommunity.name}」，可在通讯录快速进入群聊`);
+                    }}
+                    className="w-full min-h-12 rounded-2xl bg-indigo-600 text-white text-[11px] font-black active:scale-95 transition shadow-sm"
+                  >
+                    加入群组并保存到通讯录
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* -------------------- PRIVATE CHAT OVERLAY -------------------- */}
         {isLoggedIn && activeChatAttendee && (
