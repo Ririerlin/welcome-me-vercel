@@ -1343,27 +1343,6 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
         {activeTab === 'home' && (
           <div className="space-y-4 animate-fadeIn">
             
-                       {/* 活动海报卡：放在首页最上方，第一眼更像完成品 */}
-            <div className="relative h-44 rounded-[30px] overflow-hidden shadow-lg bg-slate-900">
-              <img
-                src="/welcome-hero.svg"
-                alt="欢迎ME活动主视觉"
-                className="absolute inset-0 w-full h-full object-cover opacity-95"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <p className="text-[10px] font-black tracking-[0.22em] opacity-80">
-                  WELCOME ME 2026
-                </p>
-                <h2 className="text-xl font-black leading-tight mt-1 text-white">
-                  跨界设计与人性体验峰会
-                </h2>
-                <p className="text-xs opacity-85 mt-1 text-white/85">
-                  上海当代艺术创意园 · A1馆 · 今日 09:30-18:00
-                </p>
-              </div>
-            </div>
-            
             {/* Greet & Stats ring - borderless */}
             <div className="flex items-center justify-between bg-white/90 dark:bg-slate-900/90 p-4 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.015)] hover:shadow-[0_12px_32px_rgba(244,114,182,0.06)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-350 cursor-pointer">
               <div className="space-y-1">
