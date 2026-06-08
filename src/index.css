@@ -496,26 +496,3 @@ input {
   height: auto !important;
   object-fit: contain !important;
 }
-
-
-/* ===== Premium admin visual upgrade with visible icon system ===== */
-.premium-admin-surface {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(236, 72, 153, 0.10), transparent 28%),
-    radial-gradient(circle at 92% 8%, rgba(20, 184, 166, 0.10), transparent 26%),
-    #f6f7fb;
-}
-.dark .premium-admin-surface {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(236, 72, 153, 0.18), transparent 28%),
-    radial-gradient(circle at 92% 8%, rgba(20, 184, 166, 0.12), transparent 26%),
-    #020617;
-}
-.premium-admin-sidebar svg {
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.28));
-}
-.premium-admin-hero {
-  background:
-    linear-gradient(120deg, rgba(2, 6, 23, 0.88), rgba(49, 46, 129, 0.72)),
-    url('/images/home-hero-photo.png') center / cover no-repeat;
-}

@@ -1116,22 +1116,23 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 alt="Welcome ME 2026 会场现场"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/78 via-slate-900/45 to-slate-950/68" />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_38%,rgba(15,23,42,0.35))]" />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/86 via-slate-950/42 to-slate-950/78" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent_32%,rgba(15,23,42,0.42))]" />
 
-              <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                <span className="rounded-full bg-white/20 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15">
+              <div className="absolute top-4 left-1/2 z-10 -translate-x-1/2">
+                <span className="block rounded-full bg-white/20 px-4 py-1 text-center text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15 shadow-sm whitespace-nowrap">
                   WELCOME ME 2026
                 </span>
-                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm">进行中</span>
               </div>
+              <span className="absolute top-4 right-4 z-10 rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm whitespace-nowrap">进行中</span>
 
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h2 className="text-[22px] font-black leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]">
-                  从我到我们的现场共创
-                </h2>
-                <div className="mt-3 rounded-2xl bg-slate-950/35 px-3 py-2.5 backdrop-blur-md border border-white/12">
-                  <p className="text-[11px] font-semibold text-white/95">
+              <h2 className="absolute left-0 right-0 top-[72px] z-10 mx-auto px-6 text-center text-[22px] font-black leading-tight text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.72)]">
+                从我到我们的现场共创
+              </h2>
+
+              <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center px-5">
+                <div className="w-full max-w-[288px] rounded-2xl bg-slate-950/48 px-4 py-2.5 backdrop-blur-md border border-white/12 text-center">
+                  <p className="text-center text-[11px] font-semibold text-white/95">
                     登录后查看通行证、议程、真实照片与同频推荐
                   </p>
                 </div>
@@ -1634,24 +1635,25 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
                 alt="Welcome ME 2026 现场主会场"
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/82 via-violet-950/35 to-slate-950/70" />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_36%,rgba(15,23,42,0.38))]" />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/86 via-slate-950/42 to-slate-950/78" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.18),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent_32%,rgba(15,23,42,0.42))]" />
 
-              <div className="absolute left-4 right-4 top-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                <span className="justify-self-center col-start-2 rounded-full bg-white/18 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15 text-center whitespace-nowrap">
+              <div className="absolute top-4 left-1/2 z-10 -translate-x-1/2">
+                <span className="block rounded-full bg-white/20 px-4 py-1 text-center text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15 shadow-sm whitespace-nowrap">
                   WELCOME ME 2026
                 </span>
-                <span className="justify-self-end rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm whitespace-nowrap">
-                  进行中
-                </span>
               </div>
+              <span className="absolute top-4 right-4 z-10 rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm whitespace-nowrap">
+                进行中
+              </span>
 
-              <div className="absolute bottom-4 left-4 right-4 text-white text-center flex flex-col items-center">
-                <h2 className="text-[23px] font-black leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)] text-center">
-                  从我到我们的现场共创
-                </h2>
-                <div className="mt-3 rounded-2xl bg-slate-950/42 px-4 py-2.5 backdrop-blur-md border border-white/12 w-full text-center">
-                  <p className="text-[11px] font-semibold text-white/95 text-center">
+              <h2 className="absolute left-0 right-0 top-[72px] z-10 mx-auto px-6 text-center text-[23px] font-black leading-tight text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.72)]">
+                从我到我们的现场共创
+              </h2>
+
+              <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center px-5">
+                <div className="w-full max-w-[288px] rounded-2xl bg-slate-950/48 px-4 py-2.5 backdrop-blur-md border border-white/12 text-center">
+                  <p className="text-center text-[11px] font-semibold text-white/95">
                     上海当代艺术创意园 · A1馆 · 09:30-18:00
                   </p>
                 </div>
