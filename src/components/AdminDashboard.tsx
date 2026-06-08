@@ -517,26 +517,65 @@ export default function AdminDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f7fb] dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+    <div className="min-h-screen bg-[#f6f7fb] dark:bg-slate-950 text-slate-900 dark:text-slate-100 premium-admin-surface">
       {adminNotice && <div className="fixed top-5 left-1/2 z-[100] -translate-x-1/2 rounded-2xl border border-emerald-500/20 bg-white/95 dark:bg-slate-900/95 px-4 py-3 text-sm font-black text-emerald-600 dark:text-emerald-300 shadow-xl backdrop-blur-xl">{adminNotice}</div>}
       <div className="flex min-h-screen">
-        <aside className="hidden lg:flex w-72 shrink-0 flex-col border-r border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl sticky top-0 h-screen">
-          <div className="p-6 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-3"><div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-500 via-purple-500 to-teal-400 flex items-center justify-center text-white font-black shadow-lg">{adminSettings.logoLabel || 'ME'}</div><div><div className="text-lg font-black tracking-tight text-slate-950 dark:text-white">欢迎ME 策展后台</div><div className="text-xs text-slate-500 dark:text-slate-400">Curatorial Ops Console</div></div></div>
+        <aside className="hidden lg:flex w-80 shrink-0 flex-col border-r border-white/10 bg-[#080f24] text-white sticky top-0 h-screen overflow-hidden premium-admin-sidebar">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_0%,rgba(236,72,153,0.32),transparent_34%),radial-gradient(circle_at_90%_18%,rgba(20,184,166,0.18),transparent_28%),linear-gradient(180deg,#11142d_0%,#081023_100%)]" />
+          <div className="relative p-6 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-[20px] bg-gradient-to-br from-pink-500 via-purple-500 to-teal-400 flex items-center justify-center text-white font-black shadow-[0_12px_32px_rgba(236,72,153,0.35)] ring-1 ring-white/20">{adminSettings.logoLabel || 'ME'}</div>
+              <div>
+                <div className="text-lg font-black tracking-tight text-white">欢迎ME 策展后台</div>
+                <div className="text-xs text-white/55 font-bold">Curatorial Ops Console</div>
+              </div>
+            </div>
           </div>
-          <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
-            {menuItems.map((item) => {
+          <nav className="relative flex-1 p-4 space-y-2 overflow-y-auto">
+            {menuItems.map((item, index) => {
               const Icon = item.icon;
               const active = activeTab === item.id;
+              const iconTones = [
+                'from-pink-400 via-violet-400 to-teal-300',
+                'from-violet-300 via-indigo-300 to-sky-300',
+                'from-teal-300 via-cyan-300 to-emerald-300',
+                'from-pink-300 via-purple-300 to-indigo-300',
+                'from-amber-200 via-pink-200 to-violet-300',
+                'from-sky-200 via-indigo-300 to-purple-300',
+                'from-teal-200 via-emerald-300 to-cyan-300',
+                'from-rose-200 via-violet-300 to-slate-100',
+                'from-slate-100 via-violet-200 to-teal-200'
+              ];
               return (
-                <button key={item.id} onClick={() => setActiveTab(item.id)} className={classNames('w-full text-left rounded-[20px] border transition px-3 py-3 flex items-center gap-3', active ? 'border-pink-200 dark:border-pink-500/20 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-teal-500/10 shadow-sm' : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-900')}>
-                  <div className={classNames('w-10 h-10 rounded-2xl flex items-center justify-center shrink-0', active ? 'bg-white dark:bg-slate-900 text-pink-600 shadow-sm' : 'bg-slate-100 dark:bg-slate-900 text-slate-500')}><Icon className="w-5 h-5" /></div>
-                  <div className="min-w-0"><div className="text-sm leading-5 font-black tracking-tight text-slate-900 dark:text-white">{item.label}</div><div className="mt-0.5 text-[11px] leading-4 text-slate-500 dark:text-slate-400 truncate">{item.desc}</div></div>
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={classNames(
+                    'w-full text-left rounded-[26px] transition px-4 py-4 flex items-center gap-4 group',
+                    active
+                      ? 'bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_18px_40px_rgba(236,72,153,0.18)] ring-1 ring-pink-300/25'
+                      : 'hover:bg-white/6'
+                  )}
+                >
+                  <div className={classNames(
+                    'w-14 h-14 rounded-[22px] flex items-center justify-center shrink-0 relative overflow-hidden ring-1 transition',
+                    active ? 'bg-white/16 ring-white/22 shadow-[0_12px_30px_rgba(139,92,246,0.24)]' : 'bg-white/8 ring-white/10 group-hover:bg-white/12'
+                  )}>
+                    <div className={classNames('absolute inset-0 bg-gradient-to-br opacity-20', iconTones[index % iconTones.length])} />
+                    <Icon className={classNames('relative w-7 h-7 transition drop-shadow-[0_0_12px_rgba(255,255,255,0.42)]', active ? 'text-white' : 'text-white/82 group-hover:text-white')} strokeWidth={2.2} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[18px] leading-6 font-black tracking-tight text-white">{item.label}</div>
+                    <div className="mt-1 text-[12px] leading-4 text-white/62 truncate font-bold">{item.desc}</div>
+                  </div>
                 </button>
               );
             })}
           </nav>
-          <div className="p-4 border-t border-slate-100 dark:border-slate-800 space-y-3"><button onClick={exportAdminSnapshot} className="w-full px-4 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-black flex items-center justify-center gap-2"><Download className="w-4 h-4" /> 导出运营快照</button><a href="/" className="block text-center text-xs font-bold text-slate-500 hover:text-pink-600">返回用户端</a></div>
+          <div className="relative p-4 border-t border-white/10 space-y-3">
+            <button onClick={exportAdminSnapshot} className="w-full px-4 py-3 rounded-2xl bg-white text-slate-950 text-xs font-black flex items-center justify-center gap-2 shadow-[0_14px_30px_rgba(255,255,255,0.16)]"><Download className="w-4 h-4" /> 导出运营快照</button>
+            <a href="/" className="block text-center text-xs font-bold text-white/60 hover:text-white">返回用户端</a>
+          </div>
         </aside>
         <main className="flex-1 min-w-0">
           <header className="sticky top-0 z-30 bg-[#f6f7fb]/88 dark:bg-slate-950/88 backdrop-blur-xl border-b border-slate-200/75 dark:border-slate-800">
@@ -546,7 +585,7 @@ export default function AdminDashboard({
           <section className="p-4 md:p-8 space-y-6">
             {activeTab === 'overview' && (
               <>
-                <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6"><div className="premium-admin-hero relative overflow-hidden rounded-[36px] text-white p-6 md:p-8 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"><div className="absolute -top-12 -right-8 w-44 h-44 rounded-full bg-pink-500/25 blur-3xl" /><div className="absolute -bottom-12 left-0 w-56 h-56 rounded-full bg-teal-400/18 blur-3xl" /><div className="relative grid grid-cols-1 md:grid-cols-[1.05fr_0.95fr] gap-6 items-center"><div><div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 text-[11px] font-black tracking-[0.22em] uppercase text-white/80"><Sparkles className="w-3.5 h-3.5" /> Curatorial Command</div><h3 className="mt-4 text-3xl md:text-4xl font-black tracking-tight leading-tight text-white max-w-2xl">策展级服务端控制台</h3><p className="mt-4 text-base leading-8 text-white/88 max-w-2xl">用展览级视觉统一管理用户、签到、关系、作品、内容、议程与报告，让后台也像正式产品一样可信、清晰、可演示。</p><div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">{[['注册用户', allAttendees.length], ['签到率', fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)], ['作品总数', workCards.length], ['报告可生成', stats.reportReadyCount]].map(([label, value]) => <div key={label} className="rounded-2xl bg-white/10 border border-white/10 p-3"><div className="text-[11px] text-white/80 font-bold">{label}</div><div className="mt-1 text-2xl font-black text-white">{value}</div></div>)}</div></div><div className="rounded-[30px] bg-white/8 border border-white/10 p-4 md:p-5 backdrop-blur-sm"><div className="flex items-center justify-between mb-3"><div><div className="text-xs uppercase tracking-[0.18em] font-black text-white/60">Visual Board</div><div className="text-xl font-black text-white">现场封面与运营趋势</div></div><Activity className="w-5 h-5 text-pink-300" /></div><div className="rounded-[24px] overflow-hidden h-44 bg-slate-800 border border-white/10">{adminSettings.coverImage ? <img src={adminSettings.coverImage} alt="活动封面" className="w-full h-full object-cover" /> : workCards[0]?.imageUrl ? <img src={workCards[0].imageUrl} alt={workCards[0].title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gradient-to-br from-pink-500/30 via-purple-500/30 to-teal-400/30 flex items-center justify-center text-6xl">🎉</div>}</div><div className="mt-4"><SimpleAreaChart values={[58, 72, 66, 82, 77, 91, 86]} /></div></div></div></div><div className="space-y-4"><MiniMetric label="待审核提问" value={stats.pendingQuestions} helper="建议优先处理高热度问题" icon={Bell} accent="bg-gradient-to-br from-amber-400 to-orange-500" /><MiniMetric label="同频已连接" value={stats.confirmedConnections} helper="用于关系沉淀与通讯录" icon={HeartHandshake} accent="bg-gradient-to-br from-emerald-400 to-teal-500" /><MiniMetric label="平均资料完整度" value={fmtPercent(avgCompletion)} helper="个人报告与匹配质量核心指标" icon={Sparkles} accent="bg-gradient-to-br from-pink-500 to-violet-500" /></div></div>
+                <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6"><div className="premium-admin-hero relative overflow-hidden rounded-[36px] text-white p-6 md:p-8 shadow-[0_28px_80px_rgba(15,23,42,0.28)]"><div className="absolute -top-12 -right-8 w-44 h-44 rounded-full bg-pink-500/25 blur-3xl" /><div className="absolute -bottom-12 left-0 w-56 h-56 rounded-full bg-teal-400/18 blur-3xl" /><div className="relative grid grid-cols-1 md:grid-cols-[1.05fr_0.95fr] gap-6 items-center"><div><div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 text-[11px] font-black tracking-[0.22em] uppercase text-white/80"><Sparkles className="w-3.5 h-3.5" /> Curatorial Command</div><h3 className="mt-4 text-3xl md:text-4xl font-black tracking-tight leading-tight text-white max-w-2xl">策展级服务端控制台</h3><p className="mt-4 text-base leading-8 text-white/88 max-w-2xl">用展览级视觉统一管理用户、签到、关系、作品、内容、议程与报告，让后台也像正式产品一样可信、清晰、可演示。</p><div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">{[['注册用户', allAttendees.length], ['签到率', fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)], ['作品总数', workCards.length], ['报告可生成', stats.reportReadyCount]].map(([label, value]) => <div key={label} className="rounded-2xl bg-white/10 border border-white/10 p-3"><div className="text-[11px] text-white/80 font-bold">{label}</div><div className="mt-1 text-2xl font-black text-white">{value}</div></div>)}</div></div><div className="rounded-[30px] bg-white/8 border border-white/10 p-4 md:p-5 backdrop-blur-sm"><div className="flex items-center justify-between mb-3"><div><div className="text-xs uppercase tracking-[0.18em] font-black text-white/60">Visual Board</div><div className="text-xl font-black text-white">活动封面与热度趋势</div></div><Activity className="w-5 h-5 text-pink-300" /></div><div className="rounded-[24px] overflow-hidden h-44 bg-slate-800 border border-white/10">{adminSettings.coverImage ? <img src={adminSettings.coverImage} alt="活动封面" className="w-full h-full object-cover" /> : workCards[0]?.imageUrl ? <img src={workCards[0].imageUrl} alt={workCards[0].title} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gradient-to-br from-pink-500/30 via-purple-500/30 to-teal-400/30 flex items-center justify-center text-6xl">🎉</div>}</div><div className="mt-4"><SimpleAreaChart values={[58, 72, 66, 82, 77, 91, 86]} /></div></div></div></div><div className="space-y-4"><MiniMetric label="待审核提问" value={stats.pendingQuestions} helper="建议优先处理高热度问题" icon={Bell} accent="bg-gradient-to-br from-amber-400 to-orange-500" /><MiniMetric label="同频已连接" value={stats.confirmedConnections} helper="用于关系沉淀与通讯录" icon={HeartHandshake} accent="bg-gradient-to-br from-emerald-400 to-teal-500" /><MiniMetric label="平均资料完整度" value={fmtPercent(avgCompletion)} helper="个人报告与匹配质量核心指标" icon={Sparkles} accent="bg-gradient-to-br from-pink-500 to-violet-500" /></div></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4"><MiniMetric label="注册用户" value={allAttendees.length} helper="含当前用户与预置嘉宾" icon={Users} accent="bg-gradient-to-br from-pink-500 to-purple-500" /><MiniMetric label="已签到" value={checkedInCount} helper={`${fmtPercent((checkedInCount / Math.max(allAttendees.length, 1)) * 100)} 签到率`} icon={QrCode} accent="bg-gradient-to-br from-teal-400 to-cyan-500" /><MiniMetric label="设计作品" value={workCards.length} helper="用户上传 + 展品资料" icon={ImageIcon} accent="bg-gradient-to-br from-amber-400 to-orange-500" /><MiniMetric label="互动内容" value={questions.length + bulletMessages.length} helper={`${stats.approvedQuestions} 条内容已通过`} icon={MessageCircle} accent="bg-gradient-to-br from-indigo-500 to-violet-500" /></div>
                 <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr] gap-6"><SectionCard title="用户方向分布" subtitle="帮助主办方判断议程与内容结构是否平衡。" action={<BarChart3 className="w-5 h-5 text-pink-500" />}><div className="space-y-4">{distribution.map((item) => { const pct = (item.value / Math.max(allAttendees.length, 1)) * 100; return <div key={item.label}><div className="flex items-center justify-between text-sm mb-2"><span className="font-bold text-slate-700 dark:text-slate-200">{item.label}</span><span className="font-black text-slate-950 dark:text-white">{item.value} 人</span></div><div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-teal-400" style={{ width: `${Math.max(12, pct)}%` }} /></div></div>; })}</div></SectionCard><SectionCard title="会议关键词词云" subtitle="从用户标签、议程标签、作品标签和连接关系中提取热词。" action={<Sparkles className="w-5 h-5 text-teal-500" />}><WordCloudPanel items={meetingWordCloud} /></SectionCard></div>
               </>

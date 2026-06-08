@@ -1637,21 +1637,21 @@ body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans
               <div className="absolute inset-0 bg-gradient-to-r from-slate-950/82 via-violet-950/35 to-slate-950/70" />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_36%,rgba(15,23,42,0.38))]" />
 
-              <div className="absolute left-4 right-4 top-4 flex items-center justify-between">
-                <span className="rounded-full bg-white/18 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15">
+              <div className="absolute left-4 right-4 top-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <span className="justify-self-center col-start-2 rounded-full bg-white/18 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-md border border-white/15 text-center whitespace-nowrap">
                   WELCOME ME 2026
                 </span>
-                <span className="rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm">
+                <span className="justify-self-end rounded-full bg-emerald-300 px-3 py-1 text-[10px] font-black text-slate-950 shadow-sm whitespace-nowrap">
                   进行中
                 </span>
               </div>
 
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h2 className="text-[23px] font-black leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]">
+              <div className="absolute bottom-4 left-4 right-4 text-white text-center flex flex-col items-center">
+                <h2 className="text-[23px] font-black leading-tight text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.45)] text-center">
                   从我到我们的现场共创
                 </h2>
-                <div className="mt-3 rounded-2xl bg-slate-950/38 px-3 py-2.5 backdrop-blur-md border border-white/12">
-                  <p className="text-[11px] font-semibold text-white/95">
+                <div className="mt-3 rounded-2xl bg-slate-950/42 px-4 py-2.5 backdrop-blur-md border border-white/12 w-full text-center">
+                  <p className="text-[11px] font-semibold text-white/95 text-center">
                     上海当代艺术创意园 · A1馆 · 09:30-18:00
                   </p>
                 </div>
